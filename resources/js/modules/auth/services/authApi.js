@@ -1,13 +1,23 @@
-async function postJson(url, payload) {
+function getCsrfToken() {
+    return document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
+}
+
+async function fetchJson(url, options = {}) {
+    const headers = {
+        Accept: 'application/json',
+        'X-Requested-With': 'XMLHttpRequest',
+        ...options.headers,
+    };
+
+    const csrfToken = getCsrfToken();
+    if (csrfToken) {
+        headers['X-CSRF-TOKEN'] = csrfToken;
+    }
+
     const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            Accept: 'application/json',
-            'X-Requested-With': 'XMLHttpRequest',
-        },
-        body: JSON.stringify(payload),
         credentials: 'same-origin',
+        ...options,
+        headers,
     });
 
     const data = await response.json().catch(() => ({}));
@@ -22,17 +32,33 @@ async function postJson(url, payload) {
     return data;
 }
 
+async function postJson(url, payload) {
+    return fetchJson(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+    });
+}
+
 export const authApi = {
     login(payload) {
-        return postJson('/login', payload);
+        return postJson('/auth/login', payload);
     },
     register(payload) {
-        return postJson('/register', payload);
+        return postJson('/auth/register', payload);
     },
     forgotPassword(payload) {
-        return postJson('/forgot-password', payload);
+        return postJson('/auth/forgot-password', payload);
     },
     resetPassword(payload) {
-        return postJson('/reset-password', payload);
+        return postJson('/auth/reset-password', payload);
+    },
+    async me() {
+        return fetchJson('/api/user');
+    },
+    async logout() {
+        return postJson('/auth/logout', {});
     },
 };

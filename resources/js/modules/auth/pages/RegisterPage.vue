@@ -1,7 +1,7 @@
 <template>
-    <AuthCard title="Create account" subtitle="Set up access for your team workspace.">
+    <VotumCard title="Create account" subtitle="Set up access for your team workspace.">
         <form class="space-y-4" @submit.prevent="submit">
-            <AuthInput
+            <VotumInput
                 v-model="form.name"
                 name="name"
                 autocomplete="name"
@@ -10,7 +10,7 @@
                 :error="validationErrors.name?.[0]"
             />
 
-            <AuthInput
+            <VotumInput
                 v-model="form.email"
                 name="email"
                 type="email"
@@ -20,7 +20,15 @@
                 :error="validationErrors.email?.[0]"
             />
 
-            <AuthInput
+            <VotumSelect
+                v-model="form.role"
+                name="role"
+                label="Role"
+                :options="roleOptions"
+                :error="validationErrors.role?.[0]"
+            />
+
+            <VotumInput
                 v-model="form.password"
                 name="password"
                 type="password"
@@ -30,7 +38,7 @@
                 :error="validationErrors.password?.[0]"
             />
 
-            <AuthInput
+            <VotumInput
                 v-model="form.password_confirmation"
                 name="password_confirmation"
                 type="password"
@@ -39,10 +47,6 @@
                 placeholder="Repeat password"
                 :error="validationErrors.password_confirmation?.[0]"
             />
-
-            <p v-if="serverError" class="rounded-md border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-700">
-                {{ serverError }}
-            </p>
 
             <button
                 type="submit"
@@ -58,34 +62,62 @@
                 Already have an account?
             </router-link>
         </template>
-    </AuthCard>
+    </VotumCard>
 </template>
 
 <script setup>
 import { reactive } from 'vue';
+import router from '../../../router/index.js';
 
-import AuthCard from '../components/AuthCard.vue';
-import AuthInput from '../components/AuthInput.vue';
+import VotumCard from '../components/VotumCard.vue';
+import VotumInput from '../components/VotumInput.vue';
+import VotumSelect from '../components/VotumSelect.vue';
 import { useAuthForm } from '../composables/useAuthForm';
 import { authApi } from '../services/authApi';
+import { useGlobalAlert } from '../../site/composables/useGlobalAlert';
+
+const roleOptions = [
+    { value: 'user', label: 'User' },
+    { value: 'manager', label: 'Manager' },
+    { value: 'admin', label: 'Admin' },
+];
 
 const form = reactive({
     name: '',
     email: '',
+    role: 'user',
     password: '',
     password_confirmation: '',
 });
 
 const {
     isSubmitting,
-    serverError,
     validationErrors,
     runSubmit,
 } = useAuthForm();
 
+const { showAlert } = useGlobalAlert();
+
+const showServerAlert = (type, message) => {
+    showAlert(type, message);
+};
+
 const submit = async () => {
-    await runSubmit(async () => {
-        await authApi.register(form);
-    });
+    try {
+        await runSubmit(async () => {
+            const response = await authApi.register(form);
+            showServerAlert('success', response?.message || 'Account created successfully');
+            setTimeout(() => {
+                 router.push({ name: 'site.index' });
+            }, 1000);
+        });
+    } catch (error) {
+        if (error?.status === 422) {
+            showServerAlert('warning', 'Please check the form fields.');
+            return;
+        }
+
+        showServerAlert('error', error?.message || 'Registration failed. Please try again.');
+    }
 };
 </script>

@@ -1,7 +1,7 @@
 <template>
-    <AuthCard title="Reset password" subtitle="We will send a password reset link to your email.">
+    <VotumCard title="Reset password" subtitle="We will send a password reset link to your email.">
         <form class="space-y-4" @submit.prevent="submit">
-            <AuthInput
+            <VotumInput
                 v-model="form.email"
                 name="email"
                 type="email"
@@ -33,14 +33,14 @@
                 Back to sign in
             </router-link>
         </template>
-    </AuthCard>
+    </VotumCard>
 </template>
 
 <script setup>
 import { reactive, ref } from 'vue';
 
-import AuthCard from '../components/AuthCard.vue';
-import AuthInput from '../components/AuthInput.vue';
+import VotumCard from '../components/VotumCard.vue';
+import VotumInput from '../components/VotumInput.vue';
 import { useAuthForm } from '../composables/useAuthForm';
 import { authApi } from '../services/authApi';
 

@@ -1,7 +1,7 @@
 <template>
-    <AuthCard title="Set a new password" subtitle="Enter your new credentials to complete the reset.">
+    <VotumCard title="Set a new password" subtitle="Enter your new credentials to complete the reset.">
         <form class="space-y-4" @submit.prevent="submit">
-            <AuthInput
+            <VotumInput
                 v-model="form.email"
                 name="email"
                 type="email"
@@ -11,7 +11,7 @@
                 :error="validationErrors.email?.[0]"
             />
 
-            <AuthInput
+            <VotumInput
                 v-model="form.password"
                 name="password"
                 type="password"
@@ -21,7 +21,7 @@
                 :error="validationErrors.password?.[0]"
             />
 
-            <AuthInput
+            <VotumInput
                 v-model="form.password_confirmation"
                 name="password_confirmation"
                 type="password"
@@ -53,15 +53,15 @@
                 Back to sign in
             </router-link>
         </template>
-    </AuthCard>
+    </VotumCard>
 </template>
 
 <script setup>
 import { reactive, ref } from 'vue';
 import { useRoute } from 'vue-router';
 
-import AuthCard from '../components/AuthCard.vue';
-import AuthInput from '../components/AuthInput.vue';
+import VotumCard from '../components/VotumCard.vue';
+import VotumInput from '../components/VotumInput.vue';
 import { useAuthForm } from '../composables/useAuthForm';
 import { authApi } from '../services/authApi';
 

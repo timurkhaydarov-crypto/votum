@@ -1,7 +1,7 @@
 <template>
-    <AuthCard title="Sign in" subtitle="Use your work account to continue.">
+    <VotumCard title="Sign in" subtitle="Use your work account to continue.">
         <form class="space-y-4" @submit.prevent="submit">
-            <AuthInput
+            <VotumInput
                 v-model="form.email"
                 name="email"
                 type="email"
@@ -11,7 +11,7 @@
                 :error="validationErrors.email?.[0]"
             />
 
-            <AuthInput
+            <VotumInput
                 v-model="form.password"
                 name="password"
                 type="password"
@@ -20,10 +20,6 @@
                 placeholder="Enter your password"
                 :error="validationErrors.password?.[0]"
             />
-
-            <p v-if="serverError" class="rounded-md border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-700">
-                {{ serverError }}
-            </p>
 
             <button
                 type="submit"
@@ -35,18 +31,20 @@
         </form>
 
         <template #footer>
-            <p>Admin sign-in endpoint: /admin-votum</p>
+            <p>Admin sign-in endpoint: /auth/login</p>
         </template>
-    </AuthCard>
+    </VotumCard>
 </template>
 
 <script setup>
 import { reactive } from 'vue';
 
-import AuthCard from '../components/AuthCard.vue';
-import AuthInput from '../components/AuthInput.vue';
+import VotumCard from '../components/VotumCard.vue';
+import VotumInput from '../components/VotumInput.vue';
 import { useAuthForm } from '../composables/useAuthForm';
 import { authApi } from '../services/authApi';
+import { useGlobalAlert } from '../../site/composables/useGlobalAlert';
+import router from '../../../router/index.js';
 
 const form = reactive({
     email: '',
@@ -55,14 +53,33 @@ const form = reactive({
 
 const {
     isSubmitting,
-    serverError,
     validationErrors,
     runSubmit,
 } = useAuthForm();
 
+const { showAlert } = useGlobalAlert();
+
+const showServerAlert = (type, message) => {
+    showAlert(type, message);
+};
+
 const submit = async () => {
-    await runSubmit(async () => {
-        await authApi.login(form);
-    });
+    try {
+        await runSubmit(async () => {
+            const response = await authApi.login(form);
+            showServerAlert('success', response?.message || 'Login successful');
+        });
+
+        setTimeout(() => {
+            router.push({ name: 'site.index' });
+        }, 800);
+    } catch (error) {
+        if (error?.status === 401 || error?.status === 403) {
+            showServerAlert('warning', error?.message || 'Access is restricted.');
+            return;
+        }
+
+        showServerAlert('error', error?.message || 'Request failed. Please try again.');
+    }
 };
 </script>
