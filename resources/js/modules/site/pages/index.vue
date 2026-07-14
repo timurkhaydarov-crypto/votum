@@ -1,15 +1,17 @@
 <template>
     <section class="min-h-screen bg-slate-950 text-slate-100">
-        <TechnicalPanel
+
+        <!-- <TechnicalPanel
             v-if="user"
             :user-name="userName"
             :is-logging-out="isLoggingOut"
             @logout="logout"
-        />
-
+            class="top"
+        /> -->
+        <TopPagePanel />
         <div
             class="mx-auto flex min-h-screen max-w-5xl flex-col px-6 py-10"
-            :class="user ? 'pt-[58px]' : ''"
+            :class="user ? 'pt-[102px]' : 'pt-[48px]'"
         >
 
             <div class="flex flex-1 flex-col items-center justify-center text-center">
@@ -37,7 +39,8 @@
 import { computed, onMounted, ref } from 'vue';
 import router from '../../../router';
 import { authApi } from '../../auth/services/authApi';
-import TechnicalPanel from '../components/TechnicalPanel.vue';
+// import TechnicalPanel from '../components/TechnicalPanel.vue';
+import TopPagePanel from '../components/TopPagePanel/index.vue';
 import { useGlobalAlert } from '../composables/useGlobalAlert';
 
 const user = ref(null);
