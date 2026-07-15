@@ -14,7 +14,7 @@ class PhoneSeeder extends Seeder
     public function run(): void
     {
         Department::query()->get()->each(function ($department) {
-            Phone::factory()->create(['department_id' => $department->id]);
+            Phone::factory(2)->create(['department_id' => $department->id]);
         });
     }
 }
