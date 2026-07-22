@@ -2,7 +2,20 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Middleware\ManagerMiddleware;
+use App\Http\Controllers\ContactsController;
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
+
+Route::prefix('contacts')->group(function () {
+    Route::get('/phones', [ContactsController::class, 'phones']);
+    Route::post('/phones', [ContactsController::class, 'addPhone']);
+    Route::put('/phones/{phone}', [ContactsController::class, 'updatePhone']);
+    Route::delete('/phones/{phone}', [ContactsController::class, 'deletePhone']);
+    
+    Route::get('/operating-hours', [ContactsController::class, 'operatingHours']);
+    Route::get('/emails', [ContactsController::class, 'emails']);
+    Route::get('/social-media', [ContactsController::class, 'socialMedia']);
+    Route::get('/departments', [ContactsController::class, 'departments']);
+});

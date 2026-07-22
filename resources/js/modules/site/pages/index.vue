@@ -1,6 +1,5 @@
 <template>
     <section class="min-h-screen bg-slate-950 text-slate-100">
-
         <!-- <TechnicalPanel
             v-if="user"
             :user-name="userName"
@@ -8,7 +7,7 @@
             @logout="logout"
             class="top"
         /> -->
-        <TopPagePanel />
+        <TopPagePanel class="hidden sm:inline" />
         <div
             class="mx-auto flex min-h-screen max-w-5xl flex-col px-6 py-10"
             :class="user ? 'pt-[102px]' : 'pt-[48px]'"
