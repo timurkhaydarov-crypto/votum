@@ -4,7 +4,7 @@
 </template>
 
 <script setup>
-import ServerAlert from './modules/site/components/ServerAlert.vue';
+import ServerAlert from './modules/site/components/modals/ServerAlert.vue';
 import { useGlobalAlert } from './modules/site/composables/useGlobalAlert';
 
 const {
