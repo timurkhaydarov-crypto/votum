@@ -4,6 +4,7 @@ namespace Database\Factories\Contacts;
 
 use App\Models\Contacts\Phone;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use App\Models\Department;
 
 /**
  * @extends Factory<Phone>
@@ -19,7 +20,7 @@ class PhoneFactory extends Factory
     {
         return [
             'phone' => $this->faker->phoneNumber(),
-            'department_id' => \App\Models\Department::factory(),
+            'department_id' => Department::factory(),
         ];
     }
 }
