@@ -12,6 +12,11 @@ class OperatingHoursSeeder extends Seeder
      */
     public function run(): void
     {
-        OperatingHours::factory()->create(['operating_hours' => 'Пн. - Пт. 9:00 - 18:00']);
+        OperatingHours::factory()->create([
+            'from' => 'monday',
+            'to' => 'friday',
+            'time' => '09:00 - 18:00',
+            'department_id' => 1,
+        ]);
     }
 }

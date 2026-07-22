@@ -4,6 +4,7 @@ namespace Database\Factories\Contacts;
 
 use App\Models\Contacts\Email;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use App\Models\Department;
 
 /**
  * @extends Factory<Email>
@@ -19,7 +20,7 @@ class EmailFactory extends Factory
     {
         return [
             'email' => $this->faker->unique()->safeEmail(),
-            'department_id' => \App\Models\Department::factory(),
+            'department_id' => Department::factory(),
         ];
     }
 }

@@ -3,6 +3,7 @@
 namespace Database\Factories\Contacts;
 
 use App\Models\Contacts\OperatingHours;
+use App\Models\Department;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -18,7 +19,10 @@ class OperatingHoursFactory extends Factory
     public function definition(): array
     {
         return [
-            'operating_hours' => $this->faker->sentence(),
+            'from' => $this->faker->time(),
+            'to' => $this->faker->time(),
+            'time' => $this->faker->time(),
+            'department_id' => Department::factory(),
         ];
     }
 }

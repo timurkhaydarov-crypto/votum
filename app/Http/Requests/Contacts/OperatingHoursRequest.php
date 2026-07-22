@@ -23,7 +23,10 @@ class OperatingHoursRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'operating_hours' => ['required', 'string'],
+            'from' => ['required', 'string'],
+            'to' => ['required', 'string'],
+            'time' => ['required', 'string'],
+            'department_id' => ['required', 'integer'],
         ];
     }
 }
