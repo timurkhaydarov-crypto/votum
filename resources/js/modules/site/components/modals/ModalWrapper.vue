@@ -1,18 +1,30 @@
 <template>
   <div>
     <TransitionRoot as="template" :show="open">
-      <Dialog class="relative z-10" @close="$emit('closeModal')">
+      <Dialog class="relative z-10" @close="open = false">
         <TransitionChild as="template" enter="ease-out duration-300" enter-from="opacity-0" enter-to="" leave="ease-in duration-200" leave-from="" leave-to="opacity-0">
           <div class="fixed inset-0 bg-gray-500/75 transition-opacity"></div>
         </TransitionChild>
         <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
           <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
             <TransitionChild as="template" enter="ease-out duration-300" enter-from="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" enter-to=" translate-y-0 sm:scale-100" leave="ease-in duration-200" leave-from=" translate-y-0 sm:scale-100" leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
-              <DialogTitle class="text-base first-letter:uppercase font-semibold text-gray-900">{{ $t('actions.' + settings.action) }} {{ $t(settings.type) }}</DialogTitle>
               <DialogPanel class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
-                <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-                  <button type="button" class="inline-flex w-full justify-center rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-green-500 sm:ml-3 sm:w-auto" @click="$emit('closeModal')">Добавить</button>
-                  <button type="button" class="mt-3 inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-red-500 inset-ring inset-ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto" @click="$emit('closeModal')" ref="cancelButtonRef">Отмена</button>
+                <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                  <div class="sm:flex sm:items-start">
+                    <div class="mx-auto flex size-12 shrink-0 items-center justify-center rounded-full bg-red-800 sm:mx-0 sm:size-10">
+                      <i class="bi bi-exclamation-lg text-white"></i>
+                    </div>
+                    <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                      <DialogTitle as="h3" class="text-base font-semibold text-gray-900 first-letter:uppercase">{{ $t(`actions.${settings.action}`) +' '+ (settings.item?.value ?? '') }}</DialogTitle>
+                      <div class="mt-2">
+                        <p class=" first-letter:uppercase text-sm text-gray-500">{{ $t(`messages.confirm.${settings.action}`) }}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="px-4 py-3 flex justify-end space-x-2">
+                  <ActionButton @click="submitHandler({id:props.settings.item.id,type:props.settings.type})" :label="$t(`actions.${props.settings.action}`)" :action="props.settings.action" />
+                  <CancelButton @close="$emit('close')" />
                 </div>
               </DialogPanel>
             </TransitionChild>
@@ -25,16 +37,31 @@
 
 <script setup>
 import { ref, watch} from 'vue'
+import { useI18n } from 'vue-i18n';
 import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
+import ActionButton from '../UI/button/ActionButton.vue'
+import CancelButton from '../UI/button/CancelButton.vue'
 const props = defineProps({
     settings: {
         type: Object,
-        default: () => ({ isOpen: false, type: null, action: null }),
+        default: () => ({type: null, action: null, id: null }),
+    },
+    isOpen: {
+        type: Boolean,
+        default: false,
     },
 });
 const open = ref(false);
-watch(() => props.settings.isOpen, (newVal) => {
+const { t } = useI18n();
+const emit = defineEmits(['close', 'submit']);
+
+const submitHandler = async (item) => {
+  console.log('submitHandler called with item:', item);
+    emit('submit', item);
+    open.value = false;
+};
+
+watch(() => props.isOpen, (newVal) => {
     open.value = newVal;
 });
-defineEmits(['closeModal']);
 </script>

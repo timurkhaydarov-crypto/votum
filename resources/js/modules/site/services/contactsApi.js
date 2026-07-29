@@ -37,7 +37,6 @@ export const contactsApi = {
         return fetchJson('/api/contacts/phones');
     },
     async addPhone(phoneData) {
-        console.log('Adding phone:', phoneData); // Debugging line
         return fetchJson('/api/contacts/phones', {
             method: 'POST',
             headers: {
@@ -62,6 +61,29 @@ export const contactsApi = {
     },
     async getEmails() {
         return fetchJson('/api/contacts/emails');
+    },
+    async addEmail(emailData) {
+        return fetchJson('/api/contacts/emails', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(emailData),
+        });
+    },
+    async deleteEmail(emailId) {
+        return fetchJson(`/api/contacts/emails/${emailId}`, {
+            method: 'DELETE',
+        });
+    },
+    async updateEmail(emailId, emailData) {
+        return fetchJson(`/api/contacts/emails/${emailId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(emailData),
+        });
     },
     async getOperatingHours() {
         return fetchJson('/api/contacts/operating-hours');

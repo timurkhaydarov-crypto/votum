@@ -1,6 +1,6 @@
 <template>
     <div
-        class="fixed left-1/2 top-4 z-50 w-[calc(100%-2rem)] max-w-md -translate-x-1/2 rounded-lg border px-4 py-3 text-sm shadow-lg"
+        class="fixed text-center left-1/2 top-4 z-50 w-[calc(100%-2rem)] max-w-md -translate-x-1/2 rounded-lg border px-4 py-3 text-sm shadow-lg"
         :class="variantClass"
         role="alert"
     >

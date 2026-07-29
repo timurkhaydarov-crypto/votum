@@ -13,9 +13,13 @@ Route::prefix('contacts')->group(function () {
     Route::post('/phones', [ContactsController::class, 'addPhone']);
     Route::put('/phones/{phone}', [ContactsController::class, 'updatePhone']);
     Route::delete('/phones/{phone}', [ContactsController::class, 'deletePhone']);
+
+    Route::get('/emails', [ContactsController::class, 'emails']);
+    Route::post('/emails', [ContactsController::class, 'addEmail']);
+    Route::put('/emails/{email}', [ContactsController::class, 'updateEmail']);
+    Route::delete('/emails/{email}', [ContactsController::class, 'deleteEmail']);
     
     Route::get('/operating-hours', [ContactsController::class, 'operatingHours']);
-    Route::get('/emails', [ContactsController::class, 'emails']);
     Route::get('/social-media', [ContactsController::class, 'socialMedia']);
     Route::get('/departments', [ContactsController::class, 'departments']);
 });

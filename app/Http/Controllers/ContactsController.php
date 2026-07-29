@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Http\Requests\Contacts\PhoneRequest;
+use App\Http\Requests\Contacts\EmailRequest;
 use App\Models\Contacts\Email;
 use App\Models\Contacts\OperatingHours;
 use App\Models\Contacts\Phone;
@@ -17,13 +18,14 @@ class ContactsController extends Controller
             return [
                 'id' => $department->id,
                 'name' => $department->department_name,
-                'phones' => $department->phones->map(fn (Phone $phone) => [
+                'contacts' => $department->phones->map(fn (Phone $phone) => [
                     'id' => $phone->id,
                     'phone' => $phone->phone,
                 ])->values(),
             ];
         });
     }
+    
     public function addPhone(PhoneRequest $request)
     {
         $validatedData = $request->validated();
@@ -32,19 +34,19 @@ class ContactsController extends Controller
             'phone' => $validatedData['phone'],
         ]);
         $department->phones()->save($phone);
-        return response()->json(['message' => 'Phone added successfully', 'phone' => $phone], 201);
+        return response()->json(['message' => 'messages.success.create', 'phone' => $phone], 201);
     }
 
     public function updatePhone(PhoneRequest $request, Phone $phone)
     {
         $validatedData = $request->validated();
         $phone->update($validatedData);
-        return response()->json(['message' => 'Phone updated successfully', 'phone' => $phone]);
+        return response()->json(['message' => 'messages.success.update', 'phone' => $phone]);
     }
     public function deletePhone(Phone $phone)
     {
         $phone->delete();
-        return response()->json(['message' => 'Phone deleted successfully']);
+        return response()->json(['message' => 'messages.success.delete']);
     }
 
     public function emails()
@@ -52,10 +54,38 @@ class ContactsController extends Controller
         // Logic to retrieve email contacts
         return Department::with('emails')->has('emails')->get()->map(function ($department) {
             return [
+                'id' => $department->id,
                 'name' => $department->department_name,
-                'emails' => $department->emails->pluck('email')->toArray(),
+                'contacts' => $department->emails->map(fn ($email) => [
+                    'id' => $email->id,
+                    'email' => $email->email,
+                ])->values(),
             ];
         });
+    }
+
+    public function addEmail(EmailRequest $request)
+    {
+        $validatedData = $request->validated();
+        $department = Department::findOrFail($validatedData['department_id']);
+        $email = new Email([
+            'email' => $validatedData['email'],
+        ]);
+        $department->emails()->save($email);
+        return response()->json(['message' => 'messages.success.create', 'email' => $email], 201);
+    }
+
+    public function updateEmail(EmailRequest $request, Email $email)
+    {
+        $validatedData = $request->validated();
+        $email->update($validatedData);
+        return response()->json(['message' => 'messages.success.update', 'email' => $email]);
+    }
+
+    public function deleteEmail(Email $email)
+    {
+        $email->delete();
+        return response()->json(['message' => 'messages.success.delete']);
     }
 
     public function operatingHours()
@@ -63,8 +93,9 @@ class ContactsController extends Controller
         // Logic to retrieve operating hours contacts
         return Department::with('operatingHours')->has('operatingHours')->get()->map(function ($department) {
             return [
+                'id' => $department->id,
                 'name' => $department->department_name,
-                'operating_hours' => $department->operatingHours->map(fn (OperatingHours $hours) => [
+                'contacts' => $department->operatingHours->map(fn (OperatingHours $hours) => [
                     'from' => $hours->from,
                     'to' => $hours->to,
                     'time' => $hours->time,

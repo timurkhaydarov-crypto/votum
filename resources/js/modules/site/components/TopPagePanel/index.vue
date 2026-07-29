@@ -4,111 +4,130 @@
             <div class="h-[40px] border-b border-slate-700/60 bg-slate-900 text-slate-300">
                 <div class="mx-auto flex h-full max-w-5xl items-center justify-between gap-4 px-6 text-[11px] uppercase tracking-[0.08em] sm:text-xs">
                     <div class="flex items-center gap-4 whitespace-nowrap text-right">
-                    <TopPanelSocialLinks class="hidden sm:inline" :social-media-array="socialMediaArray" />
+                        <LeftContactPanel class="hidden sm:inline" :social-media-array="contacts.socialMedia" />
                     </div>
                     <div class="flex items-center gap-4 whitespace-nowrap text-right">
-                        <TopPanelPhones
-                            :phones-array="phonesArray"
-                            :is-open="openMenu === 'phones'"
+                        <RightContactPanel
+                            v-for="contact in rightPanelData"
+                            :contactArray="contact.data"
+                            :contactType="contact.type"
+                            :is-open="openMenu === contact.type"
                             :can-manage="canManage"
-                            @toggle="toggleMenu('phones')"
-                            @add-phone="openDrawersHandler('phone','add')"
-                            @edit-phone="openDrawersHandler('phone','edit')"
-                            @delete-phone="deletePhone($event)"
-                        />
-                        <TopPanelEmail
-                            :emails-array="emailsArray"
-                            :is-open="openMenu === 'emails'"
-                            @toggle="toggleMenu('emails')"
-                        />
-                        <TopPanelWorkTime
-                            :operating-hours-array="operatingHoursArray"
-                            :is-open="openMenu === 'workTime'"
-                            @toggle="toggleMenu('workTime')"
+                            @toggle="toggleMenu(contact.type)"
+                            @add-contact="openDrawersHandler(contact.type,'add')"
+                            @edit-contact="openDrawersHandler(contact.type,'update', $event)"
+                            @delete-contact="openModalHandler(contact.type,'delete', $event)"
                         />
                         <ChangeLanguage/>
-
                     </div>
                 </div>
             </div>
         </div>
-        <ModalWrapper :settings="ModalSetting" v-if="canManage" />
-        <DrawersWrapper v-if="canManage" :settings="DrawerSetting" @close-drawers="DrawerSetting.isOpen = false" />
+        <ModalWrapper v-if="canManage"  :settings="Setting" :isOpen="ModalIsOpen"  @close="close" @submit="deleteHandler" />
+        <DrawersWrapper v-if="canManage" :settings="Setting" :isOpen="DrawerIsOpen" @close="close" />
+        <Alert v-if="isVisible" :type="type" :message="message" />
     </div>
 </template>
 
 <script setup>
 
-import { computed, onMounted, onUnmounted, ref } from 'vue';
+import { computed, onMounted, onUnmounted, ref, reactive } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { getDefaultDepartment } from '../../constants/form'; 
+import { getDefaultSetting } from '../../constants/modal';
 import { useCurrentUser } from '../../../auth/composables/useCurrentUser';
-import { contactsApi } from '../../../auth/services/contactsApi';
+import { contactsApi } from '../../services/contactsApi.js';
 
-import TopPanelEmail from './TopPanelEmail.vue';
-import TopPanelPhones from './TopPanelPhones.vue';
-import TopPanelSocialLinks from './TopPanelSocialLinks.vue';
-import TopPanelWorkTime from './TopPanelWorkTime.vue';
+
+import LeftContactPanel from './LeftContactPanel.vue';
+import RightContactPanel from './RightContactPanel.vue';
 import ChangeLanguage from '../UI/ChangeLanguage.vue';
+
 import ModalWrapper from '../modals/ModalWrapper.vue';
 import DrawersWrapper from '../modals/DrawersWrapper.vue';
+import Alert from '../UI/Alert.vue';
+import { useGlobalAlert } from '../../composables/useGlobalAlert';
+const { isVisible, type, message } = useGlobalAlert();
+const { showAlert } = useGlobalAlert();
+const { t } = useI18n();
 
 const openMenu = ref(null); // 'phones' | 'emails' | 'workTime' | null
 const { canManage, loadUser } = useCurrentUser();
 const toggleMenu = (menu) => {
     openMenu.value = openMenu.value === menu ? null : menu;
 };
-const DrawerSetting = ref({
-    isOpen: false,
-    type: null,
-    action: null,
-});
-const openDrawersHandler = (type, action) => {
-    DrawerSetting.value = {
-        isOpen: true,
-        type: 'contacts.' + type,
-        action: 'actions.' + action,
+const DrawerIsOpen = ref(false);
+const ModalIsOpen = ref(false);
+
+const Setting = ref(getDefaultSetting());
+const openDrawersHandler = (type, action, item = null) => {
+    DrawerIsOpen.value = true;
+    Setting.value = {
+        type: type,
+        action: action,
+        item: item,
     };
 };
 
-const ModalSetting = ref({
-    isOpen: false,
-    type: null,
-    action: null,
-});
-const openModalHandler = (type, action) => {
-    ModalSetting.value = {
-        isOpen: true,
-        type: 'contacts.' + type,
-        action,
+
+const openModalHandler = (type, action, item) => {
+    ModalIsOpen.value = true;
+    Setting.value = {
+        type: type,
+        action: action,
+        item: item,
     };
 };
 
-const phones = ref(null);
-const emails = ref(null);
-const operatingHours = ref(null);
-const socialMedia = ref(null);
+const contacts = reactive({
+    phones: [],
+    emails: [],
+    operatingHours: [],
+    socialMedia: [],
+});
 
-const phonesArray = computed(() => phones.value || []);
-const emailsArray = computed(() => emails.value || []);
-const operatingHoursArray = computed(() => operatingHours.value || []);
-const socialMediaArray = computed(() => socialMedia.value || []);
 
-const deletePhone = async (phoneId) => {
+const rightPanelData = computed(() => ([
+    { type: 'phone', data: contacts.phones },
+    { type: 'email', data: contacts.emails },
+    { type: 'operatingHour', data: contacts.operatingHours },
+]));
+const close = (message) => {
+    loadContacts();
+    DrawerIsOpen.value = ModalIsOpen.value = false;
+    Setting.value = getDefaultSetting();
+    showAlert(message.type, message.text);
+};
+const deleteHandler = async (item) => {
+    const deleteItem =  Setting.value.action + Setting.value.type.charAt(0).toUpperCase() + Setting.value.type.slice(1);
     try {
-        await contactsApi.deletePhone(phoneId);
-        await loadContacts();
+        const { message } = await contactsApi[deleteItem](item.id);
+        close({ type: 'success', text: t(message) ?? 'Phone number deleted successfully' });
     } catch (error) {
-        console.error('Failed to delete phone:', error);
+        close({ type: 'error', text: t(error.message) ?? 'Failed to delete phone number' });
+    } finally {
+        await loadContacts();
+        Setting.value = getDefaultSetting();
     }
 };
 
 const loadContacts = async () => {
     try {
-        phones.value = await contactsApi.getPhones();
-        emails.value = await contactsApi.getEmails();
-        operatingHours.value = await contactsApi.getOperatingHours();
-        socialMedia.value = await contactsApi.getSocialMedia();
+        const [phones, emails, operatingHours, socialMedia] = await Promise.all([
+            contactsApi.getPhones(),
+            contactsApi.getEmails(),
+            contactsApi.getOperatingHours(),
+            contactsApi.getSocialMedia(),
+        ]);
+
+        Object.assign(contacts, {
+            phones,
+            emails,
+            operatingHours,
+            socialMedia,
+        });
     } catch (error) {
-        console.error('Failed to load contact information:', error);
+        console.error("Failed to load contact information:", error);
     }
 };
 const closeMenu = () => {
