@@ -51,7 +51,8 @@
     "department":"отдел",
     "selectDepartment":"выберите отдел",
     "time_mask":"ЧЧ:ММ",
-    "week_day":"день недели"
+    "week_day":"день недели",
+    "operating_hours":"часы работы"
   },
   "messages":{
     "confirm":{

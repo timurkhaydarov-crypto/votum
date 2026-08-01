@@ -1,5 +1,7 @@
 export const Icon = {
     PHONE: 'bi-telephone',
     EMAIL: 'bi-envelope',
-    OPERATING_HOUR: 'bi-clock',
+    TIME: 'bi-clock',
+    DEPARTMENT: 'bi-buildings',
+    CALENDAR: 'bi-calendar',
 };

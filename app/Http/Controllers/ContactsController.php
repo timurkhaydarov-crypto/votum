@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use App\Http\Requests\Contacts\PhoneRequest;
 use App\Http\Requests\Contacts\EmailRequest;
+use App\Http\Requests\Contacts\OperatingHoursRequest;
 use App\Models\Contacts\Email;
 use App\Models\Contacts\OperatingHours;
 use App\Models\Contacts\Phone;
@@ -96,6 +97,7 @@ class ContactsController extends Controller
                 'id' => $department->id,
                 'name' => $department->department_name,
                 'contacts' => $department->operatingHours->map(fn (OperatingHours $hours) => [
+                    'id' => $hours->id,
                     'from' => $hours->from,
                     'to' => $hours->to,
                     'time' => $hours->time,
@@ -103,6 +105,33 @@ class ContactsController extends Controller
             ];
         });
     }
+
+    public function addOperatingHours(OperatingHoursRequest $request)
+    {
+        $validatedData = $request->validated();
+        $department = Department::findOrFail($validatedData['department_id']);
+        $operatingHours = new OperatingHours([
+            'from' => $validatedData['from'],
+            'to' => $validatedData['to'],
+            'time' => $validatedData['time'],
+        ]);
+        $department->operatingHours()->save($operatingHours);
+        return response()->json(['message' => 'messages.success.create', 'operating_hours' => $operatingHours], 201);
+    }
+
+    public function updateOperatingHours(OperatingHoursRequest $request, OperatingHours $operating_hour)
+    {
+        $validatedData = $request->validated();
+        $operating_hour->update($validatedData);
+        return response()->json(['message' => 'messages.success.update', 'operating_hours' => $operating_hour]);
+    }
+
+    public function deleteOperatingHours(OperatingHours $operating_hour)
+    {
+        $operating_hour->delete();
+        return response()->json(['message' => 'messages.success.delete']);
+    }
+
 
     public function socialMedia()
     {

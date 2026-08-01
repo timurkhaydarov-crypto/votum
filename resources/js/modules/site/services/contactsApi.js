@@ -54,8 +54,8 @@ export const contactsApi = {
             body: JSON.stringify(data),
         });
     },
-    async deletePhone(phoneId) {
-        return fetchJson(`/api/contacts/phones/${phoneId}`, {
+    async deletePhone(id) {
+        return fetchJson(`/api/contacts/phones/${id}`, {
             method: 'DELETE',
         });
     },
@@ -71,8 +71,8 @@ export const contactsApi = {
             body: JSON.stringify(emailData),
         });
     },
-    async deleteEmail(emailId) {
-        return fetchJson(`/api/contacts/emails/${emailId}`, {
+    async deleteEmail(id) {
+        return fetchJson(`/api/contacts/emails/${id}`, {
             method: 'DELETE',
         });
     },
@@ -88,6 +88,32 @@ export const contactsApi = {
     async getOperatingHours() {
         return fetchJson('/api/contacts/operating-hours');
     },
+    async addOperatingHours(data) {
+        return fetchJson('/api/contacts/operating-hours', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        });
+    },
+
+    async updateOperatingHours(data) {
+        return fetchJson(`/api/contacts/operating-hours/${data.id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        });
+    },
+
+    async deleteOperatingHours(id) {
+        return fetchJson(`/api/contacts/operating-hours/${id}`, {
+            method: 'DELETE',
+        });
+    },
+    
     async getSocialMedia() {
         return fetchJson('/api/contacts/social-media');
     },

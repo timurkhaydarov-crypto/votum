@@ -6,10 +6,15 @@ export const useContacts = () => {
 const contacts = reactive({
     phones: [],
     emails: [],
-    operatingHours: [],
+    operating_hours: [],
     socialMedia: [],
 });
-const getApiMethod = (action, type) => `${action}${type.charAt(0).toUpperCase()}${type.slice(1)}`;
+const toPascalCase = (str) =>
+    str
+        .split('_')
+        .map(part => part.charAt(0).toUpperCase() + part.slice(1))
+        .join('');
+const getApiMethod = (action, type) => action + toPascalCase(type);
 const resetForm = (fields, department, t) => {
     fields.forEach(field => {
         if (field) {
@@ -34,17 +39,15 @@ const populateForm = (props, fields,t) => {
                 break;
 
             case ContactType.OPERATING_HOUR:
-                fields.day_from.value = item.day_from ?? '';
-                fields.day_to.value = item.day_to ?? '';
-                fields.time_from.value = item.time_from ?? '';
-                fields.time_to.value = item.time_to ?? '';
+                fields.day.value.from = item.contact?.from ?? '';
+                fields.day.value.to = item.contact?.to ?? '';
+                fields.time.value = item.contact?.time ?? '';
                 break;
         }
 
         if (fields.department) {
             fields.department.value = item.department.id ?? null;
         }
-
         return;
     }
 
@@ -60,10 +63,9 @@ const populateForm = (props, fields,t) => {
         case ContactType.OPERATING_HOUR:
             resetForm(
                 [
-                    fields.day_from,
-                    fields.day_to,
-                    fields.time_from,
-                    fields.time_to,
+                    fields.day.from,
+                    fields.day.to,
+                    fields.time,
                 ],
                 fields.department,
                 t
@@ -76,7 +78,7 @@ const loadContacts = async () => {
             const [
                 phones,
                 emails,
-                operatingHours,
+                operating_hours,
                 socialMedia
             ] = await Promise.all([
                 contactsApi.getPhones(),
@@ -87,7 +89,7 @@ const loadContacts = async () => {
             Object.assign(contacts, {
                 phones,
                 emails,
-                operatingHours,
+                operating_hours,
                 socialMedia,
             });
        

@@ -18,11 +18,11 @@
                 >
                     <a :href="`tel:${contact[contactType]}`" class="inline-flex items-center gap-1.5 transition hover:text-amber-300">
                         <i :class="`bi ` + iconClass + ` text-[14px] leading-none`" aria-hidden="true"></i>
-                        {{ contact[contactType] }}
+                        {{ props.contactType !== ContactType.OPERATING_HOUR ? contact[contactType] : `${$t(`weekdays.${contact.from}`)} - ${$t(`weekdays.${contact.to}`)} ${contact.time}` }}
                     </a>
                     <div v-if="canManage" class="flex items-center gap-0.5">
-                        <TopPanelEditButton @click="$emit('edit-contact', {contact: {id: contact.id, value: contact[contactType]}, department:{ id: department.id, value: department.name }})" />
-                        <TopPanelDeleteButton @click="$emit('delete-contact', { id: contact.id, value: contactType !== 'operatingHour' ? contact[contactType] : `${$t(`weekdays.${contact.from}`)} - ${$t(`weekdays.${contact.to}`)} ${contact.time}` })" />
+                        <TopPanelEditButton @click="$emit('edit-contact', {contact: props.contactType !== ContactType.OPERATING_HOUR ? {id: contact.id, value: contact[contactType]} : contact, department:{ id: department.id, value: department.name }})" />
+                        <TopPanelDeleteButton @click="$emit('delete-contact', { id: contact.id, value: contactType !== ContactType.OPERATING_HOUR ? contact[contactType] : `${$t(`weekdays.${contact.from}`)} - ${$t(`weekdays.${contact.to}`)} ${contact.time}` })" />
                     </div>
                 </div>
             </template>
@@ -41,8 +41,8 @@
             v-if="canManage && contactArray.length === 1 && contactArray[0]?.contacts?.length === 1"
             class="inline-flex items-center gap-0.5"
         >
-            <TopPanelEditButton @click="$emit('edit-contact', { department: contactArray[0], contact: contactArray[0].contacts[0] })" />
-            <TopPanelDeleteButton @click="$emit('delete-contact', { id: contactArray[0].contacts[0].id, value: contactType !== ContactType.OPERATING_HOUR ? contact[contactType] : `${$t(`weekdays.${contact.from}`)} - ${$t(`weekdays.${contact.to}`)} ${contact.time}` })" />
+            <TopPanelEditButton @click="$emit('edit-contact', {contact: contactArray[0].contacts[0], department:{ id: contactArray[0].id, value: contactArray[0].name }})" />
+            <TopPanelAddButton @click="$emit('add-contact')"   />
         </div>
     </span>
 </template>
@@ -80,7 +80,7 @@ const iconClass = computed(() => {
         case ContactType.EMAIL:
             return Icon.EMAIL;
         case ContactType.OPERATING_HOUR:
-            return Icon.OPERATING_HOUR;
+            return Icon.TIME;
         default:
             return '';
     }

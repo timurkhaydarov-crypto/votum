@@ -29,7 +29,13 @@
                 <DialogTitle class="text-base first-letter:uppercase font-semibold text-gray-900">{{ $t(`actions.${Setting.action}`) }}</DialogTitle>
             </template>
             <template #body>
-                <EmailPhoneForm v-if="DrawerIsOpen" ref="form" :settings="Setting" @submit="submitHandler"/>
+                <component
+                    v-if="DrawerIsOpen && currentForm"
+                    :is="currentForm.component"
+                    ref="form"
+                    :settings="Setting"
+                    @submit="submitHandler"
+                />
             </template>
             <template #footer>
                 <ActionButton @click="submit" :label="$t(`actions.${Setting.action}`)" :action="Setting.action" />
@@ -60,7 +66,10 @@ import DrawersWrapper from '../modals/DrawersWrapper.vue';
 
 import ActionButton from '../UI/button/ActionButton.vue'
 import CancelButton from '../UI/button/CancelButton.vue'
+
 import EmailPhoneForm from '../forms/EmailPhoneForm.vue';
+import OperatingHoursForm from '../forms/OperatingHoursForm.vue';
+import SocialMediaForm from '../forms/SocialMediaForm.vue';
 
 import Alert from '../UI/Alert.vue';
 import { useGlobalAlert } from '../../composables/useGlobalAlert';
@@ -69,6 +78,25 @@ const {isVisible,type,message,showAlert} = useGlobalAlert();
 const { contacts, loadContacts, saveItem, deleteItem} = useContacts();
 const { t } = useI18n();
 const menuRef = ref();
+
+const formConfig = {
+    [ContactType.EMAIL]: {
+        component: EmailPhoneForm,
+    },
+    [ContactType.PHONE]: {
+        component: EmailPhoneForm,
+    },
+    [ContactType.OPERATING_HOUR]: {
+        component: OperatingHoursForm,
+    },
+    [ContactType.SOCIAL_MEDIA]: {
+        component: SocialMediaForm,
+    },
+};
+
+const currentForm = computed(() => {
+    return formConfig[Setting.type];
+});
 
 const openMenu = ref(null); // 'phones' | 'emails' | 'workTime' | null
 const { canManage, loadUser } = useCurrentUser();
@@ -94,7 +122,6 @@ const openDialog = (dialog, type, action, item = null) => {
     if (!dialogRef) {
         return;
     }
-
     dialogRef.value = true;
     Object.assign(Setting, { type, action, item });
 };
@@ -102,7 +129,7 @@ const openDialog = (dialog, type, action, item = null) => {
 const rightPanelData = computed(() => [
     { type: ContactType.PHONE, data: contacts.phones },
     { type: ContactType.EMAIL, data: contacts.emails },
-    { type: ContactType.OPERATING_HOUR, data: contacts.operatingHours },
+    { type: ContactType.OPERATING_HOUR, data: contacts.operating_hours},
 ]);
 
 const resetDialogs = () => {

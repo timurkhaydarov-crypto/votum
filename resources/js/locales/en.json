@@ -51,7 +51,8 @@
     "department":"department",
     "selectDepartment":"select department",
     "time_mask":"HH:MM",
-    "week_day":"week day"
+    "week_day":"week day",
+    "operating_hours":"operating hours"
   },
   "messages":{
     "confirm":{

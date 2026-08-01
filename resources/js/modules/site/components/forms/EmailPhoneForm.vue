@@ -83,7 +83,7 @@ const departmentError = ref('');
 const submit = () => {
     departmentError.value = '';
     inputError.value = '';
-    
+
     if (input.value === '') {
         inputError.value = t('validation.input.required');
         return;
@@ -117,7 +117,6 @@ watch(
     ],
     async () => {
         await loadDepartments();
-
         populateForm(
             props.settings,
             {
