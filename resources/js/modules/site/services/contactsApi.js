@@ -36,22 +36,22 @@ export const contactsApi = {
     async getPhones() {
         return fetchJson('/api/contacts/phones');
     },
-    async addPhone(phoneData) {
+    async addPhone(data) {
         return fetchJson('/api/contacts/phones', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(phoneData),
+            body: JSON.stringify(data),
         });
     },
-    async updatePhone(phoneId, phoneData) {
-        return fetchJson(`/api/contacts/phones/${phoneId}`, {
+    async updatePhone(data) {
+        return fetchJson(`/api/contacts/phones/${data.id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(phoneData),
+            body: JSON.stringify(data),
         });
     },
     async deletePhone(phoneId) {
@@ -76,13 +76,13 @@ export const contactsApi = {
             method: 'DELETE',
         });
     },
-    async updateEmail(emailId, emailData) {
-        return fetchJson(`/api/contacts/emails/${emailId}`, {
+    async updateEmail(data) {
+        return fetchJson(`/api/contacts/emails/${data.id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(emailData),
+            body: JSON.stringify(data),
         });
     },
     async getOperatingHours() {

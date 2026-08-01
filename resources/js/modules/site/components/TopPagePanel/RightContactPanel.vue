@@ -2,7 +2,7 @@
     <details v-if="contactArray.length > 1 || contactArray[0]?.phones?.length > 1" :open="isOpen" class="group relative" @click.stop>
         <summary @click.prevent="$emit('toggle')" class="inline-flex list-none cursor-pointer items-center gap-1.5 transition hover:text-amber-300">
             <i :class="`bi ` + iconClass + ` text-[14px] leading-none`" aria-hidden="true"></i>
-            <span class="hidden sm:inline">{{ $t(`contacts.${contactType}`) }}</span>
+            <span class="hidden sm:inline lowercase first-letter:uppercase">{{ $t(`contacts.${contactType}`) }}</span>
             <i class="bi bi-chevron-down text-[12px] leading-none transition group-open:rotate-180" aria-hidden="true"></i>
         </summary>
 
@@ -34,21 +34,23 @@
     </details>
     <span v-else class="inline-flex items-center gap-1.5">
         <i :class="`bi ` + iconClass + ` text-[14px] leading-none`" aria-hidden="true"></i>
-        <span v-if="contactArray.length === 1 && contactArray[0]?.contacts?.length === 1">
-            {{ contactType !== 'operatingHour' ? contact[contactType] : `${$t(`weekdays.${contact.from}`)} - ${$t(`weekdays.${contact.to}`)} ${contact.time}` }}
+        <span class="capitalize" v-if="contactArray.length === 1 && contactArray[0]?.contacts?.length === 1">
+            {{ props.contactType !== ContactType.OPERATING_HOUR ? contact[props.contactType] : `${$t(`weekdays.${contact.from}`)} - ${$t(`weekdays.${contact.to}`)} ${contact.time}` }}
        </span>
         <div
             v-if="canManage && contactArray.length === 1 && contactArray[0]?.contacts?.length === 1"
             class="inline-flex items-center gap-0.5"
         >
             <TopPanelEditButton @click="$emit('edit-contact', { department: contactArray[0], contact: contactArray[0].contacts[0] })" />
-            <TopPanelDeleteButton @click="$emit('delete-contact', { id: contactArray[0].contacts[0].id, value: contactType !== 'operatingHour' ? contact[contactType] : `${$t(`weekdays.${contact.from}`)} - ${$t(`weekdays.${contact.to}`)} ${contact.time}` })" />
+            <TopPanelDeleteButton @click="$emit('delete-contact', { id: contactArray[0].contacts[0].id, value: contactType !== ContactType.OPERATING_HOUR ? contact[contactType] : `${$t(`weekdays.${contact.from}`)} - ${$t(`weekdays.${contact.to}`)} ${contact.time}` })" />
         </div>
     </span>
 </template>
 
 <script setup>
 import { computed } from 'vue';
+import { ContactType } from '../../constants/contacts';
+import { Icon } from '../../constants/icons';
 import TopPanelAddButton from '../UI/button/AddButton.vue';
 import TopPanelDeleteButton from '../UI/button/DeleteButton.vue';
 import TopPanelEditButton from '../UI/button/EditButton.vue';
@@ -56,7 +58,7 @@ import TopPanelEditButton from '../UI/button/EditButton.vue';
 const props = defineProps({
     contactType: {
         type: String,
-        default: 'phones',
+        default: ContactType.PHONE,
     },
     contactArray: {
         type: Array,
@@ -73,12 +75,12 @@ const props = defineProps({
 });
 const iconClass = computed(() => {
     switch (props.contactType) {
-        case 'phone':
-            return 'bi-telephone';
-        case 'email':
-            return 'bi-envelope';
-        case 'operatingHour':
-            return 'bi-clock';
+        case ContactType.PHONE:
+            return Icon.PHONE;
+        case ContactType.EMAIL:
+            return Icon.EMAIL;
+        case ContactType.OPERATING_HOUR:
+            return Icon.OPERATING_HOUR;
         default:
             return '';
     }

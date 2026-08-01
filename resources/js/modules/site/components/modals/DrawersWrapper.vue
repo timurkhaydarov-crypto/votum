@@ -12,18 +12,17 @@
                 <DialogPanel class="pointer-events-auto relative w-screen max-w-md">
                   <div class="relative flex h-full flex-col overflow-y-auto bg-white py-6 shadow-xl">
                     <div class="px-4 sm:px-6">
-                      <DialogTitle class="text-base first-letter:uppercase font-semibold text-gray-900">{{ $t(`actions.${settings.action}`) }}</DialogTitle>
+                      <slot name="header"></slot>
                     </div>
                     <div class="relative mt-6 flex-1 px-4 sm:px-6">
-                   
-                      <EmailPhoneForm v-if="open" ref="phoneForm" :settings="settings" @submit="submitHandler">
-                        <template #footer>
+                      <form class="space-y-4" @submit.prevent="$emit('submit')">
+                        <slot name="body"></slot>
                           <div class="flex justify-end space-x-2">
-                            <ActionButton type="submit" :label="$t(`actions.${settings.action}`)" :action="settings.action" />
-                            <CancelButton @close="$emit('close')" />
+                            <div class="flex justify-end space-x-2">
+                              <slot name="footer"></slot>
+                            </div>
                           </div>
-                        </template>
-                      </EmailPhoneForm>
+                      </form>
                     </div>
                   </div>
                 </DialogPanel>
@@ -41,66 +40,18 @@ import { ref, watch} from 'vue'
 
 import { useI18n } from 'vue-i18n';
 import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
-import ActionButton from '../UI/button/ActionButton.vue'
-import CancelButton from '../UI/button/CancelButton.vue'
-import EmailPhoneForm from '../forms/EmailPhoneForm.vue'
-import Alert from '../UI/Alert.vue'
-import { contactsApi } from '../../services/contactsApi.js';
+
 const props = defineProps({
-    settings: {
-        type: Object,
-        default: () => ({type: null, action: null }),
-    },
     isOpen: {
         type: Boolean,
         default: false,
     },
 });
-const open = ref(false);
-const { t } = useI18n();
-const emit = defineEmits(['close']);
 
-const submitHandler = (item) => {
-  if (props.settings.action === 'add') {
-    const addApi =  props.settings.action + props.settings.type.charAt(0).toUpperCase() + props.settings.type.slice(1);
-    createItem(item, addApi);
-  } else if (props.settings.action === 'update') {
-    const updateApi =  props.settings.action + props.settings.type.charAt(0).toUpperCase() + props.settings.type.slice(1);
-    updateItem(item, updateApi);
-  }
-};
-const createItem =  async (item, addApi) => {
-  try {
-    const { message } = await contactsApi[addApi](item);
-    emit('close', {
-      text: t(message) ?? 'Phone number added successfully',
-      type: 'success',
-    });
-  } catch (error) {
-    emit('close', {
-      text: error.response?.data?.message ?? 'Failed to add phone number',
-      type: 'error',
-    });
-  } finally {
-    open.value = false;
-  }
-};
-const updateItem = async (item, updateApi) => {
-  try {
-    const { message } = await contactsApi[updateApi](item.id, item);
-    emit('close', {
-      text: t(message) ?? 'Phone number updated successfully',
-      type: 'success',
-    });
-  } catch (error) {
-    emit('close', {
-      text: error.response?.data?.message ?? 'Failed to update phone number',
-      type: 'error',
-    });
-  } finally {
-    open.value = false;
-  }
-};
+const { t } = useI18n();
+
+const open = ref(false);
+const emit = defineEmits(['close', 'submit']);
 
 watch(() => props.isOpen, (newVal) => {
   open.value = newVal;

@@ -56,7 +56,6 @@ const { t } = useI18n();
 const emit = defineEmits(['close', 'submit']);
 
 const submitHandler = async (item) => {
-  console.log('submitHandler called with item:', item);
     emit('submit', item);
     open.value = false;
 };

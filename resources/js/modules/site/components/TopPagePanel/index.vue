@@ -14,9 +14,9 @@
                             :is-open="openMenu === contact.type"
                             :can-manage="canManage"
                             @toggle="toggleMenu(contact.type)"
-                            @add-contact="openDrawersHandler(contact.type,'add')"
-                            @edit-contact="openDrawersHandler(contact.type,'update', $event)"
-                            @delete-contact="openModalHandler(contact.type,'delete', $event)"
+                            @add-contact="openDialog(DialogType.DRAWER, contact.type, ActionType.ADD)"
+                            @edit-contact="openDialog(DialogType.DRAWER, contact.type, ActionType.UPDATE, $event)"
+                            @delete-contact="openDialog(DialogType.MODAL, contact.type, ActionType.DELETE, $event)"
                         />
                         <ChangeLanguage/>
                     </div>
@@ -24,20 +24,32 @@
             </div>
         </div>
         <ModalWrapper v-if="canManage"  :settings="Setting" :isOpen="ModalIsOpen"  @close="close" @submit="deleteHandler" />
-        <DrawersWrapper v-if="canManage" :settings="Setting" :isOpen="DrawerIsOpen" @close="close" />
+        <DrawersWrapper v-if="canManage" :settings="Setting" :isOpen="DrawerIsOpen" @close="close">
+            <template #header>
+                <DialogTitle class="text-base first-letter:uppercase font-semibold text-gray-900">{{ $t(`actions.${Setting.action}`) }}</DialogTitle>
+            </template>
+            <template #body>
+                <EmailPhoneForm v-if="DrawerIsOpen" ref="form" :settings="Setting" @submit="submitHandler"/>
+            </template>
+            <template #footer>
+                <ActionButton @click="submit" :label="$t(`actions.${Setting.action}`)" :action="Setting.action" />
+                <CancelButton @close="close" />
+            </template>
+        </DrawersWrapper>
         <Alert v-if="isVisible" :type="type" :message="message" />
     </div>
 </template>
 
 <script setup>
 
-import { computed, onMounted, onUnmounted, ref, reactive } from 'vue';
+import { computed, onMounted, onUnmounted, ref, reactive} from 'vue';
 import { useI18n } from 'vue-i18n';
-import { getDefaultDepartment } from '../../constants/form'; 
+import { DialogTitle } from '@headlessui/vue'
+import { DialogType } from '../../constants/modal';
+import { ContactType } from '../../constants/contacts';
+import { ActionType } from '../../constants/actions';
 import { getDefaultSetting } from '../../constants/modal';
 import { useCurrentUser } from '../../../auth/composables/useCurrentUser';
-import { contactsApi } from '../../services/contactsApi.js';
-
 
 import LeftContactPanel from './LeftContactPanel.vue';
 import RightContactPanel from './RightContactPanel.vue';
@@ -45,94 +57,97 @@ import ChangeLanguage from '../UI/ChangeLanguage.vue';
 
 import ModalWrapper from '../modals/ModalWrapper.vue';
 import DrawersWrapper from '../modals/DrawersWrapper.vue';
+
+import ActionButton from '../UI/button/ActionButton.vue'
+import CancelButton from '../UI/button/CancelButton.vue'
+import EmailPhoneForm from '../forms/EmailPhoneForm.vue';
+
 import Alert from '../UI/Alert.vue';
 import { useGlobalAlert } from '../../composables/useGlobalAlert';
-const { isVisible, type, message } = useGlobalAlert();
-const { showAlert } = useGlobalAlert();
+import {useContacts} from '../../composables/useContacts.js';
+const {isVisible,type,message,showAlert} = useGlobalAlert();
+const { contacts, loadContacts, saveItem, deleteItem} = useContacts();
 const { t } = useI18n();
+const menuRef = ref();
 
 const openMenu = ref(null); // 'phones' | 'emails' | 'workTime' | null
 const { canManage, loadUser } = useCurrentUser();
 const toggleMenu = (menu) => {
     openMenu.value = openMenu.value === menu ? null : menu;
 };
+
 const DrawerIsOpen = ref(false);
 const ModalIsOpen = ref(false);
 
-const Setting = ref(getDefaultSetting());
-const openDrawersHandler = (type, action, item = null) => {
-    DrawerIsOpen.value = true;
-    Setting.value = {
-        type: type,
-        action: action,
-        item: item,
+const Setting = reactive(getDefaultSetting());
+const form = ref(null);
+
+const submit = () => form.value?.submit();
+
+const openDialog = (dialog, type, action, item = null) => {
+    const dialogs = {
+        [DialogType.DRAWER]: DrawerIsOpen,
+        [DialogType.MODAL]: ModalIsOpen,
     };
+    const dialogRef = dialogs[dialog];
+
+    if (!dialogRef) {
+        return;
+    }
+
+    dialogRef.value = true;
+    Object.assign(Setting, { type, action, item });
 };
 
+const rightPanelData = computed(() => [
+    { type: ContactType.PHONE, data: contacts.phones },
+    { type: ContactType.EMAIL, data: contacts.emails },
+    { type: ContactType.OPERATING_HOUR, data: contacts.operatingHours },
+]);
 
-const openModalHandler = (type, action, item) => {
-    ModalIsOpen.value = true;
-    Setting.value = {
-        type: type,
-        action: action,
-        item: item,
-    };
+const resetDialogs = () => {
+    DrawerIsOpen.value = false;
+    ModalIsOpen.value = false;
+    Object.assign(Setting, getDefaultSetting());
 };
 
-const contacts = reactive({
-    phones: [],
-    emails: [],
-    operatingHours: [],
-    socialMedia: [],
-});
-
-
-const rightPanelData = computed(() => ([
-    { type: 'phone', data: contacts.phones },
-    { type: 'email', data: contacts.emails },
-    { type: 'operatingHour', data: contacts.operatingHours },
-]));
-const close = (message) => {
-    loadContacts();
-    DrawerIsOpen.value = ModalIsOpen.value = false;
-    Setting.value = getDefaultSetting();
-    showAlert(message.type, message.text);
+const close = () => {
+    resetDialogs();
 };
-const deleteHandler = async (item) => {
-    const deleteItem =  Setting.value.action + Setting.value.type.charAt(0).toUpperCase() + Setting.value.type.slice(1);
-    try {
-        const { message } = await contactsApi[deleteItem](item.id);
-        close({ type: 'success', text: t(message) ?? 'Phone number deleted successfully' });
-    } catch (error) {
-        close({ type: 'error', text: t(error.message) ?? 'Failed to delete phone number' });
-    } finally {
+
+const submitHandler = async (item) => {
+    const response = await saveItem({
+                        setting: Setting,
+                        args: item,
+                        t,
+                    })
+    if (response.type === 'success') {
         await loadContacts();
-        Setting.value = getDefaultSetting();
     }
+    close();
+    showAlert(response.type, response.text);
 };
 
-const loadContacts = async () => {
-    try {
-        const [phones, emails, operatingHours, socialMedia] = await Promise.all([
-            contactsApi.getPhones(),
-            contactsApi.getEmails(),
-            contactsApi.getOperatingHours(),
-            contactsApi.getSocialMedia(),
-        ]);
+const deleteHandler = async (item) => {
+    const response = await deleteItem({
+        item,
+        setting: Setting,
+        t,
+    });
 
-        Object.assign(contacts, {
-            phones,
-            emails,
-            operatingHours,
-            socialMedia,
-        });
-    } catch (error) {
-        console.error("Failed to load contact information:", error);
+    if (response.type === 'success') {
+        await loadContacts();
     }
+
+    close();
+
+    showAlert(response.type, response.text);
 };
+
 const closeMenu = () => {
     openMenu.value = null;
 };
+
 onMounted(async () => {
     document.addEventListener('click', closeMenu);
     await Promise.all([loadContacts(), loadUser()]);

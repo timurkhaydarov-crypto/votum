@@ -42,6 +42,17 @@
     "view":"view",
     "yes":"yes"
   },
+  "contacts":{
+    "address":"address",
+    "email":"email",
+    "mail":"mail",
+    "phone":"phone",
+    "work_time":"work time",
+    "department":"department",
+    "selectDepartment":"select department",
+    "time_mask":"HH:MM",
+    "week_day":"week day"
+  },
   "messages":{
     "confirm":{
       "null":"",
@@ -50,19 +61,31 @@
     "success":{
       "update":"Item updated successfully",
       "create":"Item created successfully",
-      "delete":"Item deleted successfully"
+      "delete":"Item deleted successfully",
+      "default":"Action performed successfully"
+    },
+    "fail":{
+      "update":"Failed to update item",
+      "create":"Failed to create item",
+      "delete":"Failed to delete item",
+      "default":"Failed to perform action"
     }
   },
-  "contacts":{
-    "address":"address",
-    "email":"email",
-    "mail":"mail",
-    "phone":"phone",
-    "work_time":"work time",
-    "department":"department",
-    "selectDepartment":"select department"
+  "periods":{
+    "from":"from",
+    "to":"to"
   },
-    "weekdays":{
+  "validation": {
+    "select": {
+      "required": "Please select a value"
+    },
+    "input": {
+      "required": "Please enter a value"
+    },
+    "email": "Please enter a valid email address",
+    "phone": "Please enter a valid phone number"
+  },
+  "weekdays":{
     "monday":"mon.",
     "tuesday":"tue.",
     "wednesday":"wed.",
