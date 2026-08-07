@@ -1,20 +1,22 @@
 <template>
     <div>
-        <label :for="id" class="block first-letter:uppercase text-sm/6 font-medium text-gray-900">{{ label }}</label>
-        <div class="mt-2">
-            <div class="
-                flex items-center rounded-md bg-white pl-3
-                outline-1 -outline-offset-1
-                focus-within:outline-2
-                focus-within:-outline-offset-2
-            " :class="error
-                ? 'outline-red-500 focus-within:outline-red-500'
-                : 'outline-gray-300 focus-within:outline-emerald-500'
-                ">
-                <div class="shrink-0 text-base text-gray-500 select-none sm:text-sm/6"><i :class="icon"></i></div>
+        <label v-if="label != ''" :for="id" class="mb-2 block first-letter:uppercase text-sm/6 font-medium text-gray-900">{{ label }}</label>
+        <div>
+            <div
+                :class="[
+                    'flex items-center rounded-md bg-white pl-3 outline-1 -outline-offset-1 focus-within:outline-2 focus-within:-outline-offset-2',
+                    height,
+                    error
+                        ? 'outline-red-500 focus-within:outline-red-500'
+                        : 'outline-gray-300 focus-within:outline-emerald-500',
+                ]"
+            >
+                <div v-if="icon != ''" class="flex w-5 items-center justify-center text-gray-500">
+                    <i :class="icon" aria-hidden="true"></i>
+                </div>
                 <select v-model="model" :aria-invalid="!!error" :aria-describedby="error ? `${id}-error` : undefined"
                     :name="name" :id="id" :required="required" :aria-required="required"
-                    class="block min-w-0 grow py-1.5 pr-3 pl-1 text-base text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm/6">
+                    class="block h-full min-w-0 grow bg-transparent pr-8 pl-2 text-sm text-gray-900 focus:outline-none">
                     <option disabled :value="null">
                         {{ placeholder }}
                     </option>
@@ -35,7 +37,10 @@ const model = defineModel({
     default: null,
 });
 defineProps({
-
+    height: {
+        type: String,
+        default: 'h-11',
+    },
     label: {
         type: String,
         default: '',

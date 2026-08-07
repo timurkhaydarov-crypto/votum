@@ -50,8 +50,10 @@
     "work_time":"время работы",
     "department":"отдел",
     "selectDepartment":"выберите отдел",
+    "social_media":"социальные сети",
     "time_mask":"ЧЧ:ММ",
     "week_day":"день недели",
+    "url":"ссылка",
     "operating_hours":"часы работы"
   },
   "messages":{

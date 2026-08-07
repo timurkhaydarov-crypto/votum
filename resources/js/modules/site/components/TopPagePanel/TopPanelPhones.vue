@@ -28,7 +28,7 @@
             </template>
 
             <div v-if="canManage" class="flex justify-center border-t border-slate-700/60 pt-2">
-                <TopPanelAddButton @click="$emit('add-phone')" />
+                <TopPanelAddButton customClass="w-full" @click="$emit('add-phone')" />
             </div>
         </div>
     </details>

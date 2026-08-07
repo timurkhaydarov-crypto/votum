@@ -24,7 +24,7 @@ class SocialMediaRequest extends FormRequest
     {
         return [
             'platform' => ['required', 'string'],
-            'url' => ['required', 'string', 'url'],
+            'url' => ['required', 'string'],
             'icon' => ['required', 'string'],
         ];
     }

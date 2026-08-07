@@ -5,6 +5,7 @@ function getCsrfToken() {
 async function fetchJson(url, options = {}) {
     const headers = {
         Accept: 'application/json',
+        'Content-Type': 'application/json',
         'X-Requested-With': 'XMLHttpRequest',
         ...options.headers,
     };
@@ -32,95 +33,44 @@ async function fetchJson(url, options = {}) {
     return data;
 }
 
+const createResourceApi = (resource) => ({
+    index() {
+        return fetchJson(`/api/contacts/${resource}`);
+    },
+
+    store(data) {
+        return fetchJson(`/api/contacts/${resource}`, {
+            method: 'POST',
+            body: JSON.stringify(data),
+        });
+    },
+
+    update(data) {
+        return fetchJson(`/api/contacts/${resource}/${data.id}`, {
+            method: 'PUT',
+            body: JSON.stringify(data),
+        });
+    },
+
+    destroy(id) {
+        return fetchJson(`/api/contacts/${resource}/${id}`, {
+            method: 'DELETE',
+        });
+    },
+});
+
 export const contactsApi = {
-    async getPhones() {
-        return fetchJson('/api/contacts/phones');
-    },
-    async addPhone(data) {
-        return fetchJson('/api/contacts/phones', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data),
-        });
-    },
-    async updatePhone(data) {
-        return fetchJson(`/api/contacts/phones/${data.id}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data),
-        });
-    },
-    async deletePhone(id) {
-        return fetchJson(`/api/contacts/phones/${id}`, {
-            method: 'DELETE',
-        });
-    },
-    async getEmails() {
-        return fetchJson('/api/contacts/emails');
-    },
-    async addEmail(emailData) {
-        return fetchJson('/api/contacts/emails', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(emailData),
-        });
-    },
-    async deleteEmail(id) {
-        return fetchJson(`/api/contacts/emails/${id}`, {
-            method: 'DELETE',
-        });
-    },
-    async updateEmail(data) {
-        return fetchJson(`/api/contacts/emails/${data.id}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data),
-        });
-    },
-    async getOperatingHours() {
-        return fetchJson('/api/contacts/operating-hours');
-    },
-    async addOperatingHours(data) {
-        return fetchJson('/api/contacts/operating-hours', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data),
-        });
-    },
+    phones: createResourceApi('phones'),
+    emails: createResourceApi('emails'),
+    operatingHours: createResourceApi('operating-hours'),
+    socialMedia: createResourceApi('social-media'),
 
-    async updateOperatingHours(data) {
-        return fetchJson(`/api/contacts/operating-hours/${data.id}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data),
-        });
-    },
-
-    async deleteOperatingHours(id) {
-        return fetchJson(`/api/contacts/operating-hours/${id}`, {
-            method: 'DELETE',
-        });
-    },
-    
-    async getSocialMedia() {
-        return fetchJson('/api/contacts/social-media');
-    },
-    async getDepartments() {
-        return fetchJson('/api/contacts/departments').then(departments => departments.map(department => ({
-            id: department.id,
-            value: department.department_name,
-        })));
+    getDepartments() {
+        return fetchJson('/api/contacts/departments').then((departments) =>
+            departments.map((department) => ({
+                id: department.id,
+                value: department.department_name,
+            }))
+        );
     },
 };

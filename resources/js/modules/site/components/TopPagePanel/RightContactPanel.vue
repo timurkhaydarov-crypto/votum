@@ -28,7 +28,7 @@
             </template>
 
             <div v-if="canManage" class="flex justify-center border-t border-slate-700/60 pt-2">
-                <TopPanelAddButton @click="$emit('add-contact')" />
+                <TopPanelAddButton customClass="w-full" @click="$emit('add-contact')" />
             </div>
         </div>
     </details>
@@ -42,7 +42,7 @@
             class="inline-flex items-center gap-0.5"
         >
             <TopPanelEditButton @click="$emit('edit-contact', {contact: contactArray[0].contacts[0], department:{ id: contactArray[0].id, value: contactArray[0].name }})" />
-            <TopPanelAddButton @click="$emit('add-contact')"   />
+            <TopPanelAddButton customClass="w-full" @click="$emit('add-contact')" />
         </div>
     </span>
 </template>

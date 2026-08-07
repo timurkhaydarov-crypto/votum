@@ -50,9 +50,11 @@
     "work_time":"work time",
     "department":"department",
     "selectDepartment":"select department",
+    "social_media":"social media",
     "time_mask":"HH:MM",
     "week_day":"week day",
-    "operating_hours":"operating hours"
+    "operating_hours":"operating hours",
+    "url":"url"
   },
   "messages":{
     "confirm":{

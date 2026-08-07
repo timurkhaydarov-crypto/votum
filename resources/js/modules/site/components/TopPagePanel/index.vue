@@ -2,43 +2,39 @@
     <div>
         <div class="fixed inset-x-0 top-0">
             <div class="h-[40px] border-b border-slate-700/60 bg-slate-900 text-slate-300">
-                <div class="mx-auto flex h-full max-w-5xl items-center justify-between gap-4 px-6 text-[11px] uppercase tracking-[0.08em] sm:text-xs">
+                <div
+                    class="mx-auto flex h-full max-w-5xl items-center justify-between gap-4 px-6 text-[11px] uppercase tracking-[0.08em] sm:text-xs">
                     <div class="flex items-center gap-4 whitespace-nowrap text-right">
-                        <LeftContactPanel class="hidden sm:inline" :social-media-array="contacts.socialMedia" />
+                        <LeftContactPanel class="hidden sm:inline" :can-manage="canManage" :social-media-array="contacts.socialMedia"
+                            @edit-social-media="openDialog(DialogType.DRAWER, ContactType.SOCIAL_MEDIA, ActionType.DELETE, contacts.socialMedia)"
+                            @add-social-media="openDialog(DialogType.DRAWER, ContactType.SOCIAL_MEDIA, ActionType.ADD, [{ icon: Icon.QUESTION, platform: '', url: '' }])" />
                     </div>
                     <div class="flex items-center gap-4 whitespace-nowrap text-right">
-                        <RightContactPanel
-                            v-for="contact in rightPanelData"
-                            :contactArray="contact.data"
-                            :contactType="contact.type"
-                            :is-open="openMenu === contact.type"
-                            :can-manage="canManage"
+                        <RightContactPanel v-for="contact in rightPanelData" :contactArray="contact.data"
+                            :contactType="contact.type" :is-open="openMenu === contact.type" :can-manage="canManage"
                             @toggle="toggleMenu(contact.type)"
                             @add-contact="openDialog(DialogType.DRAWER, contact.type, ActionType.ADD)"
                             @edit-contact="openDialog(DialogType.DRAWER, contact.type, ActionType.UPDATE, $event)"
-                            @delete-contact="openDialog(DialogType.MODAL, contact.type, ActionType.DELETE, $event)"
-                        />
-                        <ChangeLanguage/>
+                            @delete-contact="openDialog(DialogType.MODAL, contact.type, ActionType.DELETE, $event)" />
+                        <ChangeLanguage />
                     </div>
                 </div>
             </div>
         </div>
-        <ModalWrapper v-if="canManage"  :settings="Setting" :isOpen="ModalIsOpen"  @close="close" @submit="deleteHandler" />
+        <ModalWrapper v-if="canManage" :settings="Setting" :isOpen="ModalIsOpen" @close="close"
+            @submit="deleteHandler" />
         <DrawersWrapper v-if="canManage" :settings="Setting" :isOpen="DrawerIsOpen" @close="close">
             <template #header>
-                <DialogTitle class="text-base first-letter:uppercase font-semibold text-gray-900">{{ $t(`actions.${Setting.action}`) }}</DialogTitle>
+                <DialogTitle class="text-base first-letter:uppercase font-semibold text-gray-900">{{
+                    $t(`actions.${Setting.action}`) }}</DialogTitle>
             </template>
             <template #body>
-                <component
-                    v-if="DrawerIsOpen && currentForm"
-                    :is="currentForm.component"
-                    ref="form"
-                    :settings="Setting"
-                    @submit="submitHandler"
-                />
+                <component v-if="DrawerIsOpen && currentForm" :is="currentForm.component" ref="form" :settings="Setting"
+                    @submit="submitHandler" @delete="deleteHandler($event, false)" />
             </template>
             <template #footer>
-                <ActionButton @click="submit" :label="$t(`actions.${Setting.action}`)" :action="Setting.action" />
+                <ActionButton v-if="!Array.isArray(Setting.item) || Setting.action === ActionType.ADD" @click="submit"
+                    :label="$t(`actions.${Setting.action}`)" :action="Setting.action" />
                 <CancelButton @close="close" />
             </template>
         </DrawersWrapper>
@@ -48,7 +44,8 @@
 
 <script setup>
 
-import { computed, onMounted, onUnmounted, ref, reactive} from 'vue';
+import { computed, onMounted, onUnmounted, ref, reactive } from 'vue';
+import { Icon } from '../../constants/icons';
 import { useI18n } from 'vue-i18n';
 import { DialogTitle } from '@headlessui/vue'
 import { DialogType } from '../../constants/modal';
@@ -73,9 +70,9 @@ import SocialMediaForm from '../forms/SocialMediaForm.vue';
 
 import Alert from '../UI/Alert.vue';
 import { useGlobalAlert } from '../../composables/useGlobalAlert';
-import {useContacts} from '../../composables/useContacts.js';
-const {isVisible,type,message,showAlert} = useGlobalAlert();
-const { contacts, loadContacts, saveItem, deleteItem} = useContacts();
+import { useContacts } from '../../composables/useContacts.js';
+const { isVisible, type, message, showAlert } = useGlobalAlert();
+const { contacts, loadContacts, saveItem, deleteItem } = useContacts();
 const { t } = useI18n();
 const menuRef = ref();
 
@@ -87,7 +84,7 @@ const formConfig = {
         component: EmailPhoneForm,
     },
     [ContactType.OPERATING_HOUR]: {
-        component: OperatingHoursForm,
+        component: OperatingHoursForm,  
     },
     [ContactType.SOCIAL_MEDIA]: {
         component: SocialMediaForm,
@@ -129,7 +126,7 @@ const openDialog = (dialog, type, action, item = null) => {
 const rightPanelData = computed(() => [
     { type: ContactType.PHONE, data: contacts.phones },
     { type: ContactType.EMAIL, data: contacts.emails },
-    { type: ContactType.OPERATING_HOUR, data: contacts.operating_hours},
+    { type: ContactType.OPERATING_HOUR, data: contacts.operatingHours },
 ]);
 
 const resetDialogs = () => {
@@ -144,10 +141,10 @@ const close = () => {
 
 const submitHandler = async (item) => {
     const response = await saveItem({
-                        setting: Setting,
-                        args: item,
-                        t,
-                    })
+        setting: Setting,
+        args: item,
+        t,
+    })
     if (response.type === 'success') {
         await loadContacts();
     }
@@ -155,7 +152,7 @@ const submitHandler = async (item) => {
     showAlert(response.type, response.text);
 };
 
-const deleteHandler = async (item) => {
+const deleteHandler = async (item, closeModal = true) => {
     const response = await deleteItem({
         item,
         setting: Setting,
@@ -166,7 +163,9 @@ const deleteHandler = async (item) => {
         await loadContacts();
     }
 
-    close();
+    if (closeModal) {
+        close();
+    }
 
     showAlert(response.type, response.text);
 };

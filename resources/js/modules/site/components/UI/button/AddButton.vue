@@ -1,7 +1,7 @@
 <template>
     <button
         type="button"
-        class="inline-flex w-full font-bold cursor-pointer items-center justify-center rounded transition hover:text-emerald-300 font-bold"
+        :class="`${customClass} inline-flex font-bold cursor-pointer items-center justify-center rounded transition hover:text-emerald-300 font-bold`"
         :aria-label="label"
         @click="$emit('click')"
     >
@@ -14,6 +14,10 @@ defineProps({
     label: {
         type: String,
         default: 'Добавить',
+    },
+    customClass: {
+        type: String,
+        default: '',
     },
 });
 defineEmits(['click']);

@@ -1,29 +1,13 @@
 <template>
     <div class="w-full">
-        <Input
-            v-model="input"
-            :name="props.settings.type"
-            :label="$t(`contacts.${props.settings.type}`)"
-            :placeholder="$t(`contacts.${props.settings.type}`)"
-            :icon="inputConfig.icon"
-            :required="true"
-            :mask="inputConfig.mask"
-            :type="inputConfig.type"
-            :pattern="isPhone ? `^\\+7\\(\\d{3}\\)\\d{3}-\\d{2}-\\d{2}$` : undefined"
-            :error="inputError"
-        />
-        <Select
-            v-model="department"
-            :name="'department'"
-            :options="allDepartments"
-            option-value="id"
-            option-label="value"
-            :label="$t('contacts.department')"
-            :placeholder="`-- ${t('contacts.selectDepartment')} --`"
-            :icon="'bi bi-buildings'"
-            :required="true"
-            :error="departmentError"
-        />
+        <Input v-model="input" :name="props.settings.type" :label="$t(`contacts.${props.settings.type}`)"
+            :placeholder="$t(`contacts.${props.settings.type}`)" :icon="inputConfig.icon" :required="true"
+            :mask="inputConfig.mask" :type="inputConfig.type"
+            :pattern="isPhone ? `^\\+7\\(\\d{3}\\)\\d{3}-\\d{2}-\\d{2}$` : undefined" :error="inputError" />
+        <Select v-model="department" :name="'department'" :options="allDepartments" option-value="id"
+            option-label="value" :label="$t('contacts.department')"
+            :placeholder="`-- ${t('contacts.selectDepartment')} --`" :icon="'bi bi-buildings'" :required="true"
+            :error="departmentError" />
     </div>
 </template>
 
@@ -54,7 +38,7 @@ const loadDepartments = async () => {
     try {
         const departments = await contactsApi.getDepartments();
         allDepartments.value = departments;
-    } catch(error) {
+    } catch (error) {
         console.error(error);
     }
 };
@@ -101,8 +85,7 @@ const submit = () => {
         department_id: department.value,
     };
 
-    if (props.settings.action === ActionType.UPDATE && props.settings.item?.contact?.id)
-    {
+    if (props.settings.action === ActionType.UPDATE && props.settings.item?.contact?.id) {
         data.id = props.settings.item.contact.id;
     }
 
@@ -123,8 +106,7 @@ watch(
                 phone: input,
                 email: input,
                 department
-            },
-            t
+            }
         );
     },
     {
