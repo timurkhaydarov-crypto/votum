@@ -23,7 +23,9 @@ class DepartmentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'department_name' => ['required', 'string'],
+            'department_name' => ['required', 'array'],
+            'department_name.ru' => ['required', 'string'],
+            'department_name.en' => ['required', 'string'],
         ];
     }
 }

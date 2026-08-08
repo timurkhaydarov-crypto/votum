@@ -12,7 +12,12 @@ class DepartmentSeeder extends Seeder
      */
     public function run(): void
     {
-        $departments = ['приемная', 'отдел продаж', 'техническая поддержка'];
+        $departments = [
+            ['ru' => 'Приемная', 'en' => 'Reception'],
+            ['ru' => 'Отдел продаж', 'en' => 'Sales department'],
+            ['ru' => 'Техническая поддержка', 'en' => 'Technical support'],
+        ];
+
         foreach ($departments as $department) {
             Department::factory()->create([
                 'department_name' => $department,

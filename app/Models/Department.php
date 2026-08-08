@@ -13,6 +13,9 @@ class Department extends Model
 {
     use HasFactory;
     protected $fillable = ['department_name'];
+    protected $casts = [
+        'department_name' => 'array',
+    ];
 
     public function phones():HasMany
     {
