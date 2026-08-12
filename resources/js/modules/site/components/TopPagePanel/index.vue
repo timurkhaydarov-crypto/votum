@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="fixed inset-x-0 top-0">
+        <div class="fixed inset-x-0 top-0 z-[70]">
             <div class="h-[40px] border-b border-slate-700/60 bg-slate-900 text-slate-300">
                 <div
                     class="mx-auto flex h-full max-w-5xl items-center justify-between gap-4 px-6 text-[11px] uppercase tracking-[0.08em] sm:text-xs">
@@ -12,7 +12,8 @@
                     <div class="flex items-center gap-4 whitespace-nowrap text-right">
                         <RightContactPanel v-for="contact in rightPanelData" :contactArray="contact.data"
                             :contactType="contact.type" :is-open="openMenu === contact.type" :can-manage="canManage"
-                            @toggle="toggleMenu(contact.type)"
+                            @open="openHoverMenu(contact.type)"
+                            @close="closeHoverMenu"
                             @add-contact="openDialog(DialogType.DRAWER, contact.type, ActionType.ADD)"
                             @edit-contact="openDialog(DialogType.DRAWER, contact.type, ActionType.UPDATE, $event)"
                             @delete-contact="openDialog(DialogType.MODAL, contact.type, ActionType.DELETE, $event)" />
@@ -96,11 +97,28 @@ const currentForm = computed(() => {
 });
 
 const openMenu = ref(null); // 'phones' | 'emails' | 'workTime' | null
+const closeMenuTimer = ref(null);
 const { canManage, loadUser } = useCurrentUser();
-const toggleMenu = (menu) => {
-    openMenu.value = openMenu.value === menu ? null : menu;
+
+const openHoverMenu = (menu) => {
+    if (closeMenuTimer.value) {
+        clearTimeout(closeMenuTimer.value);
+        closeMenuTimer.value = null;
+    }
+
+    openMenu.value = menu;
 };
 
+const closeHoverMenu = () => {
+    if (closeMenuTimer.value) {
+        clearTimeout(closeMenuTimer.value);
+    }
+
+    closeMenuTimer.value = setTimeout(() => {
+        openMenu.value = null;
+        closeMenuTimer.value = null;
+    }, 200);
+};
 const DrawerIsOpen = ref(false);
 const ModalIsOpen = ref(false);
 
@@ -180,5 +198,10 @@ onMounted(async () => {
 });
 onUnmounted(() => {
     document.removeEventListener('click', closeMenu);
+
+    if (closeMenuTimer.value) {
+        clearTimeout(closeMenuTimer.value);
+        closeMenuTimer.value = null;
+    }
 });
 </script>

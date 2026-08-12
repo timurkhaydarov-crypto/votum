@@ -1,0 +1,244 @@
+<template>
+
+<Transition
+  enter-active-class="transition-all duration-200 ease-out"
+  enter-from-class="opacity-0 -translate-y-2"
+  enter-to-class="opacity-100 translate-y-0"
+
+  leave-active-class="transition-all duration-150 ease-in"
+  leave-from-class="opacity-100 translate-y-0"
+  leave-to-class="opacity-0 -translate-y-2"
+>
+  <div
+    v-if="open"
+    class="fixed
+           left-1/2
+           z-50
+           -translate-x-1/2
+           pt-3"
+    style="width: min(1050px, calc(100vw - 32px));"
+    @contextmenu.prevent
+  >
+
+    <div
+      class="w-full
+             overflow-hidden
+             rounded-2xl
+             border border-gray-100
+             bg-white
+             shadow-[0_25px_70px_rgba(0,0,0,0.13)]"
+    >
+
+      <MegaMenuHeader
+        :title="title"
+        :icon="icon"
+        :all-link="allLink"
+        :all-label="allLabel"
+      />
+
+      <div
+        :class="[
+          'grid',
+          variant === 'cards'
+            ? 'grid-cols-[minmax(190px,260px)_minmax(0,1fr)]'
+            : 'grid-cols-[minmax(190px,260px)_minmax(0,1fr)_minmax(220px,310px)]'
+        ]"
+      >
+
+        <MegaMenuCategories
+          :categories="categories"
+          :active-index="activeCategory"
+          @select="selectCategory"
+        />
+
+        <div class="min-w-0 overflow-hidden border-r border-gray-100">
+
+          <MegaMenuContent
+            v-if="variant === 'content'"
+            :category="categories[activeCategory]"
+            @product-hover="handleProductHover"
+          />
+
+          <MegaMenuCards
+            v-else-if="variant === 'cards'"
+            :category="categories[activeCategory]"
+          />
+
+        </div>
+
+        <aside
+          v-if="variant !== 'cards'"
+          class="p-0"
+          @mouseenter="clearPreviewHideTimer()"
+          @mouseleave="schedulePreviewHide()"
+        >
+
+          <MegaMenuPreview
+            :product="previewProduct"
+            :image="previewProductImage"
+            :description="previewProductDescription"
+          />
+
+        </aside>
+
+      </div>
+
+      <MegaMenuFooter
+        :footer="footer"
+      />
+
+    </div>
+
+  </div>
+</Transition>
+
+</template>
+<script setup>
+import { computed, ref, watch } from 'vue'
+
+import MegaMenuHeader from './MegaMenuHeader.vue'
+import MegaMenuCategories from './MegaMenuCategories.vue'
+import MegaMenuContent from './MegaMenuContent.vue'
+import MegaMenuCards from './MegaMenuCards.vue'
+import MegaMenuPreview from './MegaMenuPreview.vue'
+import MegaMenuFooter from './MegaMenuFooter.vue'
+import { useProductPreviewHover } from './useProductPreviewHover.js'
+import { products } from '../navigation.data.js'
+
+const previewImageMap = {
+    'vtm-5000-orbita': '/image/product/roboscop_vtm_5000_orbita.webp',
+    'tandem': '/image/product/tandem.webp',
+    'chameleon-32-plus-32-64': '/image/product/chameleon_32_plus_32_64.webp',
+    'padi-8-su': '/image/product/padi_8_su.webp',
+    'on-3': '/image/product/on-3.webp'
+}
+
+const productDescriptionMap = {
+    'vtm-5000-orbita': 'Роботизированная установка для высокоточного ультразвукового контроля в промышленности и на транспорте.',
+    'tandem': 'Компактный сканирующий прибор для контроля сварных соединений и труднодоступных зон.',
+    'chameleon-32-plus-32-64': 'Портативный дефектоскоп с широкой диагностической областью и быстрым набором режимов.',
+    'padi-8-su': 'Преобразователь для ультразвукового контроля с высокой чувствительностью и точностью.',
+    'on-3': 'Мера дефектов и настроечный образец для проверки чувствительности и калибровки оборудования.'
+}
+
+const props = defineProps({
+    open: Boolean,
+
+    title: {
+        type: String,
+        required: true
+    },
+
+    icon: {
+        type: String,
+        default: 'bi-grid'
+    },
+
+    categories: {
+        type: Array,
+        default: () => []
+    },
+
+    allLink: {
+        type: String,
+        default: '#'
+    },
+
+    allLabel: {
+        type: String,
+        default: 'Смотреть всё'
+    },
+
+    footer: {
+        type: Object,
+        default: () => ({})
+    },
+
+    variant: {
+        type: String,
+        default: 'content'
+    }
+})
+
+
+const activeCategory = ref(0)
+
+
+watch(
+    () => props.open,
+    (value) => {
+        if (value) {
+            activeCategory.value = 0
+        }
+    }
+)
+
+
+const selectCategory = (index) => {
+    activeCategory.value = index
+}
+
+const {
+    hoveredProductId,
+    clearPreviewHideTimer,
+    schedulePreviewHide,
+    handleProductHover
+} = useProductPreviewHover()
+
+const currentCategory = computed(() => props.categories[activeCategory.value] || null)
+
+const fallbackPreviewProduct = computed(() => {
+    const category = currentCategory.value
+
+    if (!category?.groups?.length) {
+        return null
+    }
+
+    for (const group of category.groups) {
+        if (!Array.isArray(group.productIds) || !group.productIds.length) {
+            continue
+        }
+
+        const product = products.find(item => item.id === group.productIds[0])
+
+        if (product) {
+            return product
+        }
+    }
+
+    return null
+})
+
+const previewProduct = computed(() => {
+    if (!hoveredProductId.value) {
+        return null
+    }
+
+    return products.find(product => product.id === hoveredProductId.value) || null
+})
+
+const previewProductCategoryTitle = computed(() => {
+    return currentCategory.value?.shortTitle || currentCategory.value?.title || 'Прибор'
+})
+
+const previewProductImage = computed(() => {
+    if (!previewProduct.value) {
+        return '/image/logo.svg'
+    }
+
+    return previewImageMap[previewProduct.value.id] || `/image/product/${previewProduct.value.id}.webp` || '/image/logo.svg'
+})
+
+const previewProductDescription = computed(() => {
+    if (!previewProduct.value) {
+        return 'Выберите прибор из списка, чтобы увидеть краткое описание.'
+    }
+
+    return productDescriptionMap[previewProduct.value.id]
+        || `Профессиональный прибор для ${previewProduct.value.title.toLowerCase()} и точного контроля качества.`
+})
+
+const onPreviewImageError = (event) => {
+    event.target.src = '/image/logo.svg'
+}
+</script>

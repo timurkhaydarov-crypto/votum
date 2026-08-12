@@ -56,6 +56,57 @@
     "operating_hours":"operating hours",
     "url":"url"
   },
+
+"hero": {
+  "badge": "NDT Equipment Manufacturer",
+  "titleBefore": "We Engineer the",
+  "titleGradient": "Future of NDT",
+  "subtitle": "World-class NDT equipment manufacturer based in Moscow, Russia. Designed, prototyped, and mass-produced in our own facilities — from ultrasonic flaw detectors to advanced phased array systems.",
+  "requestQuote": "Request a Quote",
+  "viewProducts": "View Products",
+  "meta": {
+    "location": {
+      "value": "Moscow, Russia",
+      "label": "Based in"
+    },
+    "production": {
+      "value": "In-house",
+      "label": "Design & Production"
+    }
+  },
+  "scanner": {
+    "live": "Live Scan",
+    "scanActive": "NDT Scan Active",
+    "system": "Ultrasonic Inspection System"
+  },
+  "stats": {
+    "tests": {
+      "value": "18,000+",
+      "label": "Certified Tests"
+    },
+    "industry": {
+      "value": "Aerospace",
+      "label": "& Railway",
+      "status": "Industry Certified"
+    },
+    "certificates": {
+      "value": "5 CE",
+      "label": "Certificates"
+    }
+  }
+},  
+  "logo":{
+    "Title":"TECHNOVOTUM",
+    "Subtitle":"Technologies of non-destructive testing"
+  },
+  "menu":{
+    "home":"Home",
+    "about":"About",
+    "services":"Services",
+    "products":"Products",
+    "cart":"Cart",
+    "contacts":"Contacts"
+  },
   "messages":{
     "confirm":{
       "null":"",
