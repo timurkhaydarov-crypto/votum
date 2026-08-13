@@ -33,7 +33,7 @@
         :title="title"
         :icon="icon"
         :all-link="allLink"
-        :all-label="allLabel"
+        :all-label="resolvedAllLabel"
       />
 
       <div
@@ -41,7 +41,7 @@
           'grid',
           variant === 'cards'
             ? 'grid-cols-[minmax(190px,260px)_minmax(0,1fr)]'
-            : 'grid-cols-[minmax(190px,260px)_minmax(0,1fr)_minmax(220px,310px)]'
+            : 'grid-cols-[minmax(190px,260px)_minmax(0,1fr)_minmax(170px,210px)]'
         ]"
       >
 
@@ -95,6 +95,7 @@
 </template>
 <script setup>
 import { computed, ref, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 import MegaMenuHeader from './MegaMenuHeader.vue'
 import MegaMenuCategories from './MegaMenuCategories.vue'
@@ -103,23 +104,9 @@ import MegaMenuCards from './MegaMenuCards.vue'
 import MegaMenuPreview from './MegaMenuPreview.vue'
 import MegaMenuFooter from './MegaMenuFooter.vue'
 import { useProductPreviewHover } from './useProductPreviewHover.js'
-import { products } from '../navigation.data.js'
+import { resolveProductById } from '../navigation.data.js'
 
-const previewImageMap = {
-    'vtm-5000-orbita': '/image/product/roboscop_vtm_5000_orbita.webp',
-    'tandem': '/image/product/tandem.webp',
-    'chameleon-32-plus-32-64': '/image/product/chameleon_32_plus_32_64.webp',
-    'padi-8-su': '/image/product/padi_8_su.webp',
-    'on-3': '/image/product/on-3.webp'
-}
-
-const productDescriptionMap = {
-    'vtm-5000-orbita': 'Роботизированная установка для высокоточного ультразвукового контроля в промышленности и на транспорте.',
-    'tandem': 'Компактный сканирующий прибор для контроля сварных соединений и труднодоступных зон.',
-    'chameleon-32-plus-32-64': 'Портативный дефектоскоп с широкой диагностической областью и быстрым набором режимов.',
-    'padi-8-su': 'Преобразователь для ультразвукового контроля с высокой чувствительностью и точностью.',
-    'on-3': 'Мера дефектов и настроечный образец для проверки чувствительности и калибровки оборудования.'
-}
+const { t } = useI18n()
 
 const props = defineProps({
     open: Boolean,
@@ -146,7 +133,7 @@ const props = defineProps({
 
     allLabel: {
         type: String,
-        default: 'Смотреть всё'
+        default: ''
     },
 
     footer: {
@@ -162,7 +149,7 @@ const props = defineProps({
 
 
 const activeCategory = ref(0)
-
+const resolvedAllLabel = computed(() => props.allLabel || t('megaMenu.allProducts'))
 
 watch(
     () => props.open,
@@ -199,43 +186,71 @@ const fallbackPreviewProduct = computed(() => {
             continue
         }
 
-        const product = products.find(item => item.id === group.productIds[0])
-
-        if (product) {
-            return product
-        }
+        return resolveProductById(group.productIds[0])
     }
 
     return null
+})
+
+const productMap = computed(() => {
+    const map = {}
+
+    for (const category of props.categories || []) {
+        for (const group of category.groups || []) {
+            if (!Array.isArray(group.products)) {
+                continue
+            }
+
+            for (const product of group.products) {
+                if (product?.id) {
+                    map[product.id] = product
+                }
+            }
+        }
+    }
+
+    return map
 })
 
 const previewProduct = computed(() => {
     if (!hoveredProductId.value) {
         return null
     }
-
-    return products.find(product => product.id === hoveredProductId.value) || null
+    return productMap.value[hoveredProductId.value] || resolveProductById(hoveredProductId.value)
 })
 
 const previewProductCategoryTitle = computed(() => {
-    return currentCategory.value?.shortTitle || currentCategory.value?.title || 'Прибор'
+    return currentCategory.value?.shortTitle || currentCategory.value?.title || t('megaMenu.deviceDefault')
 })
 
 const previewProductImage = computed(() => {
     if (!previewProduct.value) {
-        return '/image/logo.svg'
+        return ''
     }
 
-    return previewImageMap[previewProduct.value.id] || `/image/product/${previewProduct.value.id}.webp` || '/image/logo.svg'
+    const categorySlug = currentCategory.value?.id || currentCategory.value?.slug
+    const rawImageName = previewProduct.value.image_url || ''
+
+    if (!categorySlug || !rawImageName) {
+        return ''
+    }
+
+    const imageName = rawImageName.includes('.')
+        ? rawImageName
+        : `${rawImageName}.webp`
+
+    return `/image/product/${categorySlug}/${imageName}`
 })
 
 const previewProductDescription = computed(() => {
     if (!previewProduct.value) {
-        return 'Выберите прибор из списка, чтобы увидеть краткое описание.'
+        return t('megaMenu.deviceHint')
     }
 
-    return productDescriptionMap[previewProduct.value.id]
-        || `Профессиональный прибор для ${previewProduct.value.title.toLowerCase()} и точного контроля качества.`
+    return previewProduct.value.description
+        || t('megaMenu.deviceDescription', {
+            product: previewProduct.value.title.toLowerCase()
+        })
 })
 
 const onPreviewImageError = (event) => {

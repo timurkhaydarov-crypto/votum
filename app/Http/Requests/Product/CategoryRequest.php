@@ -26,6 +26,7 @@ class StoreCategoryRequest extends FormRequest
             'category' => ['required', 'array'],
             'category.ru' => ['required', 'string'],
             'category.en' => ['required', 'string'],
+            'slug' => ['required', 'string'],
             'image_url' => ['nullable', 'string'],
             'description' => ['required', 'array'],
             'description.ru' => ['required', 'string'],

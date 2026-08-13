@@ -26,6 +26,7 @@ class GroupRequest extends FormRequest
             'group' => ['required', 'array'],
             'group.ru' => ['required', 'string'],
             'group.en' => ['required', 'string'],
+            'slug' => ['required', 'string'],
             'image_url' => ['nullable', 'string'],
             'description' => ['required', 'array'],
             'description.ru' => ['required', 'string'],

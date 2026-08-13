@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('groups', function (Blueprint $table) {
             $table->id();
             $table->jsonb('group');
+            $table->string('slug')->unique();
             $table->string('image_url')->nullable();
             $table->jsonb('description');
             $table->timestamps();

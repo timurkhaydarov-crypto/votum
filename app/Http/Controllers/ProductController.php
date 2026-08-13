@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
 use App\Models\Product\Product;
+use App\Services\ProductMenuService;
+use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
@@ -13,7 +15,50 @@ class ProductController extends Controller
      */
     public function index()
     {
-        //
+        $products = Product::with(['brand', 'category', 'group', 'groups'])->get();
+
+        return response()->json(
+            $products->map(function (Product $product) {
+                return [
+                    'id' => $product->id,
+                    'article' => $product->article,
+                    'name' => $product->name,
+                    'short_description' => $product->short_description,
+                    'full_description' => $product->full_description,
+                    'category' => $product->category ? [
+                        'id' => $product->category->id,
+                        'slug' => $product->category->slug,
+                        'title' => $product->category->category,
+                    ] : null,
+                    'group' => $product->group ? [
+                        'id' => $product->group->id,
+                        'slug' => $product->group->slug,
+                        'title' => $product->group->group,
+                    ] : null,
+                    'groups' => $product->groups->map(fn ($group) => [
+                        'id' => $group->id,
+                        'slug' => $group->slug,
+                        'title' => $group->group,
+                    ])->values()->all(),
+                    'brand' => $product->brand ? [
+                        'id' => $product->brand->id,
+                        'title' => $product->brand->brand,
+                    ] : null,
+                    'image_url' => $product->image_url,
+                    'video_url' => $product->video_url,
+                    'price' => $product->price,
+                    'quantity' => $product->quantity,
+                    'status' => $product->status,
+                ];
+            })->values()->all()
+        );
+    }
+
+    public function menu(ProductMenuService $menuService, Request $request)
+    {
+        $locale = $request->query('lang', 'ru');
+
+        return response()->json($menuService->buildMenu($locale));
     }
 
     /**

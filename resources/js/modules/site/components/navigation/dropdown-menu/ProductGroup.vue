@@ -103,7 +103,7 @@
 <script setup>
 import { ref } from 'vue'
 import ProductItem from './ProductItem.vue'
-import { products } from '../navigation.data.js'
+import { resolveProductById } from '../navigation.data.js'
 
 
 defineProps({
@@ -141,8 +141,12 @@ const isGroupOpen = (group) => {
 
 const getProducts = (group) => {
 
+    if (Array.isArray(group.products) && group.products.length) {
+        return group.products
+    }
+
     return group.productIds
-        .map(id => products.find(product => product.id === id))
+        .map(id => resolveProductById(id))
         .filter(Boolean)
 
 }

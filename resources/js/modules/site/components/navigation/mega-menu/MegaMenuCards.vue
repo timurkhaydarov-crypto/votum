@@ -82,7 +82,7 @@
                  text-xs font-semibold
                  text-[#252525]">
 
-                    Подробнее
+                    {{ t('megaMenu.details') }}
 
                     <i class="bi bi-arrow-right
                    transition-transform
@@ -105,7 +105,7 @@
                text-[#252525]
                hover:underline">
 
-                Все услуги «{{ category.title }}»
+                {{ t('megaMenu.allServicesInCategory', { category: category.title }) }}
 
                 <i class="bi bi-arrow-right" aria-hidden="true"></i>
 
@@ -117,6 +117,10 @@
 
 </template>
 <script setup>
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
+
 defineProps({
     category: {
         type: Object,

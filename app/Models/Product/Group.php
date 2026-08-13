@@ -4,6 +4,7 @@ namespace App\Models\Product;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Models\Product\Product;
 
@@ -18,6 +19,7 @@ class Group extends Model
 
     protected $fillable = [
         'group',
+        'slug',
         'image_url',
         'description',
     ];
@@ -25,5 +27,10 @@ class Group extends Model
     public function products(): HasMany
     {
         return $this->hasMany(Product::class);
+    }
+
+    public function productPivot(): BelongsToMany
+    {
+        return $this->belongsToMany(Product::class, 'product_group');
     }
 }

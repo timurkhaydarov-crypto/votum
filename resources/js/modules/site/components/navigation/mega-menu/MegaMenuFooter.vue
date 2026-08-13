@@ -27,7 +27,7 @@
              text-[#252525]
              transition
              hover:bg-gray-100">
-            {{ footer.button || 'Связаться' }}
+            {{ footer.button || t('megaMenu.contactUs') }}
 
             <i class="bi bi-arrow-right"></i>
         </a>
@@ -35,6 +35,10 @@
     </div>
 </template>
 <script setup>
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
+
 defineProps({
     footer: {
         type: Object,

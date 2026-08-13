@@ -22,6 +22,7 @@ class CategoryFactory extends Factory
                 'ru' => $this->faker->words(2, true),
                 'en' => $this->faker->words(2, true),
             ],
+            'slug' => $this->faker->slug(),
             'image_url' => $this->faker->imageUrl(),
             'description' => [
                 'ru' => $this->faker->paragraph(),

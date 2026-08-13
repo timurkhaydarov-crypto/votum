@@ -1,26 +1,28 @@
 <template>
 
-    <a :href="category.href" class="group flex items-center
-           gap-3 rounded-xl
-           px-3 py-3
+    <div class="group flex cursor-default items-center
+           gap-2.5 rounded-lg
+           border border-transparent
+           px-2.5 py-2.5
+           select-none
            transition-all duration-150" :class="active
-                ? 'bg-white shadow-sm'
-                : 'hover:bg-white/70'
+                ? 'border-gray-200 bg-gray-200'
+                : 'hover:bg-[#f2f2f2]'
             ">
 
         <!-- ICON -->
 
-        <span class="flex h-9 w-9 shrink-0
+        <span class="flex h-7 w-7 shrink-0
              items-center justify-center
-             rounded-lg transition" :class="active
+             rounded-md transition" :class="active
                     ? 'bg-[#252525] text-white'
-                    : 'bg-white text-gray-500'
+                    : 'bg-[#efefef] text-gray-600 group-hover:bg-[#e9e9e9] group-hover:text-[#252525]'
                 ">
 
             <i :class="[
                 'bi',
-                category.icon,
-                'text-base'
+                Icon[category.id?.toUpperCase().replace(/-/g, '_')] || category.icon,
+                'text-sm'
             ]"></i>
 
         </span>
@@ -30,10 +32,10 @@
 
         <span class="min-w-0 flex-1">
 
-            <span class="block text-[13px]
+            <span class="block text-[12px]
                font-semibold leading-4" :class="active
                     ? 'text-[#252525]'
-                    : 'text-gray-600'
+                    : 'text-gray-700 group-hover:text-[#1f1f1f]'
                 ">
 
                 {{ category.shortTitle || category.title }}
@@ -46,15 +48,16 @@
         <!-- ARROW -->
 
         <i class="bi bi-chevron-right
-             text-[10px]" :class="active
+             text-[9px]" :class="active
                     ? 'text-[#252525] translate-x-0.5'
-                    : 'text-gray-300'
+                    : 'text-gray-400 group-hover:text-[#343434]'
                 "></i>
 
-    </a>
+    </div>
 
 </template>
 <script setup>
+import { Icon } from '../../../constants/icons.js'
 defineProps({
     category: {
         type: Object,

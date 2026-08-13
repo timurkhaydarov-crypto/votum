@@ -107,6 +107,24 @@
     "cart":"Cart",
     "contacts":"Contacts"
   },
+  "megaMenu": {
+    "categories": "Categories",
+    "allProducts": "All products",
+    "allServices": "All services",
+    "chooseCategory": "Choose category",
+    "showAllProducts": "Show all products",
+    "allCategory": "All category",
+    "details": "Details",
+    "contactUs": "Contact us",
+    "noProducts": "No products available",
+    "chooseDevice": "Select a device",
+    "deviceHint": "Select a device from the list to see a short description.",
+    "deviceDefault": "Device",
+    "deviceDescription": "Professional device for {product} and precise quality control.",
+    "needHelpTitle": "Need help choosing equipment?",
+    "needHelpDescription": "Our specialists will help you choose the right solution",
+    "allServicesInCategory": "All services {category}"
+  },
   "messages":{
     "confirm":{
       "null":"",

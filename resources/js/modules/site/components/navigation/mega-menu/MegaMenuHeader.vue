@@ -28,7 +28,7 @@
 
                 <p class="mt-0.5 text-xs
                  text-gray-500">
-                    Выберите категорию
+                    {{ t('megaMenu.chooseCategory') }}
                 </p>
 
             </div>
@@ -42,7 +42,7 @@
              text-[#252525]
              hover:bg-gray-100">
 
-            {{ allLabel }}
+            {{ allLabel || t('megaMenu.allProducts') }}
 
             <i class="bi bi-arrow-right"></i>
 
@@ -52,6 +52,10 @@
 
 </template>
 <script setup>
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
+
 defineProps({
     title: String,
     icon: String,

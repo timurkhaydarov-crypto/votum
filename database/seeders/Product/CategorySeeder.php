@@ -15,8 +15,8 @@ class CategorySeeder extends Seeder
         $categories = [
             [
                 'category' => [
-                    'ru' => 'Промышленные установки неразрушающего контроля',
-                    'en' => 'Industrial non-destructive testing systems',
+                    'ru' => 'Промышленные установки НК',
+                    'en' => 'Industrial NDT systems',
                 ],
                 'slug' => 'industrial-ndt',
                 'description' => [
@@ -78,6 +78,7 @@ class CategorySeeder extends Seeder
         foreach ($categories as $item) {
             Category::query()->create([
                 'category' => $item['category'],
+                'slug' => $item['slug'],
                 'description' => $item['description'],
                 'image_url' => $item['image_url'],
             ]);

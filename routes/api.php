@@ -5,6 +5,14 @@ use App\Http\Controllers\EmailController;
 use App\Http\Controllers\OperatingHourController;
 use App\Http\Controllers\PhoneController;
 use App\Http\Controllers\SocialMediaController;
+
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\GroupController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\BrandController;
+use App\Http\Controllers\MethodController;
+use App\Http\Controllers\SectorController;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -20,7 +28,12 @@ Route::prefix('contacts')->group(function () {
     Route::apiResource('operating-hours', OperatingHourController::class)
         ->only(['index', 'store', 'update', 'destroy']);
     Route::apiResource('social-media', SocialMediaController::class)
-        ->only(['index', 'store', 'update', 'destroy']);
-
+        ->only(['index', 'store', 'update', 'destroy']);    
     Route::get('/departments', [ContactsController::class, 'departments']);
+});
+Route::prefix('products')->group(function () {
+    Route::get('menu', [ProductController::class, 'menu']);
+
+    Route::apiResource('item', ProductController::class)
+        ->only(['index', 'store', 'update', 'destroy']);
 });

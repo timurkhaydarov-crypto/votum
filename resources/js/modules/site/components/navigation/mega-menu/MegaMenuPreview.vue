@@ -9,41 +9,45 @@
     mode="out-in"
   >
     <div
-      v-if="product"
-      :key="product.id"
+      :key="product?.id ?? 'empty'"
       class="h-full bg-transparent p-0"
     >
-      <div class="overflow-hidden rounded-none bg-[#f5f5f5]">
-        <img
-          :src="image"
-          :alt="product.title"
-          class="h-32 w-full object-cover"
-          @error="onImageError"
-        />
+      <div v-if="product" class="h-full">
+        <div class="overflow-hidden rounded-none pt-[5px]">
+          <img
+            :src="image"
+            :alt="product.title"
+            class="h-24 w-full object-contain"
+            @error="onImageError"
+          />
+        </div>
+
+        <div class="px-2.5 pb-2.5 pt-2.5">
+          <h3 class="text-sm font-bold leading-4 text-[#252525]">
+            {{ product.title }}
+          </h3>
+
+          <p class="mt-1.5 text-xs leading-4 text-gray-600">
+            {{ description }}
+          </p>
+        </div>
       </div>
 
-      <div class="px-3 pb-3 pt-3">
-        <h3 class="text-base font-bold leading-5 text-[#252525]">
-          {{ product.title }}
-        </h3>
-
-        <p class="mt-2 text-sm leading-5 text-gray-600">
-          {{ description }}
-        </p>
+      <div
+        v-else
+        class="flex h-full items-center justify-center bg-transparent p-5 text-center text-sm text-gray-400"
+      >
+        {{ t('megaMenu.chooseDevice') }}
       </div>
-    </div>
-
-    <div
-      v-else
-      key="empty"
-      class="flex h-full items-center justify-center bg-transparent p-5 text-center text-sm text-gray-400"
-    >
-      Выберите прибор
     </div>
   </Transition>
 </template>
 
 <script setup>
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
+
 const props = defineProps({
   product: {
     type: Object,
@@ -57,7 +61,7 @@ const props = defineProps({
 
   description: {
     type: String,
-    default: 'Выберите прибор из списка, чтобы увидеть краткое описание.'
+    default: ''
   }
 })
 

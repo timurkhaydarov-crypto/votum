@@ -38,7 +38,7 @@
             class="px-2 py-3
                    text-sm text-gray-400"
         >
-            Продукция отсутствует
+            {{ t('megaMenu.noProducts') }}
         </div>
 
 
@@ -55,7 +55,7 @@
             >
 
                 <span>
-                    {{ allLabel }}
+                    {{ allLabel || t('megaMenu.showAllProducts') }}
                 </span>
 
                 <i class="bi bi-arrow-right"></i>
@@ -74,11 +74,13 @@
 import {
     computed
 } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 import {
-    products
+    resolveProductById
 } from '../navigation.data.js'
 
+const { t } = useI18n()
 
 const emit = defineEmits(['product-hover'])
 
@@ -96,7 +98,7 @@ const props = defineProps({
 
     allLabel: {
         type: String,
-        default: 'Показать всю продукцию'
+        default: ''
     }
 
 })
@@ -104,16 +106,16 @@ const props = defineProps({
 
 const groupProducts = computed(() => {
 
+    if (Array.isArray(props.group.products) && props.group.products.length) {
+        return props.group.products
+    }
+
     if (!Array.isArray(props.group.productIds)) {
         return []
     }
 
     return props.group.productIds
-        .map(id => {
-            return products.find(
-                product => product.id === id
-            )
-        })
+        .map(id => resolveProductById(id))
         .filter(Boolean)
 
 })

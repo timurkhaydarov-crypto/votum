@@ -107,6 +107,24 @@
     "cart":"Корзина",
     "contacts":"Контакты"
   },
+  "megaMenu": {
+    "categories": "Категории",
+    "allProducts": "Вся продукция",
+    "allServices": "Все услуги",
+    "chooseCategory": "Выберите категорию",
+    "showAllProducts": "Показать всю продукцию",
+    "allCategory": "Вся категория",
+    "details": "Подробнее",
+    "contactUs": "Связаться",
+    "noProducts": "Продукция отсутствует",
+    "chooseDevice": "Выберите прибор",
+    "deviceHint": "Выберите прибор из списка, чтобы увидеть краткое описание.",
+    "deviceDefault": "Прибор",
+    "deviceDescription": "Профессиональный прибор для {product} и точного контроля качества.",
+    "needHelpTitle": "Нужна помощь с выбором оборудования?",
+    "needHelpDescription": "Наши специалисты помогут подобрать решение",
+    "allServicesInCategory": "Все услуги «{category}»"
+  },
   "messages":{
     "confirm":{
       "null":"",

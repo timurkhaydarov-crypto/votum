@@ -47,11 +47,11 @@
             </button>
 
 
-            <MegaMenu :open="productsOpen" :variant="'content'" title="Продукция" :icon="'bi-box-seam'" :categories="productCategories"
-                all-link="/products" all-label="Вся продукция" :footer="{
-                    title: 'Нужна помощь с выбором оборудования?',
-                    description: 'Наши специалисты помогут подобрать решение',
-                    button: 'Связаться',
+            <MegaMenu :open="productsOpen" :variant="'content'" :title="t('menu.products')" :icon="'bi-box-seam'" :categories="productCategories"
+                :all-link="'/products'" :all-label="t('megaMenu.allProducts')" :footer="{
+                    title: t('megaMenu.needHelpTitle'),
+                    description: t('megaMenu.needHelpDescription'),
+                    button: t('megaMenu.contactUs'),
                     link: '/contacts'
                 }" />
 
@@ -84,11 +84,11 @@
             </button>
 
 
-            <MegaMenu :open="servicesOpen" title="Услуги" :variant="'cards'" :icon="'bi-tools'" :categories="serviceCategories"
-                all-link="/services" all-label="Все услуги" :footer="{
-                    title: 'Нужна консультация?',
-                    description: 'Мы поможем подобрать нужную услугу',
-                    button: 'Связаться',
+            <MegaMenu :open="servicesOpen" :title="t('menu.services')" :variant="'cards'" :icon="'bi-tools'" :categories="serviceCategories"
+                :all-link="'/services'" :all-label="t('megaMenu.allServices')" :footer="{
+                    title: t('megaMenu.needHelpTitle'),
+                    description: t('megaMenu.needHelpDescription'),
+                    button: t('megaMenu.contactUs'),
                     link: '/contacts'
                 }" />
 
@@ -123,37 +123,48 @@
 
 </template>
 <script setup>
-import { ref } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import MegaMenu from './mega-menu/MegaMenu.vue'
 
 import {
     mainMenu,
-    productCategories,
-    serviceCategories
+    serviceCategories,
+    fetchProductCategories,
 } from './navigation.data.js'
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 const productsOpen = ref(false)
 const servicesOpen = ref(false)
+const productCategories = ref([])
 
+const loadProductCategories = async () => {
+    try {
+        productCategories.value = await fetchProductCategories(locale.value)
+    } catch (error) {
+        console.error('Failed to load product menu:', error)
+        productCategories.value = []
+    }
+}
+
+onMounted(loadProductCategories)
+watch(locale, () => {
+    loadProductCategories()
+})
 
 const openProducts = () => {
     productsOpen.value = true
     servicesOpen.value = false
 }
 
-
 const openServices = () => {
     servicesOpen.value = true
     productsOpen.value = false
 }
 
-
 const closeProducts = () => {
     productsOpen.value = false
 }
-
 
 const closeServices = () => {
     servicesOpen.value = false
