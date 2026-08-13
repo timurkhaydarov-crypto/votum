@@ -4,25 +4,31 @@
         <!-- CATEGORY HEADER -->
         <button
             type="button"
-            class="flex w-full items-center gap-4
-                   rounded-2xl px-4 py-3.5
-                   text-left text-[15px] font-medium
-                   text-[#252525]
-                   transition
-                   hover:bg-gray-100"
+            class="group flex w-full items-center gap-2.5
+                   rounded-lg px-2.5 py-2.5
+                   text-left text-[13.5px] font-medium
+                   tracking-[-0.01em] text-[#252525]
+                   transition-colors duration-200
+                   hover:bg-transparent"
+            :class="{
+                'bg-transparent': open
+            }"
             @click="toggle"
         >
             <!-- Icon -->
             <span
-                class="flex h-10 w-10 shrink-0
+                class="flex h-8 w-8 shrink-0
                        items-center justify-center
-                       rounded-xl bg-gray-100"
+                       rounded-md transition-all duration-200"
+                :class="open
+                    ? 'bg-[#252525] text-white'
+                    : 'bg-[#efefef] text-gray-600 group-hover:bg-[#252525] group-hover:text-white'"
             >
                 <i
                     :class="[
                         'bi',
                         icon,
-                        'text-xl'
+                        'text-lg'
                     ]"
                 ></i>
             </span>
@@ -47,18 +53,18 @@
 
         <!-- CONTENT -->
         <Transition
-            enter-active-class="transition-all duration-200 ease-out"
-            enter-from-class="max-h-0 opacity-0"
-            enter-to-class="max-h-[2000px] opacity-100"
-            leave-active-class="transition-all duration-150 ease-in"
-            leave-from-class="max-h-[2000px] opacity-100"
-            leave-to-class="max-h-0 opacity-0"
+            enter-active-class="transition-[max-height,opacity,transform] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]"
+            enter-from-class="max-h-0 translate-y-1 opacity-0"
+            enter-to-class="max-h-[2000px] translate-y-0 opacity-100"
+            leave-active-class="transition-[max-height,opacity,transform] duration-250 ease-[cubic-bezier(0.4,0,0.2,1)]"
+            leave-from-class="max-h-[2000px] translate-y-0 opacity-100"
+            leave-to-class="max-h-0 -translate-y-1 opacity-0"
         >
             <div
                 v-if="open"
                 class="overflow-hidden"
             >
-                <div class="mt-1 rounded-2xl bg-gray-50 p-2">
+                <div class="mt-0 rounded-xl p-0.5">
 
                     <template v-if="isProductMenu">
                         <ProductCategory
@@ -78,23 +84,29 @@
                             <a
                                 :href="category.href"
                                 @click="$emit('close')"
-                                class="flex items-center gap-3
-                                       rounded-xl px-3 py-2.5
-                                       text-sm font-semibold
+                                class="group flex items-center gap-2.5
+                                       rounded-md px-2.5 py-1.75
+                                       text-[13px] font-medium
                                        text-[#252525]
-                                       transition
-                                       hover:bg-white"
+                                       transition-colors duration-200
+                                       hover:bg-transparent"
                             >
                                 <span
-                                    class="flex h-8 w-8 shrink-0
+                                    class="flex h-6 w-6 shrink-0
                                            items-center justify-center
-                                           rounded-lg bg-white
-                                           text-gray-500"
+                                           rounded-md bg-[#efefef] text-gray-600
+                                           shadow-[inset_0_0_0_1px_rgba(0,0,0,0.02)]
+                                           transition-all duration-200
+                                           group-hover:bg-[#252525] group-hover:text-white"
                                 >
                                     <i
                                         :class="[
                                             'bi',
-                                            category.icon || 'bi-folder'
+                                            Icon[
+                                                category.id
+                                                    ?.toUpperCase()
+                                                    .replace(/-/g, '_')
+                                            ] || Icon.FOLDER
                                         ]"
                                     ></i>
                                 </span>
@@ -110,12 +122,11 @@
                                 :href="item.href"
                                 @click="$emit('close')"
                                 class="flex items-center gap-2
-                                       rounded-lg px-3 py-2
-                                       pl-14 text-sm
+                                       rounded-md px-2.5 py-1.25
+                                       pl-11 text-[12.5px]
                                        text-gray-600
-                                       transition
-                                       hover:bg-white
-                                       hover:text-[#252525]"
+                                       transition-colors duration-200
+                                       hover:bg-[#f7f5f2] hover:text-[#252525]"
                             >
                                 <i class="bi bi-chevron-right text-[9px] text-gray-400"></i>
                                 <span>{{ item.title }}</span>
@@ -148,6 +159,7 @@
 <script setup>
 import { computed } from 'vue'
 import ProductCategory from './ProductCategory.vue'
+import { Icon } from '@/modules/site/constants/icons.js'
 
 const props = defineProps({
     open: {

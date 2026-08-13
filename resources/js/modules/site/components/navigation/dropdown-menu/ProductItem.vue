@@ -4,14 +4,14 @@
         :href="product.href"
         @click="$emit('close')"
         class="block
-               rounded-lg
-               px-3 py-2
+               rounded-md
+               px-3 py-1.5
                pl-[4.5rem]
-               text-sm
-               leading-5
+               text-[12.5px]
+               leading-4
                text-gray-500
                transition
-               hover:bg-gray-50
+               hover:bg-[#f7f5f2]
                hover:text-[#252525]"
     >
         {{ product.title }}

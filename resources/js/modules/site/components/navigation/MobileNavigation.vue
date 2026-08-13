@@ -16,8 +16,8 @@
         <div
             v-if="open"
             class="fixed inset-0 z-[60]
-                   bg-black/30
-                   backdrop-blur-[2px]"
+                   bg-black/20
+                   backdrop-blur-[1px]"
             @click="close"
         ></div>
 
@@ -43,8 +43,9 @@
                    flex h-screen w-[85%]
                    max-w-[380px]
                    flex-col
-                   bg-white
-                   shadow-2xl"
+                   border-l border-[#f1f0ee]
+                   bg-[#fdfcfb]
+                   shadow-[0_18px_50px_rgba(20,20,20,0.08)]"
         >
 
             <!-- ======================================== -->
@@ -54,7 +55,8 @@
             <div
                 class="flex h-[60px] shrink-0
                        items-center justify-between
-                       border-b border-gray-100
+                       border-b border-[#f1f0ee]
+                       bg-[#fdfcfb]
                        px-5"
             >
 
@@ -63,12 +65,12 @@
                 <button
                     type="button"
                     aria-label="Закрыть меню"
-                    class="flex h-10 w-10
+                    class="flex h-9 w-9
                            items-center justify-center
-                           rounded-xl
+                           rounded-lg
                            text-[#252525]
-                           transition
-                           hover:bg-gray-100"
+                           transition-colors duration-200
+                           hover:bg-[#f3f1ee]"
                     @click="close"
                 >
                     <i class="bi bi-x-lg"></i>
@@ -90,20 +92,22 @@
                     <a
                         href="/"
                         @click="close"
-                        class="flex items-center gap-4
-                               rounded-2xl px-4 py-3.5
-                               text-[15px] font-medium
-                               text-[#252525]
-                               transition
-                               hover:bg-gray-100"
+                        class="group flex items-center gap-2.5
+                               rounded-lg px-2.5 py-2.5
+                               text-[13.5px] font-medium
+                               tracking-[-0.01em] text-[#252525]
+                               transition-colors duration-200
+                               hover:bg-transparent"
                     >
 
                         <span
-                            class="flex h-10 w-10
+                            class="flex h-8 w-8
                                    items-center justify-center
-                                   rounded-xl bg-gray-100"
+                                   rounded-md bg-[#efefef] text-gray-600
+                                   transition-all duration-200
+                                   group-hover:bg-[#252525] group-hover:text-white"
                         >
-                            <i class="bi bi-house-door text-xl"></i>
+                            <i class="bi bi-house-door text-lg"></i>
                         </span>
 
                         <span>
@@ -118,7 +122,7 @@
                     <DropdownMenu
                         :open="productsOpen"
                         :title="t('menu.products')"
-                        icon="bi-box-seam"
+                        :icon="Icon.PRODUCTS"
                         :categories="productCategories"
                         all-link="/products"
                         :all-label="t('megaMenu.allProducts')"
@@ -132,7 +136,7 @@
                     <DropdownMenu
                         :open="servicesOpen"
                         :title="t('menu.services')"
-                        icon="bi-tools"
+                        :icon="Icon.SERVICES"
                         :categories="serviceCategories"
                         all-link="/services"
                         :all-label="t('megaMenu.allServices')"
@@ -148,18 +152,20 @@
                         :key="item.title"
                         :href="item.href"
                         @click="close"
-                        class="flex items-center gap-4
-                               rounded-2xl px-4 py-3.5
-                               text-[15px] font-medium
-                               text-[#252525]
-                               transition
-                               hover:bg-gray-100"
+                        class="group flex items-center gap-2.5
+                               rounded-lg px-2.5 py-2.5
+                               text-[13.5px] font-medium
+                               tracking-[-0.01em] text-[#252525]
+                               transition-colors duration-200
+                               hover:bg-transparent"
                     >
 
                         <span
-                            class="flex h-10 w-10
+                            class="flex h-8 w-8
                                    items-center justify-center
-                                   rounded-xl bg-gray-100"
+                                   rounded-md bg-[#efefef] text-gray-600
+                                   transition-all duration-200
+                                   group-hover:bg-[#252525] group-hover:text-white"
                         >
 
                             <i
@@ -203,6 +209,7 @@ import { useI18n } from 'vue-i18n'
 
 import DropdownMenu from './dropdown-menu/DropdownMenu.vue'
 import Logo from '../shared/Logo.vue'
+import { Icon } from '@/modules/site/constants/icons.js'
 
 import {
     mainMenu,
