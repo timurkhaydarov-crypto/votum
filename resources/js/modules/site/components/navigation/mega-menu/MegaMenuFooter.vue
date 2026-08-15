@@ -20,7 +20,7 @@
 
         <!-- Кнопка -->
 
-        <a :href="footer.link || '#'" class="inline-flex items-center
+        <RouterLink :to="footer.link || '#'" class="inline-flex items-center
              gap-2 rounded-lg
              bg-white px-4 py-2
              text-sm font-semibold
@@ -30,7 +30,7 @@
             {{ footer.button || t('megaMenu.contactUs') }}
 
             <i class="bi bi-arrow-right"></i>
-        </a>
+        </RouterLink>
 
     </div>
 </template>

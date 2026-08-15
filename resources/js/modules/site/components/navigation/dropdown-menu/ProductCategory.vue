@@ -94,9 +94,9 @@
                         @close="$emit('close')"
                     />
 
-                    <a
+                    <RouterLink
                         v-if="category.href"
-                        :href="category.href"
+                        :to="category.href"
                         @click="$emit('close')"
                         class="mt-2 inline-flex items-center gap-2
                                px-2 py-1.5 text-[12px]
@@ -106,16 +106,16 @@
                     >
                         <span>{{ t('megaMenu.showAllCategory') }}</span>
                         <i class="bi bi-arrow-right text-[11px]"></i>
-                    </a>
+                    </RouterLink>
 
                 </div>
             </Transition>
 
         </div>
 
-        <a
+        <RouterLink
             v-if="allLink"
-            :href="allLink"
+            :to="allLink"
             @click="$emit('close')"
             class="mt-2 inline-flex items-center gap-2
                    px-2 py-1.5 text-[12px]
@@ -125,7 +125,7 @@
         >
             <span>{{ allLabel || t('megaMenu.showAllCategory') }}</span>
             <i class="bi bi-arrow-right text-[11px]"></i>
-        </a>
+        </RouterLink>
 
     </div>
 </template>

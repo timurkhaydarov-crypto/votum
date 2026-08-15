@@ -11,10 +11,10 @@
                    sm:grid-cols-2"
         >
 
-            <a
+            <RouterLink
                 v-for="product in visibleProducts"
                 :key="product.id"
-                :href="product.href"
+                :to="product.href"
                 class="product-link"
                 @mouseenter="$emit('product-hover', product.id)"
                 @mouseleave="$emit('product-hover', null)"
@@ -26,7 +26,7 @@
                     {{ product.title }}
                 </span>
 
-            </a>
+            </RouterLink>
 
         </div>
 
@@ -49,8 +49,8 @@
             class="mt-2 px-2 pt-2"
         >
 
-            <a
-                :href="group.href"
+            <RouterLink
+                :to="group.href"
                 class="all-products-link"
             >
 
@@ -60,7 +60,7 @@
 
                 <i class="bi bi-arrow-right"></i>
 
-            </a>
+            </RouterLink>
 
         </div>
 

@@ -127,6 +127,13 @@
     "needHelpDescription": "Our specialists will help you choose the right solution",
     "allServicesInCategory": "All services {category}"
   },
+  "productBreadcrumbs": {
+    "catalog": "Catalog",
+    "productFallback": "Product #{id}",
+    "backToCatalog": "Back to catalog",
+    "backToCategory": "Back to category: {category}",
+    "backToGroup": "Back to group: {group}"
+  },
   "messages":{
     "confirm":{
       "null":"",

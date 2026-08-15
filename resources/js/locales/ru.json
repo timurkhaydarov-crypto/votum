@@ -127,6 +127,13 @@
     "needHelpDescription": "Наши специалисты помогут подобрать решение",
     "allServicesInCategory": "Все услуги «{category}»"
   },
+  "productBreadcrumbs": {
+    "catalog": "Каталог",
+    "productFallback": "Товар #{id}",
+    "backToCatalog": "Назад к каталогу",
+    "backToCategory": "Назад к категории: {category}",
+    "backToGroup": "Назад к группе: {group}"
+  },
   "messages":{
     "confirm":{
       "null":"",

@@ -41,13 +41,15 @@ export const resolveProductById = (id) => {
         return cached
     }
 
+    const safeId = String(id)
+
     return {
-        id,
-        title: id
+        id: safeId,
+        title: safeId
             .replace(/[-_]+/g, ' ')
             .replace(/\s+/g, ' ')
             .trim() || 'Продукция',
-        href: `/products/${id}`
+        href: `/products/item/${safeId}`
     }
 }
 

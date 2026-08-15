@@ -36,7 +36,7 @@
         </div>
 
 
-        <a :href="allLink" class="flex items-center gap-2
+        <RouterLink :to="allLink" class="flex items-center gap-2
              rounded-lg px-3 py-2
              text-sm font-medium
              text-[#252525]
@@ -46,7 +46,7 @@
 
             <i class="bi bi-arrow-right"></i>
 
-        </a>
+        </RouterLink>
 
     </div>
 

@@ -45,7 +45,7 @@
 
         <!-- Ссылка без дочерних элементов -->
 
-        <a v-else :href="item.href" class="flex items-center
+        <RouterLink v-else :to="item.href" class="flex items-center
              gap-3
              py-3.5
              text-sm
@@ -65,7 +65,7 @@
                 {{ item.title }}
             </span>
 
-        </a>
+        </RouterLink>
 
 
         <!-- Дочерние элементы -->

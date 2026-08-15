@@ -27,7 +27,7 @@
          grid-cols-[repeat(auto-fit,minmax(min(220px,100%),1fr))]
          gap-4">
 
-            <a v-for="item in category.items" :key="item.title" :href="item.href" class="group min-w-0
+            <RouterLink v-for="item in category.items" :key="item.title" :to="item.href" class="group min-w-0
            rounded-2xl
            border border-gray-100
            bg-gray-50/70
@@ -90,7 +90,7 @@
 
                 </div>
 
-            </a>
+            </RouterLink>
 
         </div>
 
@@ -100,7 +100,7 @@
         <div class="mt-6 border-t
              border-gray-100 pt-4">
 
-            <a :href="category.href" class="inline-flex items-center gap-2
+                <RouterLink :to="category.href" class="inline-flex items-center gap-2
                text-sm font-semibold
                text-[#252525]
                hover:underline">
@@ -109,7 +109,7 @@
 
                 <i class="bi bi-arrow-right" aria-hidden="true"></i>
 
-            </a>
+            </RouterLink>
 
         </div>
 

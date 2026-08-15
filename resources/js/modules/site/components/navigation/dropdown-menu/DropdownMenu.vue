@@ -81,8 +81,8 @@
                             :key="category.title"
                             class="mb-2 last:mb-0"
                         >
-                            <a
-                                :href="category.href"
+                            <RouterLink
+                                :to="category.href"
                                 @click="$emit('close')"
                                 class="group flex items-center gap-2.5
                                        rounded-md px-2.5 py-1.75
@@ -114,12 +114,12 @@
                                 <span>
                                     {{ category.shortTitle || category.title }}
                                 </span>
-                            </a>
+                            </RouterLink>
 
-                            <a
+                            <RouterLink
                                 v-for="item in category.items || []"
                                 :key="item.title"
-                                :href="item.href"
+                                :to="item.href"
                                 @click="$emit('close')"
                                 class="flex items-center gap-2
                                        rounded-md px-2.5 py-1.25
@@ -130,13 +130,13 @@
                             >
                                 <i class="bi bi-chevron-right text-[9px] text-gray-400"></i>
                                 <span>{{ item.title }}</span>
-                            </a>
+                            </RouterLink>
                         </div>
                     </template>
 
-                    <!-- <a
+                    <!-- <RouterLink
                         v-if="allLink"
-                        :href="allLink"
+                        :to="allLink"
                         @click="$emit('close')"
                         class="mt-2 flex items-center justify-center
                                gap-2 rounded-xl bg-white
@@ -146,7 +146,7 @@
                     >
                         <span>{{ allLabel }}</span>
                         <i class="bi bi-arrow-right text-sm"></i>
-                    </a> -->
+                    </RouterLink> -->
 
                 </div>
             </div>

@@ -96,9 +96,9 @@
 
                     </div>
 
-                    <a
+                    <RouterLink
                         v-if="group.href"
-                        :href="group.href"
+                        :to="group.href"
                         @click="$emit('close')"
                         class="mt-2 inline-flex items-center gap-2
                                px-2 py-1.5 text-[12px]
@@ -108,7 +108,7 @@
                     >
                         <span>{{ t('megaMenu.showAllGroup') }}</span>
                         <i class="bi bi-arrow-right text-[11px]"></i>
-                    </a>
+                    </RouterLink>
 
                 </div>
             </Transition>

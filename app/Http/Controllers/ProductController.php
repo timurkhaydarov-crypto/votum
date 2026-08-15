@@ -5,11 +5,48 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
 use App\Models\Product\Product;
+use App\Models\Product\Group;
+use App\Models\Product\Category;
 use App\Services\ProductMenuService;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
+    protected function serializeProduct(Product $product): array
+    {
+        return [
+            'id' => $product->id,
+            'article' => $product->article,
+            'name' => $product->name,
+            'short_description' => $product->short_description,
+            'full_description' => $product->full_description,
+            'category' => $product->category ? [
+                'id' => $product->category->id,
+                'slug' => $product->category->slug,
+                'title' => $product->category->category,
+            ] : null,
+            'group' => $product->group ? [
+                'id' => $product->group->id,
+                'slug' => $product->group->slug,
+                'title' => $product->group->group,
+            ] : null,
+            'groups' => $product->groups->map(fn ($group) => [
+                'id' => $group->id,
+                'slug' => $group->slug,
+                'title' => $group->group,
+            ])->values()->all(),
+            'brand' => $product->brand ? [
+                'id' => $product->brand->id,
+                'title' => $product->brand->brand,
+            ] : null,
+            'image_url' => $product->image_url,
+            'video_url' => $product->video_url,
+            'price' => $product->price,
+            'quantity' => $product->quantity,
+            'status' => $product->status,
+        ];
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -18,39 +55,7 @@ class ProductController extends Controller
         $products = Product::with(['brand', 'category', 'group', 'groups'])->get();
 
         return response()->json(
-            $products->map(function (Product $product) {
-                return [
-                    'id' => $product->id,
-                    'article' => $product->article,
-                    'name' => $product->name,
-                    'short_description' => $product->short_description,
-                    'full_description' => $product->full_description,
-                    'category' => $product->category ? [
-                        'id' => $product->category->id,
-                        'slug' => $product->category->slug,
-                        'title' => $product->category->category,
-                    ] : null,
-                    'group' => $product->group ? [
-                        'id' => $product->group->id,
-                        'slug' => $product->group->slug,
-                        'title' => $product->group->group,
-                    ] : null,
-                    'groups' => $product->groups->map(fn ($group) => [
-                        'id' => $group->id,
-                        'slug' => $group->slug,
-                        'title' => $group->group,
-                    ])->values()->all(),
-                    'brand' => $product->brand ? [
-                        'id' => $product->brand->id,
-                        'title' => $product->brand->brand,
-                    ] : null,
-                    'image_url' => $product->image_url,
-                    'video_url' => $product->video_url,
-                    'price' => $product->price,
-                    'quantity' => $product->quantity,
-                    'status' => $product->status,
-                ];
-            })->values()->all()
+            $products->map(fn (Product $product) => $this->serializeProduct($product))->values()->all()
         );
     }
 
@@ -59,6 +64,25 @@ class ProductController extends Controller
         $locale = $request->query('lang', 'ru');
 
         return response()->json($menuService->buildMenu($locale));
+    }
+    
+    public function productsByGroup(Group $group)
+    {
+        $products = Product::with(['brand', 'category', 'group', 'groups'])
+            ->where('group_id', $group->id)
+            ->orWhereHas('groups', fn ($q) => $q->where('groups.id', $group->id))
+            ->get();
+
+        return response()->json($products);
+    }
+
+    public function productsByCategory(Category $category)
+    {
+        $products = Product::with(['brand', 'category', 'group', 'groups'])
+            ->where('category_id', $category->id)
+            ->get();
+
+        return response()->json($products);
     }
 
     /**
@@ -82,7 +106,9 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
-        //
+        $product->load(['brand', 'category', 'group', 'groups']);
+
+        return response()->json($this->serializeProduct($product));
     }
 
     /**

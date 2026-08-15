@@ -190,8 +190,8 @@
             class="mt-3 border-t border-gray-200 pt-2.5"
         >
 
-            <a
-                :href="category.href"
+            <RouterLink
+                :to="category.href"
                 class="group inline-flex items-center gap-[6px]
                        text-[11px] font-semibold text-[#252525]
                        transition-all duration-[220ms]
@@ -216,7 +216,7 @@
 
                 </span>
 
-            </a>
+            </RouterLink>
 
         </div>
 

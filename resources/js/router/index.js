@@ -6,6 +6,11 @@ import RegisterPage from '../modules/auth/pages/RegisterPage.vue';
 import ForgotPasswordPage from '../modules/auth/pages/ForgotPasswordPage.vue';
 import ResetPasswordPage from '../modules/auth/pages/ResetPasswordPage.vue';
 import SiteIndexPage from '../modules/site/pages/index.vue';
+import ProductsAllPage from '../modules/site/pages/products/ProductsAllPage.vue';
+import ProductsByCategoryPage from '../modules/site/pages/products/ProductsByCategoryPage.vue';
+import ProductsByGroupPage from '../modules/site/pages/products/ProductsByGroupPage.vue';
+import ProductDetailPage from '../modules/site/pages/products/ProductDetailPage.vue';
+
 const router = createRouter({
     history: createWebHistory(),
     routes: [
@@ -13,6 +18,29 @@ const router = createRouter({
             path: '/',
             name: 'site.index',
             component: SiteIndexPage,
+        },
+        {
+            path: '/products',
+            name: 'products.all',
+            component: ProductsAllPage,
+        },
+        {
+            path: '/products/item/:productId',
+            name: 'products.detail',
+            component: ProductDetailPage,
+            props: true,
+        },
+        {
+            path: '/products/:categorySlug/:groupSlug',
+            name: 'products.group',
+            component: ProductsByGroupPage,
+            props: true,
+        },
+        {
+            path: '/products/:categorySlug',
+            name: 'products.category',
+            component: ProductsByCategoryPage,
+            props: true,
         },
         {
             path: '/auth',

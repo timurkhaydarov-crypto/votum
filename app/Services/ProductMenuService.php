@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\Models\Product\Category;
-use Illuminate\Support\Str;
 
 class ProductMenuService
 {
@@ -23,9 +22,7 @@ class ProductMenuService
                         $groupProducts = $category->products
                             ->filter(fn ($product) => $product->groups->contains('id', $group->id))
                             ->map(function ($product) use ($category, $group, $locale) {
-                                $productId = $product->article
-                                    ? Str::slug($product->article)
-                                    : (string) $product->id;
+                                $productId = (string) $product->id;
 
                                 $title = $this->localized($product->name, $locale)
                                     ?? $product->article
@@ -38,7 +35,7 @@ class ProductMenuService
                                 return [
                                     'id' => $productId,
                                     'title' => $title,
-                                    'href' => '/products/' . $productId,
+                                    'href' => '/products/item/' . $productId,
                                     'image_url' => $product->image_url,
                                     'description' => $description,
                                 ];

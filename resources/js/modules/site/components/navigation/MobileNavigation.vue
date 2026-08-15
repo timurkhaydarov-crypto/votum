@@ -89,8 +89,8 @@
 
                     <!-- HOME -->
 
-                    <a
-                        href="/"
+                    <RouterLink
+                        to="/"
                         @click="close"
                         class="group flex items-center gap-2.5
                                rounded-lg px-2.5 py-2.5
@@ -114,7 +114,7 @@
                             {{ t('menu.home') }}
                         </span>
 
-                    </a>
+                    </RouterLink>
 
 
                     <!-- PRODUCTS -->
@@ -147,10 +147,10 @@
 
                     <!-- OTHER MENU ITEMS -->
 
-                    <a
+                    <RouterLink
                         v-for="item in mainMenu"
                         :key="item.title"
-                        :href="item.href"
+                        :to="item.href"
                         @click="close"
                         class="group flex items-center gap-2.5
                                rounded-lg px-2.5 py-2.5
@@ -190,7 +190,7 @@
                                    text-gray-400"
                         ></i>
 
-                    </a>
+                    </RouterLink>
 
                 </div>
 

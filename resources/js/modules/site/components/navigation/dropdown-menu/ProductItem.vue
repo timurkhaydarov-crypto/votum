@@ -1,7 +1,7 @@
 <template>
 
-    <a
-        :href="product.href"
+    <RouterLink
+        :to="product.href"
         @click="$emit('close')"
         class="block
                rounded-md
@@ -15,7 +15,7 @@
                hover:text-[#252525]"
     >
         {{ product.title }}
-    </a>
+    </RouterLink>
 
 </template>
 

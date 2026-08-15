@@ -1,6 +1,6 @@
 <template>
     <!-- Logo -->
-    <a href="/" class="flex shrink-0 items-center gap-2">
+    <RouterLink to="/" class="flex shrink-0 items-center gap-2">
         <div class="flex h-9 w-9 items-center justify-center">
             <img :src="'/image/logo.svg'" alt="Logo" class="h-9 w-9" />
         </div>
@@ -13,7 +13,7 @@
                 {{ $t('logo.Subtitle') }}
             </span>
         </div>
-    </a>
+    </RouterLink>
 </template>
 <script setup>
 import { computed } from 'vue'

@@ -7,7 +7,7 @@
 
         <!-- Главная -->
 
-        <a href="/" class="group flex items-center gap-2
+        <RouterLink to="/" class="group flex items-center gap-2
              rounded-xl px-3 py-2
              text-sm font-medium
              text-[#252525]
@@ -18,7 +18,7 @@
                nav-item-icon"></i>
 
             <span>{{ t('menu.home') }}</span>
-        </a>
+        </RouterLink>
 
 
         <!-- ========================================== -->
@@ -99,7 +99,7 @@
         <!-- ОСТАЛЬНЫЕ -->
         <!-- ========================================== -->
 
-        <a v-for="item in mainMenu.slice(1)" :key="item.title" :href="item.href" class="group flex items-center gap-2
+        <RouterLink v-for="item in mainMenu.slice(1)" :key="item.title" :to="item.href" class="group flex items-center gap-2
              rounded-xl px-3 py-2
              text-sm font-medium
              text-[#252525]
@@ -117,7 +117,7 @@
                 {{ t(item.title) }}
             </span>
 
-        </a>
+        </RouterLink>
 
     </nav>
 
