@@ -1,4 +1,4 @@
-const pickLocalized = (value) => {
+const pickLocalized = (value, locale = 'ru') => {
     if (typeof value === 'string') {
         return value;
     }
@@ -7,41 +7,57 @@ const pickLocalized = (value) => {
         return '';
     }
 
-    return value.ru || value.en || Object.values(value)[0] || '';
+    return value[locale] || value.ru || value.en || Object.values(value)[0] || '';
 };
 
-const normalizeRelationTitle = (relation, key) => {
+const normalizeRelationTitle = (relation, key, locale = 'ru') => {
     if (!relation) {
         return '';
     }
 
     if (relation.title) {
-        return pickLocalized(relation.title);
+        return pickLocalized(relation.title, locale);
     }
 
-    return pickLocalized(relation[key]);
+    return pickLocalized(relation[key], locale);
 };
 
-export const normalizeProduct = (product) => ({
+const normalizeSpecValue = (value, locale = 'ru') => {
+    if (typeof value === 'string') {
+        return value;
+    }
+
+    if (!value || typeof value !== 'object') {
+        return '';
+    }
+
+    return pickLocalized(value, locale);
+};
+
+export const normalizeProduct = (product, locale = 'ru') => ({
     id: product.id,
     article: product.article || '',
-    name: pickLocalized(product.name),
-    shortDescription: pickLocalized(product.short_description),
-    fullDescription: pickLocalized(product.full_description),
+    name: pickLocalized(product.name, locale),
+    shortDescription: pickLocalized(product.short_description, locale),
+    fullDescription: pickLocalized(product.full_description, locale),
     categorySlug: product.category?.slug || null,
-    categoryTitle: normalizeRelationTitle(product.category, 'category'),
+    categoryTitle: normalizeRelationTitle(product.category, 'category', locale),
     groupSlug: product.group?.slug || null,
-    groupTitle: normalizeRelationTitle(product.group, 'group'),
+    groupTitle: normalizeRelationTitle(product.group, 'group', locale),
     price: product.price,
     quantity: product.quantity,
     imageUrl: product.image_url || '',
     videoUrl: product.video_url || '',
+    method: normalizeSpecValue(product.method, locale),
+    frequency: normalizeSpecValue(product.frequency, locale),
+    display: normalizeSpecValue(product.display, locale),
+    application: normalizeSpecValue(product.application, locale),
 });
 
-export const normalizeProducts = (products) => {
+export const normalizeProducts = (products, locale = 'ru') => {
     if (!Array.isArray(products)) {
         return [];
     }
 
-    return products.map(normalizeProduct);
+    return products.map((product) => normalizeProduct(product, locale));
 };

@@ -1,7 +1,7 @@
 <template>
     <ProductsLayout
-        :title="`Группа: ${groupSlug}`"
-        :subtitle="`Продукция группы в категории ${categorySlug}`"
+        :title="pageTitle"
+        :subtitle="pageSubtitle"
     >
         <ProductBreadcrumbs :items="breadcrumbs" />
 
@@ -16,6 +16,7 @@
 <script setup>
 import { computed, onMounted, watch } from 'vue';
 import { useRoute } from 'vue-router';
+import { useI18n } from 'vue-i18n';
 import ProductBreadcrumbs from '../../components/products/ProductBreadcrumbs.vue';
 import ProductGrid from '../../components/products/ProductGrid.vue';
 import ProductsLayout from '../../components/products/ProductsLayout.vue';
@@ -23,6 +24,7 @@ import { useProductsCatalog } from '../../composables/useProductsCatalog.js';
 import { useProductBreadcrumbs } from '../../composables/useProductBreadcrumbs.js';
 
 const route = useRoute();
+const { locale, t } = useI18n();
 
 const {
     products,
@@ -39,6 +41,16 @@ const categoryTitle = computed(() => {
 const groupTitle = computed(() => {
     return products.value[0]?.groupTitle || groupSlug.value;
 });
+const pageTitle = computed(() => {
+    return t('productPages.groupTitle', {
+        group: groupTitle.value,
+    });
+});
+const pageSubtitle = computed(() => {
+    return t('productPages.groupSubtitle', {
+        category: categoryTitle.value,
+    });
+});
 
 const {
     breadcrumbs,
@@ -50,19 +62,23 @@ const {
 });
 
 const loadGroupProducts = () => {
-    if (!groupSlug.value) {
+    if (!categorySlug.value || !groupSlug.value) {
         return;
     }
 
-    loadProductsByGroup(groupSlug.value);
+    loadProductsByGroup(categorySlug.value, groupSlug.value);
 };
 
 onMounted(loadGroupProducts);
 
 watch(
-    () => route.params.groupSlug,
+    () => [route.params.categorySlug, route.params.groupSlug],
     () => {
         loadGroupProducts();
     }
 );
+
+watch(locale, () => {
+    loadGroupProducts();
+});
 </script>

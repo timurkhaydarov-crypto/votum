@@ -33,9 +33,11 @@ Route::prefix('contacts')->group(function () {
 });
 Route::prefix('products')->group(function () {
     Route::get('menu', [ProductController::class, 'menu']);
-    Route::get('group/{group:slug}', [ProductController::class, 'productsByGroup']);
+    Route::get('category/{category:slug}/group/{group:slug}', [ProductController::class, 'productsByGroup'])
+        ->withoutScopedBindings();
     Route::get('category/{category:slug}', [ProductController::class, 'productsByCategory']);
 
     Route::apiResource('item', ProductController::class)
-    ->only(['index', 'show', 'store', 'update', 'destroy']);
+        ->parameters(['item' => 'product'])
+        ->only(['index', 'show', 'store', 'update', 'destroy']);
 });

@@ -19,3 +19,6 @@ Route::prefix('auth')->group(function () {
     Route::get('/forgot-password', [AuthController::class, 'forgotPassword']);
     Route::post('/logout', LogoutController::class)->middleware('auth');
 });
+
+Route::get('/products/{any?}', [AuthController::class, 'index'])
+    ->where('any', '.*');

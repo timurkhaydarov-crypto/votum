@@ -1,14 +1,17 @@
 import { ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { productsApi } from '../services/productsApi.js';
 import { normalizeProducts } from '../utils/productNormalizer.js';
 
 export const useProductsCatalog = () => {
+    const { locale } = useI18n();
+
     const products = ref([]);
     const isLoading = ref(false);
     const errorMessage = ref('');
 
     const setProducts = (rawProducts) => {
-        products.value = normalizeProducts(rawProducts);
+        products.value = normalizeProducts(rawProducts, locale.value);
     };
 
     const runRequest = async (requestFn) => {
@@ -34,8 +37,8 @@ export const useProductsCatalog = () => {
         await runRequest(() => productsApi.getByCategorySlug(categorySlug));
     };
 
-    const loadProductsByGroup = async (groupSlug) => {
-        await runRequest(() => productsApi.getByGroupSlug(groupSlug));
+    const loadProductsByGroup = async (categorySlug, groupSlug) => {
+        await runRequest(() => productsApi.getByGroupSlug(categorySlug, groupSlug));
     };
 
     return {

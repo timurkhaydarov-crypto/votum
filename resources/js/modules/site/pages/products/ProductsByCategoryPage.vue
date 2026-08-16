@@ -1,6 +1,6 @@
 <template>
     <ProductsLayout
-        :title="`Категория: ${categorySlug}`"
+        :title="categoryTitle"
         subtitle="Продукция в выбранной категории"
     >
         <ProductBreadcrumbs :items="breadcrumbs" />
@@ -16,6 +16,7 @@
 <script setup>
 import { computed, onMounted, watch } from 'vue';
 import { useRoute } from 'vue-router';
+import { useI18n } from 'vue-i18n';
 import ProductBreadcrumbs from '../../components/products/ProductBreadcrumbs.vue';
 import ProductGrid from '../../components/products/ProductGrid.vue';
 import ProductsLayout from '../../components/products/ProductsLayout.vue';
@@ -23,6 +24,7 @@ import { useProductsCatalog } from '../../composables/useProductsCatalog.js';
 import { useProductBreadcrumbs } from '../../composables/useProductBreadcrumbs.js';
 
 const route = useRoute();
+const { locale } = useI18n();
 
 const {
     products,
@@ -59,4 +61,8 @@ watch(
         loadCategoryProducts();
     }
 );
+
+watch(locale, () => {
+    loadCategoryProducts();
+});
 </script>

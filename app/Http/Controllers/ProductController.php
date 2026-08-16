@@ -12,6 +12,53 @@ use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
+    protected function formatMethod(?object $method): ?string
+    {
+        if (!$method) {
+            return null;
+        }
+
+        $map = [
+            'ut_method' => 'UT',
+            'et_method' => 'ET',
+            'mia_method' => 'MIA',
+            'iet_method' => 'IET',
+            'mt_method' => 'MT',
+            'vt_method' => 'VT',
+        ];
+
+        $active = [];
+        foreach ($map as $field => $label) {
+            if ((bool) data_get($method, $field, false)) {
+                $active[] = $label;
+            }
+        }
+
+        return empty($active) ? null : implode(', ', $active);
+    }
+
+    protected function formatApplication(?object $sector): ?string
+    {
+        if (!$sector) {
+            return null;
+        }
+
+        $map = [
+            'railway' => 'Railway',
+            'aerospace' => 'Aerospace',
+            'oil' => 'Oil & Gas',
+        ];
+
+        $active = [];
+        foreach ($map as $field => $label) {
+            if ((bool) data_get($sector, $field, false)) {
+                $active[] = $label;
+            }
+        }
+
+        return empty($active) ? null : implode(', ', $active);
+    }
+
     protected function serializeProduct(Product $product): array
     {
         return [
@@ -44,6 +91,10 @@ class ProductController extends Controller
             'price' => $product->price,
             'quantity' => $product->quantity,
             'status' => $product->status,
+            'method' => $this->formatMethod($product->method),
+            'frequency' => data_get($product->note, 'frequency'),
+            'display' => data_get($product->note, 'display'),
+            'application' => $this->formatApplication($product->sector),
         ];
     }
 
@@ -52,7 +103,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::with(['brand', 'category', 'group', 'groups'])->get();
+        $products = Product::with(['brand', 'category', 'group', 'groups', 'method', 'sector'])->get();
 
         return response()->json(
             $products->map(fn (Product $product) => $this->serializeProduct($product))->values()->all()
@@ -66,23 +117,31 @@ class ProductController extends Controller
         return response()->json($menuService->buildMenu($locale));
     }
     
-    public function productsByGroup(Group $group)
+    public function productsByGroup(Category $category, Group $group)
     {
-        $products = Product::with(['brand', 'category', 'group', 'groups'])
-            ->where('group_id', $group->id)
-            ->orWhereHas('groups', fn ($q) => $q->where('groups.id', $group->id))
+        $products = Product::with(['brand', 'category', 'group', 'groups', 'method', 'sector'])
+            ->where('category_id', $category->id)
+            ->where(function ($query) use ($group) {
+                $query
+                    ->where('group_id', $group->id)
+                    ->orWhereHas('groups', fn ($q) => $q->where('groups.id', $group->id));
+            })
             ->get();
 
-        return response()->json($products);
+        return response()->json(
+            $products->map(fn (Product $product) => $this->serializeProduct($product))->values()->all()
+        );
     }
 
     public function productsByCategory(Category $category)
     {
-        $products = Product::with(['brand', 'category', 'group', 'groups'])
+        $products = Product::with(['brand', 'category', 'group', 'groups', 'method', 'sector'])
             ->where('category_id', $category->id)
             ->get();
 
-        return response()->json($products);
+        return response()->json(
+            $products->map(fn (Product $product) => $this->serializeProduct($product))->values()->all()
+        );
     }
 
     /**
@@ -106,7 +165,7 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
-        $product->load(['brand', 'category', 'group', 'groups']);
+        $product->load(['brand', 'category', 'group', 'groups', 'method', 'sector']);
 
         return response()->json($this->serializeProduct($product));
     }

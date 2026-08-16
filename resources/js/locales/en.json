@@ -134,6 +134,25 @@
     "backToCategory": "Back to category: {category}",
     "backToGroup": "Back to group: {group}"
   },
+  "productCard": {
+    "badgeFallback": "Ultrasonic",
+    "inStock": "In stock",
+    "outOfStock": "Out of stock",
+    "method": "Method",
+    "frequency": "Frequency",
+    "display": "Display",
+    "application": "Application",
+    "price": "Price",
+    "byRequest": "By request",
+    "viewProduct": "View product"
+  },
+  "productGrid": {
+    "all": "All"
+  },
+  "productPages": {
+    "groupTitle": "Group: {group}",
+    "groupSubtitle": "Products of the group in category {category}"
+  },
   "messages":{
     "confirm":{
       "null":"",

@@ -134,6 +134,25 @@
     "backToCategory": "Назад к категории: {category}",
     "backToGroup": "Назад к группе: {group}"
   },
+  "productCard": {
+    "badgeFallback": "Ультразвук",
+    "inStock": "В наличии",
+    "outOfStock": "Нет в наличии",
+    "method": "Метод",
+    "frequency": "Частота",
+    "display": "Дисплей",
+    "application": "Применение",
+    "price": "Цена",
+    "byRequest": "По запросу",
+    "viewProduct": "Смотреть товар"
+  },
+  "productGrid": {
+    "all": "Все"
+  },
+  "productPages": {
+    "groupTitle": "Группа: {group}",
+    "groupSubtitle": "Продукция группы в категории {category}"
+  },
   "messages":{
     "confirm":{
       "null":"",

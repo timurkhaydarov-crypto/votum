@@ -46,7 +46,7 @@ export const productsApi = {
         return fetchJson(`/api/products/category/${encodeURIComponent(categorySlug)}`);
     },
 
-    getByGroupSlug(groupSlug) {
-        return fetchJson(`/api/products/group/${encodeURIComponent(groupSlug)}`);
+    getByGroupSlug(categorySlug, groupSlug) {
+        return fetchJson(`/api/products/category/${encodeURIComponent(categorySlug)}/group/${encodeURIComponent(groupSlug)}`);
     },
 };
