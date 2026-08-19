@@ -1,79 +1,51 @@
 <template>
-    <ProductsLayout
-        :title="pageTitle"
-        subtitle="Детальная информация о приборе неразрушающего контроля"
-    >
+    <ProductsLayout :title="pageTitle" subtitle="Детальная информация о приборе неразрушающего контроля">
         <ProductDetailLoading v-if="isLoading" />
 
-        <ProductDetailError
-            v-else-if="errorMessage"
-            :message="errorMessage"
-        />
+        <ProductDetailError v-else-if="errorMessage" :message="errorMessage" />
 
-        <ProductDetailNotFound
-            v-else-if="isNotFound"
-        />
+        <ProductDetailNotFound v-else-if="isNotFound" />
 
-        <div
-            v-else-if="product"
-            class="space-y-6"
-        >
+        <div v-else-if="product" class="space-y-6">
             <ProductBreadcrumbs :items="breadcrumbs" />
 
-            <ProductDetailHero
-                :product="product"
-                :image-src="imageSrc"
-                :is-in-stock="isInStock"
-                :price-label="priceLabel"
-                :group-dot-class="groupDotClass"
-                :group-badge-classes="groupBadgeClasses"
-                :back-link="backLink"
-                :back-label="backLabel"
-            />
+            <ProductDetailHero :product="product" :image-src="imageSrc" :is-in-stock="isInStock"
+                :price-label="priceLabel" :group-dot-class="groupDotClass" :group-badge-classes="groupBadgeClasses"
+                :back-link="backLink" :back-label="backLabel" :active-info="activeInfo"
+                @change-info="activeInfo = $event" />
+            <ProductInformation v-if="activeInfo === 'info'"
+                :content="product.fullDescription || product.shortDescription" :active-info="activeInfo" />
+            <ProductFeatures v-if="activeInfo === 'features'" :features="features" />
 
-            <ProductFeatures
-                :features="features"
-            />
+            <ProductTechnicalCharacteristics v-if="activeInfo === 'technical'"
+                :characteristics="technicalCharacteristics" />
 
-            <ProductTechnicalCharacteristics
-                :characteristics="technicalCharacteristics"
-            />
+            <ProductTransducers :transducers="transducers" :is-loading="isLoadingTransducers"
+                :error-message="transducersErrorMessage" :has-product-transducers="hasProductTransducers" />
 
-            <ProductTransducers
-                :transducers="transducers"
-                :is-loading="isLoadingTransducers"
-                :error-message="transducersErrorMessage"
-                :has-product-transducers="hasProductTransducers"
-            />
-
-            <ProductApplication
+            <!-- <ProductApplication
                 :product="product"
                 :available="applicationAvailable"
-            />
+            /> -->
 
-            <ProductDocuments
+            <!-- <ProductDocuments
                 :documents="documents"
-            />
+            /> -->
+            <ProductImageGallery v-if="product.certificates?.length" :images="product.certificates || []" :galleryTitle="'certificates-gallery'" :gallerySubTitle="'certificates'" :type="'certificate'" />
 
-            <ProductGallery
-                :product="product"
-                :images="galleryImages"
-            />
+            <ProductGallery :product="product" :images="galleryImages" />
 
             <ProductDetailCta />
         </div>
 
-        <div
-            v-else
-            class="rounded-2xl border border-slate-200 bg-slate-50 p-6 text-sm text-slate-600"
-        >
+        <div v-else class="rounded-2xl border border-slate-200 bg-slate-50 p-6 text-sm text-slate-600">
             Нет данных о продукции.
         </div>
     </ProductsLayout>
 </template>
 
 <script setup>
-import { computed, watch } from 'vue';
+import { computed, watch, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 
@@ -91,15 +63,16 @@ import ProductTransducers from '../../components/products/detail/ProductTransduc
 import ProductApplication from '../../components/products/detail/ProductApplication.vue';
 import ProductDocuments from '../../components/products/detail/ProductDocuments.vue';
 import ProductGallery from '../../components/products/detail/ProductGallery.vue';
+import ProductImageGallery from '../../components/products/detail/ProductImageGallery.vue';
 import ProductDetailCta from '../../components/products/detail/ProductDetailCta.vue';
-
+import ProductInformation from '../../components/products/detail/ProductInformation.vue';
 import { useProductsCatalog } from '../../composables/useProductsCatalog.js';
 import { useProductDetails } from '../../composables/useProductDetails.js';
 import { useProductBreadcrumbs } from '../../composables/useProductBreadcrumbs.js';
 
 const route = useRoute();
 const { t, locale } = useI18n();
-
+const activeInfo = ref('info');
 const {
     product,
     isLoading,

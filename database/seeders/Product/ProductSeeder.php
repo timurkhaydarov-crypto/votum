@@ -4,8 +4,9 @@ namespace Database\Seeders\Product;
 
 use App\Models\Product\Brand;
 use App\Models\Product\Category;
-use App\Models\Product\Product;
+use App\Models\Product\Certificate;
 use App\Models\Product\Group;
+use App\Models\Product\Product;
 use Illuminate\Database\Seeder;
 
 class ProductSeeder extends Seeder
@@ -18,11 +19,11 @@ class ProductSeeder extends Seeder
         $brandIds = Brand::query()->orderBy('id')->pluck('id')->values();
 
         $products = array_merge(
-            require __DIR__ . '/data/industrial_ndt.php',
-            require __DIR__ . '/data/flaw_detectors.php',
-            require __DIR__ . '/data/scanning_devices.php',
-            require __DIR__ . '/data/transducers.php',
-            require __DIR__ . '/data/reference_standards.php',
+            require __DIR__.'/data/industrial_ndt.php',
+            require __DIR__.'/data/flaw_detectors.php',
+            require __DIR__.'/data/scanning_devices.php',
+            require __DIR__.'/data/transducers.php',
+            require __DIR__.'/data/reference_standards.php',
         );
 
         foreach ($products as $index => $item) {
@@ -30,7 +31,7 @@ class ProductSeeder extends Seeder
                 ->where('slug', $item['category'])
                 ->value('id');
 
-            if (!$categoryId) {
+            if (! $categoryId) {
                 throw new \RuntimeException(sprintf('Category slug not found: %s', $item['category']));
             }
 
@@ -38,7 +39,7 @@ class ProductSeeder extends Seeder
                 ->where('slug', $item['group'])
                 ->value('id');
 
-            if (!$groupId) {
+            if (! $groupId) {
                 throw new \RuntimeException(sprintf('Group slug not found: %s', $item['group']));
             }
 
@@ -74,6 +75,20 @@ class ProductSeeder extends Seeder
 
                 if ($groupIds) {
                     $product->groups()->sync($groupIds);
+                }
+            }
+            $certificateImageUrls = array_values(array_unique(array_filter(
+                $item['certificates'] ?? []
+            )));
+
+            if ($certificateImageUrls) {
+                $certificateIds = Certificate::query()
+                    ->whereIn('image_url', $certificateImageUrls)
+                    ->pluck('id')
+                    ->toArray();
+
+                if ($certificateIds) {
+                    $product->certificates()->sync($certificateIds);
                 }
             }
         }

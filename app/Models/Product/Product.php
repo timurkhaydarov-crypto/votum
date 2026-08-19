@@ -4,24 +4,23 @@ namespace App\Models\Product;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Product\Certificate;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use App\Models\Product\Category;
-use App\Models\Product\Group;
-use App\Models\Product\Brand;
-use App\Models\Product\Sector;
-use App\Models\Product\Method;
+
 
 class Product extends Model
 {
     use HasFactory;
+
     protected $casts = [
         'name' => 'array',
         'short_description' => 'array',
         'full_description' => 'array',
         'note' => 'array',
     ];
+
     protected $fillable = [
         'article',
         'name',
@@ -42,8 +41,8 @@ class Product extends Model
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
-    }    
-    
+    }
+
     public function group(): BelongsTo
     {
         return $this->belongsTo(Group::class);
@@ -53,6 +52,16 @@ class Product extends Model
     {
         return $this->belongsToMany(Group::class, 'product_group');
     }
+
+    public function certificates(): BelongsToMany
+        {
+            return $this->belongsToMany(
+                Certificate::class,
+                'product_certificates',
+                'product_id',
+                'certificate_id'
+            );
+        }
 
     public function brand(): BelongsTo
     {

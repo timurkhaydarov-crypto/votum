@@ -1,7 +1,7 @@
 <template>
     <section class="px-4 py-8 sm:px-6 lg:px-8">
         <div class="mx-auto w-full max-w-6xl">
-            <header class="mb-6">
+            <!-- <header class="mb-6">
                 <h1 class="text-2xl font-bold text-slate-900 sm:text-3xl">
                     {{ title }}
                 </h1>
@@ -12,7 +12,7 @@
                 >
                     {{ subtitle }}
                 </p>
-            </header>
+            </header> -->
 
             <slot />
         </div>

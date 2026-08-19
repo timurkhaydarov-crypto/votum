@@ -14,6 +14,7 @@ return [
         'category' => 'industrial-ndt',
         'group' => 'railway-sector',
         'groups' => ['railway-sector'],
+        'certificates' => ['roboscope_1', 'roboscope_2', 'roboscope_3'],
         'short_description' => [
             'ru' => 'Роботизированная установка для комплексного неразрушающего контроля колесных пар железнодорожного подвижного состава.',
             'en' => 'Robotic system for comprehensive non-destructive testing of railway rolling stock wheelsets.',
@@ -43,6 +44,7 @@ return [
         'category' => 'industrial-ndt',
         'group' => 'railway-sector',
         'groups' => ['railway-sector'],
+        'certificates' => ['roboscope_1', 'roboscope_2', 'roboscope_3'],
         'short_description' => [
             'ru' => 'Роботизированная измерительная система для комплексного неразрушающего контроля ударно-тяговых деталей железнодорожных вагонов.',
             'en' => 'Robotic inspection system for comprehensive non-destructive testing of railway wagon draft gear and coupler components.',
@@ -72,6 +74,7 @@ return [
         'category' => 'industrial-ndt',
         'group' => 'railway-sector',
         'groups' => ['railway-sector'],
+        'certificates' => ['roboscope_1', 'roboscope_2', 'roboscope_3'],
         'short_description' => [
             'ru' => 'Роботизированный комплекс для автоматизированного неразрушающего контроля сварных стыков рельсов.',
             'en' => 'Robotic system for automated non-destructive testing of welded rail joints.',
@@ -101,6 +104,7 @@ return [
         'category' => 'industrial-ndt',
         'group' => 'railway-sector',
         'groups' => ['railway-sector'],
+        'certificates' => ['roboscope_1', 'roboscope_2', 'roboscope_3'],
         'short_description' => [
             'ru' => 'Автоматизированная установка для дефектоскопии и лазерного измерения осей колесных пар.',
             'en' => 'Automated system for flaw detection and laser measurement of wheelset axles.',
@@ -130,6 +134,7 @@ return [
         'category' => 'industrial-ndt',
         'group' => 'railway-sector',
         'groups' => ['railway-sector'],
+        'certificates' => ['roboscope_1', 'roboscope_2', 'roboscope_3'],
         'short_description' => [
             'ru' => 'Роботизированный комплекс лазерного сканирования и дефектоскопии рам тележек вагонов метро и трамваев.',
             'en' => 'Robotic system for laser scanning and flaw detection of subway and tram bogie frames.',
@@ -159,6 +164,7 @@ return [
         'category' => 'industrial-ndt',
         'group' => 'railway-sector',
         'groups' => ['railway-sector'],
+        'certificates' => ['roboscope_1', 'roboscope_2', 'roboscope_3'],
         'short_description' => [
             'ru' => 'Роботизированный комплекс лазерного измерения и дефектоскопии деталей редукторов колесных пар.',
             'en' => 'Robotic system for laser measurement and flaw detection of wheelset gearbox components.',
@@ -188,6 +194,7 @@ return [
         'category' => 'industrial-ndt',
         'group' => 'railway-sector',
         'groups' => ['railway-sector'],
+        'certificates' => ['roboscope_1', 'roboscope_2', 'roboscope_3'],
         'short_description' => [
             'ru' => 'Роботизированная лазерно-сканирующая и дефектоскопическая система для контроля полых осей колесных пар.',
             'en' => 'Robotic laser scanning and flaw detection system for inspection of hollow wheelset axles.',
@@ -217,6 +224,7 @@ return [
         'category' => 'industrial-ndt',
         'group' => 'railway-sector',
         'groups' => ['railway-sector'],
+        'certificates' => ['roboscope_1', 'roboscope_2', 'roboscope_3'],
         'short_description' => [
             'ru' => 'Роботизированный измерительный комплекс для бесконтактного контроля геометрических параметров ответственных деталей подвижного состава.',
             'en' => 'Robotic measuring system for non-contact inspection of geometric parameters of critical railway rolling stock components.',
@@ -250,6 +258,7 @@ return [
         'category' => 'industrial-ndt',
         'group' => 'aerospace-sector',
         'groups' => ['aerospace-sector'],
+        'certificates' => ['roboscope_1', 'roboscope_2', 'roboscope_3'],
         'short_description' => [
             'ru' => 'Роботизированный стенд лазерного сканирования и дефектоскопии деталей авиационных двигателей.',
             'en' => 'Robotic laser scanning and flaw detection system for aircraft engine components.',
@@ -279,6 +288,7 @@ return [
         'category' => 'industrial-ndt',
         'group' => 'aerospace-sector',
         'groups' => ['aerospace-sector'],
+        'certificates' => ['roboscope_1', 'roboscope_2', 'roboscope_3'],
         'short_description' => [
             'ru' => 'Роботизированный стенд лазерного сканирования и дефектоскопии деталей из полимерно-композиционных материалов.',
             'en' => 'Robotic laser scanning and flaw detection system for polymer composite components.',
@@ -308,6 +318,7 @@ return [
         'category' => 'industrial-ndt',
         'group' => 'aerospace-sector',
         'groups' => ['aerospace-sector'],
+        'certificates' => ['roboscope_1', 'roboscope_2', 'roboscope_3'],
         'short_description' => [
             'ru' => 'Роботизированный стенд лазерного сканирования и дефектоскопии деталей авиационных двигателей.',
             'en' => 'Robotic laser scanning and flaw detection system for aircraft engine components.',
@@ -341,6 +352,7 @@ return [
         'category' => 'industrial-ndt',
         'group' => 'industrial-sector',
         'groups' => ['industrial-sector'],
+        'certificates' => ['roboscope_1', 'roboscope_2', 'roboscope_3'],
         'short_description' => [
             'ru' => 'Роботизированный комплекс для неразрушающего контроля механических свойств и геометрических размеров литых изделий.',
             'en' => 'Robotic system for non-destructive testing of mechanical properties and geometric dimensions of cast products.',
@@ -370,6 +382,7 @@ return [
         'category' => 'industrial-ndt',
         'group' => 'industrial-sector',
         'groups' => ['industrial-sector'],
+        'certificates' => ['roboscope_1', 'roboscope_2', 'roboscope_3'],
         'short_description' => [
             'ru' => 'Роботизированный комплекс для автоматизированного ультразвукового и оптического контроля угловых сварных соединений патрубков.',
             'en' => 'Robotic system for automated ultrasonic and optical inspection of fillet welds on pipe nozzles.',
@@ -399,6 +412,7 @@ return [
         'category' => 'industrial-ndt',
         'group' => 'industrial-sector',
         'groups' => ['industrial-sector'],
+        'certificates' => ['roboscope_1', 'roboscope_2', 'roboscope_3'],
         'short_description' => [
             'ru' => 'Роботизированный комплекс для неразрушающего контроля металла крышки и патрубков верхнего блока реактора ВВЭР-1200.',
             'en' => 'Robotic system for non-destructive testing of the reactor cover and nozzles of a VVER-1200 reactor.',
@@ -428,6 +442,7 @@ return [
         'category' => 'industrial-ndt',
         'group' => 'industrial-sector',
         'groups' => ['industrial-sector'],
+        'certificates' => ['roboscope_1', 'roboscope_2', 'roboscope_3'],
         'short_description' => [
             'ru' => 'Механизированная вихретоковая установка для контроля твердости и структуроскопии стальных коленчатых валов при поточном производстве.',
             'en' => 'Mechanized eddy-current system for hardness testing and structural analysis of steel crankshafts in serial production.',
@@ -457,6 +472,7 @@ return [
         'category' => 'industrial-ndt',
         'group' => 'industrial-sector',
         'groups' => ['industrial-sector'],
+        'certificates' => ['roboscope_1', 'roboscope_2', 'roboscope_3'],
         'short_description' => [
             'ru' => 'Лазерная установка бесконтактного контроля геометрических параметров труб и осей в процессе производства.',
             'en' => 'Laser system for non-contact inspection of the geometric parameters of pipes and axles during production.',

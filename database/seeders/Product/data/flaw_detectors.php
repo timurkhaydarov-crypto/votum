@@ -10,6 +10,7 @@ return [
         'category' => 'flaw-detectors',
         'group' => 'railway-sector',
         'groups' => ['railway-sector', 'aerospace-sector', 'industrial-sector'],
+        'certificates' => ['chameleon_1', 'chameleon_2', 'chameleon_3', 'chameleon_4'],
         'short_description' => [
             'ru' => 'Многоканальный дефектоскоп на фазированных решётках общего назначения для контроля металлических и композиционных материалов.',
             'en' => 'General-purpose multichannel phased array flaw detector for inspection of metal and composite materials.',
@@ -39,6 +40,7 @@ return [
         'category' => 'flaw-detectors',
         'group' => 'railway-sector',
         'groups' => ['railway-sector', 'aerospace-sector', 'industrial-sector'],
+        'certificates' => ['chameleon_1', 'chameleon_2', 'chameleon_3', 'chameleon_4'],
         'short_description' => [
             'ru' => 'Дефектоскоп на фазированных решётках для локального ультразвукового контроля железнодорожных рельсов.',
             'en' => 'Phased array flaw detector for local ultrasonic inspection of railway rails.',
@@ -68,6 +70,7 @@ return [
         'category' => 'flaw-detectors',
         'group' => 'railway-sector',
         'groups' => ['railway-sector'],
+        'certificates' => ['kalmar_1', 'kalmar_2'],
         'short_description' => [
             'ru' => 'Дефектоскоп на фазированных решётках для контроля сварных стыков железнодорожных рельсов.',
             'en' => 'Phased array flaw detector for inspection of welded railway rail joints.',
@@ -97,6 +100,7 @@ return [
         'category' => 'flaw-detectors',
         'group' => 'railway-sector',
         'groups' => ['railway-sector'],
+        'certificates' => ['chameleon_1', 'chameleon_2', 'chameleon_3', 'chameleon_4'],
         'short_description' => [
             'ru' => 'Двухниточный ультразвуковой дефектоскоп на фазированных решётках для контроля железнодорожных рельсов.',
             'en' => 'Dual-line phased array ultrasonic flaw detector for railway rail inspection.',
@@ -126,6 +130,7 @@ return [
         'category' => 'flaw-detectors',
         'group' => 'railway-sector',
         'groups' => ['railway-sector', 'aerospace-sector', 'industrial-sector'],
+        'certificates' => ['5m_1', '5m_2', '5m_3', '5m_4', '5m_5', '5m_6', '5m_7', '5m_8', '5m_9', '5m_10'],
         'short_description' => [
             'ru' => 'Многофункциональный дефектоскоп для ультразвукового, вихретокового и резонансного контроля.',
             'en' => 'Multifunctional flaw detector for ultrasonic, eddy current, and resonance inspection.',
@@ -155,6 +160,7 @@ return [
         'category' => 'flaw-detectors',
         'group' => 'railway-sector',
         'groups' => ['railway-sector', 'aerospace-sector', 'industrial-sector'],
+        'certificates' => ['5m_1', '5m_2', '5m_3', '5m_4', '5m_5', '5m_6', '5m_7', '5m_8', '5m_9', '5m_10'],
         'short_description' => [
             'ru' => 'Ультразвуковой дефектоскоп для контроля подошвы и перьев подошвы железнодорожных рельсов.',
             'en' => 'Ultrasonic flaw detector for inspection of railway rail feet and foot edges.',
@@ -184,6 +190,7 @@ return [
         'category' => 'flaw-detectors',
         'group' => 'railway-sector',
         'groups' => ['railway-sector', 'aerospace-sector', 'industrial-sector'],
+        'certificates' => ['dami_1', 'dami_2', 'dami_3', 'dami_4', 'dami_5'],
         'short_description' => [
             'ru' => 'Многофункциональный переносной дефектоскоп для контроля композиционных материалов, металлических конструкций и сотовых структур.',
             'en' => 'Multifunctional portable flaw detector for inspection of composite materials, metal structures, and honeycomb structures.',
@@ -213,6 +220,7 @@ return [
         'category' => 'flaw-detectors',
         'group' => 'aerospace-sector',
         'groups' => ['aerospace-sector'],
+        'certificates' => ['teri_1', 'teri_2'],
         'short_description' => [
             'ru' => 'Импедансный экспресс-тестер для контроля авиационных композитных и сотовых конструкций.',
             'en' => 'Impedance express tester for inspection of aircraft composite and honeycomb structures.',
@@ -242,6 +250,7 @@ return [
         'category' => 'flaw-detectors',
         'group' => 'aerospace-sector',
         'groups' => ['aerospace-sector'],
+        'certificates' => [],
         'short_description' => [
             'ru' => 'Блендоскоп для зачистки, диагностики и контроля авиационных лопаток.',
             'en' => 'Blending inspection scope for cleaning, diagnostics, and inspection of aircraft engine blades.',
@@ -271,6 +280,7 @@ return [
         'category' => 'flaw-detectors',
         'group' => 'aerospace-sector',
         'groups' => ['aerospace-sector'],
+        'certificates' => [],
         'short_description' => [
             'ru' => 'Портативный промышленный эндоскоп для видеоинспекции труднодоступных мест деталей авиационной техники.',
             'en' => 'Portable industrial endoscope for video inspection of hard-to-reach areas of aircraft components.',
@@ -300,6 +310,7 @@ return [
         'category' => 'flaw-detectors',
         'group' => 'industrial-sector',
         'groups' => ['industrial-sector'],
+        'certificates' => [],
         'short_description' => [
             'ru' => 'Автономная ультразвуковая приставка для создания дефектоскопов, структуроскопов и толщиномеров.',
             'en' => 'Standalone ultrasonic module for building flaw detectors, material analyzers, and thickness gauges.',

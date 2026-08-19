@@ -7,6 +7,7 @@ return [
         'category' => 'scanning-devices',
         'group' => 'railway-sector',
         'groups' => ['railway-sector'],
+        'certificates' => [],
         'short_description' => [
             'ru' => 'Сканирующее устройство для ультразвукового контроля осей колесных пар грузовых и пассажирских вагонов.',
             'en' => 'Scanning device for ultrasonic inspection of wheelset axles on freight and passenger railway vehicles.',
@@ -33,6 +34,7 @@ return [
         'category' => 'scanning-devices',
         'group' => 'railway-sector',
         'groups' => ['railway-sector'],
+        'certificates' => [],
         'short_description' => [
             'ru' => 'Тандемная каретка для ультразвукового контроля поперечных сварных швов железнодорожных рельсов.',
             'en' => 'Tandem carriage for ultrasonic inspection of transverse welded railway rail joints.',
@@ -59,6 +61,7 @@ return [
         'category' => 'scanning-devices',
         'group' => 'railway-sector',
         'groups' => ['railway-sector', 'aerospace-sector', 'industrial-sector'],
+        'certificates' => [],
         'short_description' => [
             'ru' => 'Механическая система двухмерной привязки координат для отслеживания перемещения преобразователя.',
             'en' => 'Mechanical two-dimensional coordinate tracking system for monitoring transducer movement.',
@@ -85,6 +88,7 @@ return [
         'category' => 'scanning-devices',
         'group' => 'railway-sector',
         'groups' => ['railway-sector'],
+        'certificates' => [],
         'short_description' => [
             'ru' => 'Томографический сканер для контроля сварных стыков железнодорожных рельсов.',
             'en' => 'Tomographic scanner for inspection of welded railway rail joints.',
@@ -111,6 +115,7 @@ return [
         'category' => 'scanning-devices',
         'group' => 'railway-sector',
         'groups' => ['railway-sector'],
+        'certificates' => [],
         'short_description' => [
             'ru' => 'Сканирующее устройство для ультразвукового контроля цельнокатаных колес вагонов.',
             'en' => 'Scanning device for ultrasonic inspection of solid-rolled railway wheels.',
@@ -137,6 +142,7 @@ return [
         'category' => 'scanning-devices',
         'group' => 'railway-sector',
         'groups' => ['railway-sector'],
+        'certificates' => [],
         'short_description' => [
             'ru' => 'Многоканальное сканирующее устройство для ультразвукового контроля цельнокатаных колес вагонов.',
             'en' => 'Multichannel scanning device for ultrasonic inspection of solid-rolled railway wheels.',
@@ -163,6 +169,7 @@ return [
         'category' => 'scanning-devices',
         'group' => 'railway-sector',
         'groups' => ['railway-sector'],
+        'certificates' => [],
         'short_description' => [
             'ru' => 'Сканирующее устройство для ультразвукового контроля колес локомотивов и моторвагонного подвижного состава.',
             'en' => 'Scanning device for ultrasonic inspection of locomotive and multiple-unit train wheels.',
@@ -189,6 +196,7 @@ return [
         'category' => 'scanning-devices',
         'group' => 'railway-sector',
         'groups' => ['railway-sector', 'aerospace-sector', 'industrial-sector'],
+        'certificates' => [],
         'short_description' => [
             'ru' => 'Портативная видеокамера на телескопическом штативе для визуального контроля труднодоступных мест.',
             'en' => 'Portable video camera on a telescopic stand for visual inspection of hard-to-reach areas.',
@@ -215,6 +223,7 @@ return [
         'category' => 'scanning-devices',
         'group' => 'railway-sector',
         'groups' => ['railway-sector'],
+        'certificates' => [],
         'short_description' => [
             'ru' => 'Оптическое координатное устройство для определения положения ПЭП на торце железнодорожной оси.',
             'en' => 'Optical coordinate device for determining transducer position on the end face of a railway axle.',
@@ -241,6 +250,7 @@ return [
         'category' => 'scanning-devices',
         'group' => 'railway-sector',
         'groups' => ['railway-sector'],
+        'certificates' => [],
         'short_description' => [
             'ru' => 'Устройство для очистки поверхности железнодорожных осей колесных пар перед ультразвуковым контролем.',
             'en' => 'Device for cleaning railway wheelset axle surfaces before ultrasonic inspection.',

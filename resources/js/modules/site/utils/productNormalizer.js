@@ -40,6 +40,7 @@ export const normalizeProduct = (product, locale = 'ru') => ({
     name: pickLocalized(product.name, locale),
     shortDescription: pickLocalized(product.short_description, locale),
     fullDescription: pickLocalized(product.full_description, locale),
+    certificates: product.certificates,
     categorySlug: product.category?.slug || null,
     categoryTitle: normalizeRelationTitle(product.category, 'category', locale),
     groupSlug: product.group?.slug || null,

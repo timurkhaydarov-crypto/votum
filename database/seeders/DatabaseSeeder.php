@@ -12,6 +12,7 @@ use Database\Seeders\Product\GroupSeeder;
 use Database\Seeders\Product\MethodSeeder;
 use Database\Seeders\Product\ProductSeeder;
 use Database\Seeders\Product\SectorSeeder;
+use Database\Seeders\Product\CertificateSeeder;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -41,13 +42,16 @@ class DatabaseSeeder extends Seeder
             Schema::hasTable('categories')
             && Schema::hasTable('groups')
             && Schema::hasTable('brands')
+            && Schema::hasTable('certificates')
             && Schema::hasTable('products')
             && Schema::hasTable('sectors')
             && Schema::hasTable('methods')
+
         ) {
             $this->call([
                 CategorySeeder::class,
                 GroupSeeder::class,
+                CertificateSeeder::class,
                 BrandSeeder::class,
                 ProductSeeder::class,
                 SectorSeeder::class,

@@ -167,6 +167,8 @@
                 <ProductQuickInfo
                     :product="product"
                     :is-in-stock="isInStock"
+                    :active-info="activeInfo"
+                    @change-info="emit('changeInfo', $event)"
                 />
 
                 <ProductPurchaseActions
@@ -202,6 +204,11 @@ const props = defineProps({
         default: false,
     },
 
+    activeInfo: {
+        type: String,
+        default: 'method',
+    },
+
     priceLabel: {
         type: String,
         default: 'По запросу',
@@ -227,6 +234,8 @@ const props = defineProps({
         default: 'Вернуться в каталог',
     },
 });
+
+const emit = defineEmits(['changeInfo']);
 
 const isPlaying = ref(false);
 

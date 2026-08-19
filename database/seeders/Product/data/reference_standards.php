@@ -7,6 +7,7 @@ return [
         'category' => 'reference-standards',
         'group' => 'ultrasonic',
         'groups' => ['ultrasonic'],
+        'certificates' => [],
         'short_description' => [
             'ru' => 'Стандартная мера дефектов из комплекта «КМД Вотум» для толщинометрии.',
             'en' => 'A standard measure of defects from the CMD VOTUM set for thickness evaluation.',
@@ -33,6 +34,7 @@ return [
         'category' => 'reference-standards',
         'group' => 'ultrasonic',
         'groups' => ['ultrasonic'],
+        'certificates' => [],
         'short_description' => [
             'ru' => 'Стандартная мера дефектов по ГОСТ 18576.',
             'en' => 'Standard measure of defects according to GOST 18576.',
@@ -59,6 +61,7 @@ return [
         'category' => 'reference-standards',
         'group' => 'ultrasonic',
         'groups' => ['ultrasonic'],
+        'certificates' => [],
         'short_description' => [
             'ru' => 'Стандартный образец предприятия для настройки ультразвукового дефектоскопа при работе с хордовыми преобразователями.',
             'en' => 'Enterprise reference standard for ultrasonic flaw detector setup with chord transducers.',
@@ -85,6 +88,7 @@ return [
         'category' => 'reference-standards',
         'group' => 'ultrasonic',
         'groups' => ['ultrasonic'],
+        'certificates' => [],
         'short_description' => [
             'ru' => 'Стандартный образец предприятия для настройки ультразвукового дефектоскопа при работе с хордовыми преобразователями.',
             'en' => 'Enterprise reference standard for ultrasonic flaw detector setup with chord transducers.',
@@ -111,6 +115,7 @@ return [
         'category' => 'reference-standards',
         'group' => 'ultrasonic',
         'groups' => ['ultrasonic'],
+        'certificates' => [],
         'short_description' => [
             'ru' => 'Настроечный образец для фазированных решеток типа А.',
             'en' => 'Reference standard for phased arrays type A.',
@@ -137,6 +142,7 @@ return [
         'category' => 'reference-standards',
         'group' => 'eddy-current',
         'groups' => ['eddy-current'],
+        'certificates' => [],
         'short_description' => [
             'ru' => 'Вихретоковый настроечный образец для неферромагнитных сплавов.',
             'en' => 'Eddy current reference standard for non-ferromagnetic alloys.',
@@ -163,6 +169,7 @@ return [
         'category' => 'reference-standards',
         'group' => 'eddy-current',
         'groups' => ['eddy-current'],
+        'certificates' => [],
         'short_description' => [
             'ru' => 'Вихретоковый настроечный образец для ферромагнитных сплавов.',
             'en' => 'Eddy current reference standard for ferromagnetic alloys.',
@@ -189,6 +196,7 @@ return [
         'category' => 'reference-standards',
         'group' => 'eddy-current',
         'groups' => ['eddy-current'],
+        'certificates' => [],
         'short_description' => [
             'ru' => 'Вихретоковый настроечный образец из алюминиевого сплава.',
             'en' => 'Eddy current reference standard made of aluminum alloy.',
@@ -215,6 +223,7 @@ return [
         'category' => 'reference-standards',
         'group' => 'eddy-current',
         'groups' => ['eddy-current'],
+        'certificates' => [],
         'short_description' => [
             'ru' => 'Вихретоковый настроечный образец из углеродистой стали.',
             'en' => 'Eddy current reference standard made of carbon steel.',
@@ -241,6 +250,7 @@ return [
         'category' => 'reference-standards',
         'group' => 'eddy-current',
         'groups' => ['eddy-current'],
+        'certificates' => [],
         'short_description' => [
             'ru' => 'Вихретоковый настроечный образец из нержавеющей стали.',
             'en' => 'Eddy current reference standard made of carbon steel.',
@@ -267,6 +277,7 @@ return [
         'category' => 'reference-standards',
         'group' => 'eddy-current',
         'groups' => ['eddy-current'],
+        'certificates' => [],
         'short_description' => [
             'ru' => 'Вихретоковый настроечный образец из углеродистой стали.',
             'en' => 'Eddy current reference standard made of carbon steel.',
@@ -293,6 +304,7 @@ return [
         'category' => 'reference-standards',
         'group' => 'acoustic',
         'groups' => ['acoustic'],
+        'certificates' => [],
         'short_description' => [
             'ru' => 'Мера настроечная для импедансного контроля.',
             'en' => 'Reference measure for impedance testing.',
@@ -322,6 +334,7 @@ return [
         'category' => 'reference-standards',
         'group' => 'specialized-railroad',
         'groups' => ['specialized-railroad', 'railway-sector'],
+        'certificates' => [],
         'short_description' => [
             'ru' => 'Ультразвуковой настроечный образец для контроля осей колесных пар вагонов.',
             'en' => 'Ultrasonic reference standard for railway wheelset axle inspection.',
@@ -351,6 +364,7 @@ return [
         'category' => 'reference-standards',
         'group' => 'specialized-railroad',
         'groups' => ['specialized-railroad', 'railway-sector'],
+        'certificates' => [],
         'short_description' => [
             'ru' => 'Комплект ультразвуковых настроечных образцов для контроля колесных пар вагонов.',
             'en' => 'Set of ultrasonic reference standards for railway wheelset inspection.',
@@ -377,6 +391,7 @@ return [
         'category' => 'reference-standards',
         'group' => 'specialized-railroad',
         'groups' => ['specialized-railroad', 'railway-sector'],
+        'certificates' => [],
         'short_description' => [
             'ru' => 'Вихретоковый настроечный образец для контроля стали, аналог ЖД СОП НО-037.',
             'en' => 'Eddy current reference standard for steel inspection, analogue of railway SOP NO-037.',
@@ -403,6 +418,7 @@ return [
         'category' => 'reference-standards',
         'group' => 'specialized-railroad',
         'groups' => ['specialized-railroad', 'railway-sector'],
+        'certificates' => [],
         'short_description' => [
             'ru' => 'Вихретоковый настроечный образец для контроля стали, аналог ЖД СОП НО-038.',
             'en' => 'Eddy current reference standard for steel inspection, analogue of railway SOP NO-038.',

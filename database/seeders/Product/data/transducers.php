@@ -14,6 +14,7 @@ return [
         'category' => 'transducers',
         'group' => 'ultrasonic',
         'groups' => ['ultrasonic'],
+        'certificates' => [],
         'short_description' => [
             'ru' => 'Наклонные совмещенные ультразвуковые преобразователи для контроля металлических конструкций и сварных соединений.',
             'en' => 'Inclined combined ultrasonic transducers for inspection of metal structures and welded joints.',
@@ -43,6 +44,7 @@ return [
         'category' => 'transducers',
         'group' => 'ultrasonic',
         'groups' => ['ultrasonic'],
+        'certificates' => [],
         'short_description' => [
             'ru' => 'Прямые совмещенные ультразвуковые преобразователи для выявления внутренних дефектов и локальных утонений.',
             'en' => 'Straight combined ultrasonic transducers for detecting internal defects and localized wall thinning.',
@@ -72,6 +74,7 @@ return [
         'category' => 'transducers',
         'group' => 'ultrasonic',
         'groups' => ['ultrasonic'],
+        'certificates' => [],
         'short_description' => [
             'ru' => 'Прямые раздельно-совмещенные ультразвуковые преобразователи с повышенной чувствительностью.',
             'en' => 'Dual-element ultrasonic transducers with increased inspection sensitivity.',
@@ -101,6 +104,7 @@ return [
         'category' => 'transducers',
         'group' => 'ultrasonic',
         'groups' => ['ultrasonic'],
+        'certificates' => [],
         'short_description' => [
             'ru' => 'Притертые ультразвуковые преобразователи для контроля труб, валов и других цилиндрических объектов.',
             'en' => 'Ground-in ultrasonic probes for inspection of pipes, shafts, and other cylindrical components.',
@@ -130,6 +134,7 @@ return [
         'category' => 'transducers',
         'group' => 'ultrasonic',
         'groups' => ['ultrasonic'],
+        'certificates' => [],
         'short_description' => [
             'ru' => 'Хордовые ультразвуковые преобразователи для высокоточного контроля сварных соединений трубопроводов.',
             'en' => 'Chord ultrasonic transducers for high-precision inspection of pipeline welded joints.',
@@ -163,6 +168,7 @@ return [
         'category' => 'transducers',
         'group' => 'ema',
         'groups' => ['ema'],
+        'certificates' => [],
         'short_description' => [
             'ru' => 'Электромагнитоакустические преобразователи для ультразвуковой толщинометрии и дефектоскопии.',
             'en' => 'Electromagnetic acoustic probes (EMATs) for ultrasonic thickness measurement and flaw detection.',
@@ -196,6 +202,7 @@ return [
         'category' => 'transducers',
         'group' => 'eddy-current',
         'groups' => ['eddy-current'],
+        'certificates' => [],
         'short_description' => [
             'ru' => 'Вихретоковые преобразователи для обнаружения поверхностных и подповерхностных дефектов электропроводящих материалов.',
             'en' => 'Eddy current transducers for detecting surface and subsurface defects in electrically conductive materials.',
@@ -229,6 +236,7 @@ return [
         'category' => 'transducers',
         'group' => 'resonant',
         'groups' => ['resonant'],
+        'certificates' => [],
         'short_description' => [
             'ru' => 'Резонансные преобразователи для неразрушающего контроля изделий и композиционных материалов.',
             'en' => 'Resonant transducers for non-destructive inspection of products and composite materials.',
@@ -262,6 +270,7 @@ return [
         'category' => 'transducers',
         'group' => 'impedance',
         'groups' => ['impedance'],
+        'certificates' => [],
         'short_description' => [
             'ru' => 'Раздельно-совмещенный импедансный преобразователь для неразрушающего контроля композиционных материалов.',
             'en' => 'Dual-element impedance transducer for non-destructive inspection of composite materials.',
@@ -291,6 +300,7 @@ return [
         'category' => 'transducers',
         'group' => 'impedance',
         'groups' => ['impedance'],
+        'certificates' => [],
         'short_description' => [
             'ru' => 'Импедансный преобразователь для выявления непроклеев и расслоений в композиционных материалах.',
             'en' => 'Impedance transducer for detecting disbonds and delaminations in composite materials.',
@@ -324,6 +334,7 @@ return [
         'category' => 'transducers',
         'group' => 'impact',
         'groups' => ['impact'],
+        'certificates' => [],
         'short_description' => [
             'ru' => 'Ударный преобразователь для контроля композиционных изделий и выявления несплошностей.',
             'en' => 'Impact transducer for inspection of composite products and detection of discontinuities.',
@@ -357,6 +368,7 @@ return [
         'category' => 'transducers',
         'group' => 'specialized-railroad',
         'groups' => ['specialized-railroad'],
+        'certificates' => [],
         'short_description' => [
             'ru' => 'Пьезоэлектрические преобразователи для ультразвукового контроля цельнокатаных железнодорожных колес.',
             'en' => 'Piezoelectric transducers for ultrasonic inspection of solid-rolled railway wheels.',
@@ -386,6 +398,7 @@ return [
         'category' => 'transducers',
         'group' => 'specialized-railroad',
         'groups' => ['specialized-railroad'],
+        'certificates' => [],
         'short_description' => [
             'ru' => 'Комбинированные пьезоэлектрические преобразователи для ультразвукового контроля осей колесных пар.',
             'en' => 'Combined piezoelectric transducers for ultrasonic inspection of wheelset axles.',
@@ -415,6 +428,7 @@ return [
         'category' => 'transducers',
         'group' => 'specialized-railroad',
         'groups' => ['specialized-railroad'],
+        'certificates' => [],
         'short_description' => [
             'ru' => 'Пьезоэлектрические преобразователи для контроля поверхности катания и подповерхностной зоны ободьев цельнокатаных колес.',
             'en' => 'Piezoelectric transducers for ultrasonic inspection of the running surface and subsurface zone of solid-rolled wheel rims.',
@@ -444,6 +458,7 @@ return [
         'category' => 'transducers',
         'group' => 'specialized-railroad',
         'groups' => ['specialized-railroad'],
+        'certificates' => [],
         'short_description' => [
             'ru' => 'Специализированные пьезоэлектрические преобразователи для контроля зубьев колес и шестерен.',
             'en' => 'Specialized piezoelectric transducers for ultrasonic inspection of wheel and gear teeth.',
@@ -473,6 +488,7 @@ return [
         'category' => 'transducers',
         'group' => 'specialized-railroad',
         'groups' => ['specialized-railroad'],
+        'certificates' => [],
         'short_description' => [
             'ru' => 'Специализированные пьезоэлектрические преобразователи для контроля осей колесных пар.',
             'en' => 'Specialized piezoelectric transducers for ultrasonic inspection of wheelset axles.',
@@ -502,6 +518,7 @@ return [
         'category' => 'transducers',
         'group' => 'specialized-railroad',
         'groups' => ['specialized-railroad'],
+        'certificates' => [],
         'short_description' => [
             'ru' => 'Специализированные пьезоэлектрические преобразователи для контроля сварных стыков железнодорожных рельсов.',
             'en' => 'Specialized piezoelectric transducers for ultrasonic inspection of welded railway rail joints.',
@@ -535,6 +552,7 @@ return [
         'category' => 'transducers',
         'group' => 'phased-array',
         'groups' => ['phased-array'],
+        'certificates' => [],
         'short_description' => [
             'ru' => 'Преобразователь на фазированной решетке с 16 элементами для ультразвукового контроля.',
             'en' => '16-element phased array transducer for ultrasonic inspection.',
@@ -568,6 +586,7 @@ return [
         'category' => 'transducers',
         'group' => 'immersion',
         'groups' => ['immersion'],
+        'certificates' => [],
         'short_description' => [
             'ru' => 'Иммерсионный совмещенный фокусирующий ультразвуковой преобразователь 3,5 МГц.',
             'en' => '3.5 MHz immersion combined focusing ultrasonic transducer.',
@@ -597,6 +616,7 @@ return [
         'category' => 'transducers',
         'group' => 'immersion',
         'groups' => ['immersion'],
+        'certificates' => [],
         'short_description' => [
             'ru' => 'Иммерсионный совмещенный фокусирующий ультразвуковой преобразователь 5 МГц.',
             'en' => '5 MHz immersion combined focusing ultrasonic transducer.',
@@ -630,6 +650,7 @@ return [
         'category' => 'transducers',
         'group' => 'electric-capacity',
         'groups' => ['electric-capacity'],
+        'certificates' => [],
         'short_description' => [
             'ru' => 'Электроемкостный датчик для поиска влаги, токопроводящих вкраплений и других нежелательных включений в непроводящих материалах.',
             'en' => 'Capacitive probe for detecting moisture, conductive inclusions, and other unwanted inclusions in non-conductive materials.',
