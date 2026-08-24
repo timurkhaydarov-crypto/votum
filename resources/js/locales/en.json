@@ -56,7 +56,97 @@
     "operating_hours":"operating hours",
     "url":"url"
   },
+  "certificates": {
+        "eyebrow": "CERTIFICATES",
+        "title": "Product Certificates",
+        "description": "Certificates and documents confirming product compliance with applicable standards.",
+        "collapse": "Collapse certificates",
+        "expand": "Expand certificates",
+        "empty": "No certificates available",
+        "close": "Close"
+  },
+  "productDetail": {
+        "subtitle": "Detailed information about the non-destructive testing instrument",
+        "noData": "No product data available."
+    },
+    "product": {
+        "articleFallback": "ARTICLE N/A",
+        "inStock": "In stock",
+        "outOfStock": "Out of stock",
+        "noName": "Untitled",
+        "defaultDescription": "Professional non-destructive testing equipment.",
+        "priceOnRequest": "On request",
 
+        "video": {
+            "playing": "Playing",
+            "photo": "Photo",
+            "video": "Video"
+        },
+
+        "info": {
+            "eyebrow": "INFORMATION",
+
+            "details": {
+                "title": "Detailed Information"
+            },
+
+            "features": {
+                "title": "Functional Features"
+            },
+
+            "technical": {
+                "title": "Technical Specifications"
+            },
+
+            "documentation": {
+                "title": "Documentation",
+                "open": "Open document"
+            },
+
+            "available": "Available",
+            "notAvailable": "No data",
+            "empty": "Information is unavailable"
+        },
+
+        "technical": {
+            "frequency": "Frequency range",
+            "display": "Display",
+            "channels": "Number of channels",
+            "dynamicRange": "Dynamic range",
+            "measurementRange": "Measurement range",
+            "resolution": "Resolution",
+            "dimensions": "Dimensions",
+            "weight": "Weight",
+            "power": "Power supply"
+        },
+
+        "documents": {
+            "characteristics": "Technical Specifications",
+            "certificates": "Certificates",
+            "documentation": "Documentation",
+            "software": "Software"
+        }
+    },
+  "common": {
+    "pcs": "pcs.",
+    "showAll": "Show all",
+    "showMore": "Show more",
+    "collapse": "Collapse",
+    "close": "Close"
+  },
+  "gallery": {
+    "certificates": "Certificates",
+    "images": "Images",
+    "image": "Image",
+    "empty": "No images available",
+    "title": "Photo Gallery",
+    "description": "Visual overview of the equipment.",
+    "collapse": "Collapse gallery",
+    "expand": "Expand gallery",
+    "showMore": "Show more",
+    "showLess": "Collapse",
+    "close": "Close"
+  },
 "hero": {
   "badge": "NDT Equipment Manufacturer",
   "titleBefore": "We Engineer the",

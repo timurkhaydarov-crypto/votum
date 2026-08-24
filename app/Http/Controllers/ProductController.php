@@ -90,6 +90,13 @@ class ProductController extends Controller
                 'title' => $certificate->title,
                 'description' => $certificate->description,
             ])->values()->all(),
+            'gallery' => $product->gallery->map(fn ($gallery) => [
+                'id' => $gallery->id,
+                'thumbnail' => '/image/gallery/'.$product->image_url.'/thumbnails/' . $gallery->image_url . '.webp',
+                'image_url' => '/image/gallery/'.$product->image_url.'/' . $gallery->image_url . '.webp',
+                'title' => $gallery->title,
+                'description' => $gallery->description,
+            ])->values()->all(),
             'brand' => $product->brand ? [
                 'id' => $product->brand->id,
                 'title' => $product->brand->brand,
@@ -111,7 +118,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::with(['brand', 'category', 'group', 'groups', 'certificates', 'method', 'sector'])->get();
+        $products = Product::with(['brand', 'category', 'group', 'groups', 'certificates', 'gallery', 'method', 'sector'])->get();
 
         return response()->json(
             $products->map(fn (Product $product) => $this->serializeProduct($product))->values()->all()
@@ -173,7 +180,7 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
-        $product->load(['brand', 'category', 'group', 'groups', 'certificates', 'method', 'sector']);
+        $product->load(['brand', 'category', 'group', 'groups', 'certificates', 'gallery', 'method', 'sector']);
         
         return response()->json($this->serializeProduct($product));
     }

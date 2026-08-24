@@ -79,7 +79,7 @@ defineProps({
     },
 })
 
-const emit = defineEmits(['select'])
+const emit = defineEmits(['select']);
 
 const hasValue = (value) => {
     if (value === null || value === undefined) {

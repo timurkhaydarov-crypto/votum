@@ -12,6 +12,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\MethodController;
 use App\Http\Controllers\SectorController;
+use App\Http\Controllers\ProductFeaturesController;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -40,4 +41,7 @@ Route::prefix('products')->group(function () {
     Route::apiResource('item', ProductController::class)
         ->parameters(['item' => 'product'])
         ->only(['index', 'show', 'store', 'update', 'destroy']);
+        
+    Route::get('{product}/features',[ProductFeaturesController::class, 'show']
+);
 });

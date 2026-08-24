@@ -2,13 +2,13 @@
 
 namespace Database\Factories\Product;
 
-use App\Models\Product\Certificate;
+use App\Models\Product\ProductGallery;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends Factory<Certificate>
+ * @extends Factory<ProductGallery>
  */
-class CertificateFactory extends Factory
+class ProductGalleryFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -18,6 +18,7 @@ class CertificateFactory extends Factory
     public function definition(): array
     {
         return [
+            'product_id' => null,
             'title' => [
                 'ru' => fake()->sentence(3),
                 'en' => fake()->sentence(3),

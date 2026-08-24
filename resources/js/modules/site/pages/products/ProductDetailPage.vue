@@ -1,53 +1,81 @@
 <template>
-    <ProductsLayout :title="pageTitle" subtitle="Детальная информация о приборе неразрушающего контроля">
+    <ProductsLayout
+        :title="pageTitle"
+        :subtitle="$t('productDetail.subtitle')"
+    >
+        <!-- LOADING -->
         <ProductDetailLoading v-if="isLoading" />
 
-        <ProductDetailError v-else-if="errorMessage" :message="errorMessage" />
+        <!-- ERROR -->
+        <ProductDetailError
+            v-else-if="errorMessage"
+            :message="errorMessage"
+        />
 
+        <!-- NOT FOUND -->
         <ProductDetailNotFound v-else-if="isNotFound" />
 
-        <div v-else-if="product" class="space-y-6">
+        <!-- PRODUCT -->
+        <div
+            v-else-if="product"
+            class="space-y-6"
+        >
+            <!-- BREADCRUMBS -->
             <ProductBreadcrumbs :items="breadcrumbs" />
 
-            <ProductDetailHero :product="product" :image-src="imageSrc" :is-in-stock="isInStock"
-                :price-label="priceLabel" :group-dot-class="groupDotClass" :group-badge-classes="groupBadgeClasses"
-                :back-link="backLink" :back-label="backLabel" :active-info="activeInfo"
-                @change-info="activeInfo = $event" />
-            <ProductInformation v-if="activeInfo === 'info'"
-                :content="product.fullDescription || product.shortDescription" :active-info="activeInfo" />
-            <ProductFeatures v-if="activeInfo === 'features'" :features="features" />
-
-            <ProductTechnicalCharacteristics v-if="activeInfo === 'technical'"
-                :characteristics="technicalCharacteristics" />
-
-            <ProductTransducers :transducers="transducers" :is-loading="isLoadingTransducers"
-                :error-message="transducersErrorMessage" :has-product-transducers="hasProductTransducers" />
-
-            <!-- <ProductApplication
+            <!-- HERO -->
+            <ProductDetailHero
                 :product="product"
-                :available="applicationAvailable"
-            /> -->
+                :image-src="imageSrc"
+                :is-in-stock="isInStock"
+                :price-label="priceLabel"
+                :group-dot-class="groupDotClass"
+                :group-badge-classes="groupBadgeClasses"
+                :back-link="backLink"
+                :back-label="backLabel"
+            />
 
-            <!-- <ProductDocuments
-                :documents="documents"
-            /> -->
-            <ProductImageGallery v-if="product.certificates?.length" :images="product.certificates || []" :galleryTitle="'certificates-gallery'" :gallerySubTitle="'certificates'" :type="'certificate'" />
+            <!-- TRANSDUCERS -->
+            <ProductTransducers
+                :transducers="transducers"
+                :is-loading="isLoadingTransducers"
+                :error-message="transducersErrorMessage"
+                :has-product-transducers="hasProductTransducers"
+            />
 
-            <ProductGallery :product="product" :images="galleryImages" />
+            <!-- CERTIFICATES -->
+            <ProductImageGallery
+                v-if="product.certificates?.length"
+                :images="product.certificates"
+                gallery-title="certificates-gallery"
+                gallery-sub-title="certificates"
+                type="certificate"
+            />
 
+            <!-- GALLERY -->
+            <ProductGallery
+                :product="product"
+                :images="galleryImages"
+            />
+
+            <!-- CTA -->
             <ProductDetailCta />
         </div>
 
-        <div v-else class="rounded-2xl border border-slate-200 bg-slate-50 p-6 text-sm text-slate-600">
-            Нет данных о продукции.
+        <!-- EMPTY -->
+        <div
+            v-else
+            class="rounded-2xl border border-slate-200 bg-slate-50 p-6 text-sm text-slate-600"
+        >
+            {{ $t('productDetail.noData') }}
         </div>
     </ProductsLayout>
 </template>
 
 <script setup>
-import { computed, watch, ref } from 'vue';
-import { useRoute } from 'vue-router';
+import { computed, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { useRoute } from 'vue-router';
 
 import ProductsLayout from '../../components/products/ProductsLayout.vue';
 import ProductBreadcrumbs from '../../components/products/ProductBreadcrumbs.vue';
@@ -57,22 +85,24 @@ import ProductDetailError from '../../components/products/detail/ProductDetailEr
 import ProductDetailNotFound from '../../components/products/detail/ProductDetailNotFound.vue';
 
 import ProductDetailHero from '../../components/products/detail/ProductDetailHero.vue';
-import ProductFeatures from '../../components/products/detail/ProductFeatures.vue';
-import ProductTechnicalCharacteristics from '../../components/products/detail/ProductTechnicalCharacteristics.vue';
 import ProductTransducers from '../../components/products/detail/ProductTransducers.vue';
-import ProductApplication from '../../components/products/detail/ProductApplication.vue';
-import ProductDocuments from '../../components/products/detail/ProductDocuments.vue';
 import ProductGallery from '../../components/products/detail/ProductGallery.vue';
 import ProductImageGallery from '../../components/products/detail/ProductImageGallery.vue';
 import ProductDetailCta from '../../components/products/detail/ProductDetailCta.vue';
-import ProductInformation from '../../components/products/detail/ProductInformation.vue';
+
 import { useProductsCatalog } from '../../composables/useProductsCatalog.js';
 import { useProductDetails } from '../../composables/useProductDetails.js';
 import { useProductBreadcrumbs } from '../../composables/useProductBreadcrumbs.js';
 
 const route = useRoute();
 const { t, locale } = useI18n();
-const activeInfo = ref('info');
+
+/*
+|--------------------------------------------------------------------------
+| Product
+|--------------------------------------------------------------------------
+*/
+
 const {
     product,
     isLoading,
@@ -81,6 +111,12 @@ const {
     loadProductById,
 } = useProductDetails();
 
+/*
+|--------------------------------------------------------------------------
+| Standard transducers
+|--------------------------------------------------------------------------
+*/
+
 const {
     products: standardTransducers,
     isLoading: isLoadingTransducers,
@@ -88,15 +124,27 @@ const {
     loadProductsByGroup,
 } = useProductsCatalog();
 
+/*
+|--------------------------------------------------------------------------
+| Route
+|--------------------------------------------------------------------------
+*/
+
 const productId = computed(() => {
     return route.params.productId || '';
 });
+
+/*
+|--------------------------------------------------------------------------
+| Product meta
+|--------------------------------------------------------------------------
+*/
 
 const pageTitle = computed(() => {
     return (
         product.value?.name ||
         t('productBreadcrumbs.productFallback', {
-            id: productId.value || '',
+            id: productId.value,
         })
     );
 });
@@ -121,6 +169,12 @@ const productTitle = computed(() => {
     return product.value?.name || '';
 });
 
+/*
+|--------------------------------------------------------------------------
+| Breadcrumbs
+|--------------------------------------------------------------------------
+*/
+
 const {
     breadcrumbs,
     backLink,
@@ -134,21 +188,11 @@ const {
     productId,
 });
 
-const hasValue = (value) => {
-    if (value === null || value === undefined) {
-        return false;
-    }
-
-    if (typeof value === 'string') {
-        return value.trim().length > 0;
-    }
-
-    if (Array.isArray(value)) {
-        return value.length > 0;
-    }
-
-    return true;
-};
+/*
+|--------------------------------------------------------------------------
+| Helpers
+|--------------------------------------------------------------------------
+*/
 
 const normalizeArray = (value) => {
     if (!value) {
@@ -162,7 +206,7 @@ const normalizeArray = (value) => {
     if (typeof value === 'string') {
         return value
             .split(/[,;\n]/)
-            .map(item => item.trim())
+            .map((item) => item.trim())
             .filter(Boolean);
     }
 
@@ -191,7 +235,7 @@ const loadStandardTransducers = () => {
 
     loadProductsByGroup(
         'transducers',
-        'ultrasonic'
+        'ultrasonic',
     );
 };
 
@@ -214,7 +258,7 @@ watch(
     },
     {
         immediate: true,
-    }
+    },
 );
 
 watch(
@@ -229,7 +273,7 @@ watch(
     },
     {
         immediate: true,
-    }
+    },
 );
 
 watch(locale, () => {
@@ -287,7 +331,7 @@ const isInStock = computed(() => {
 const priceLabel = computed(() => {
     return product.value?.price
         ? `${product.value.price} ₽`
-        : 'По запросу';
+        : t('product.priceOnRequest');
 });
 
 /*
@@ -330,80 +374,6 @@ const groupBadgeClasses = computed(() => {
 
 /*
 |--------------------------------------------------------------------------
-| Technical characteristics
-|--------------------------------------------------------------------------
-*/
-
-const technicalCharacteristics = computed(() => {
-    const p = product.value || {};
-
-    return [
-        {
-            key: 'frequency',
-            label: 'Диапазон частот',
-            value: p.frequency,
-        },
-        {
-            key: 'display',
-            label: 'Дисплей',
-            value: p.display,
-        },
-        {
-            key: 'channels',
-            label: 'Количество каналов',
-            value: p.channels,
-        },
-        {
-            key: 'dynamicRange',
-            label: 'Динамический диапазон',
-            value: p.dynamicRange,
-        },
-        {
-            key: 'measurementRange',
-            label: 'Диапазон измерений',
-            value: p.measurementRange,
-        },
-        {
-            key: 'resolution',
-            label: 'Разрешение',
-            value: p.resolution,
-        },
-        {
-            key: 'dimensions',
-            label: 'Габариты',
-            value: p.dimensions,
-        },
-        {
-            key: 'weight',
-            label: 'Масса',
-            value: p.weight,
-        },
-        {
-            key: 'power',
-            label: 'Питание',
-            value: p.power,
-        },
-    ].map(item => ({
-        ...item,
-        available: hasValue(item.value),
-    }));
-});
-
-/*
-|--------------------------------------------------------------------------
-| Features
-|--------------------------------------------------------------------------
-*/
-
-const features = computed(() => {
-    return normalizeArray(
-        product.value?.features ||
-        product.value?.functionalFeatures
-    );
-});
-
-/*
-|--------------------------------------------------------------------------
 | Transducers
 |--------------------------------------------------------------------------
 */
@@ -414,15 +384,11 @@ const productTransducers = computed(() => {
         product.value?.probes ??
         product.value?.converters;
 
-    if (!value) {
+    if (!Array.isArray(value)) {
         return [];
     }
 
-    if (Array.isArray(value)) {
-        return value.filter(Boolean);
-    }
-
-    return [];
+    return value.filter(Boolean);
 });
 
 const transducers = computed(() => {
@@ -435,49 +401,6 @@ const transducers = computed(() => {
 
 /*
 |--------------------------------------------------------------------------
-| Application
-|--------------------------------------------------------------------------
-*/
-
-const applicationAvailable = computed(() => {
-    return hasValue(
-        product.value?.application ||
-        product.value?.applications ||
-        product.value?.categoryTitle
-    );
-});
-
-/*
-|--------------------------------------------------------------------------
-| Documents
-|--------------------------------------------------------------------------
-*/
-
-const documents = computed(() => {
-    const p = product.value || {};
-
-    return {
-        characteristics:
-            p.characteristicsUrl ||
-            p.technicalSpecificationsUrl ||
-            '',
-
-        certificates:
-            p.certificatesUrl ||
-            '',
-
-        documentation:
-            p.documentationUrl ||
-            '',
-
-        software:
-            p.softwareUrl ||
-            '',
-    };
-});
-
-/*
-|--------------------------------------------------------------------------
 | Gallery
 |--------------------------------------------------------------------------
 */
@@ -486,7 +409,7 @@ const galleryImages = computed(() => {
     return normalizeArray(
         product.value?.photogallery ||
         product.value?.gallery ||
-        product.value?.galleryImages
+        product.value?.galleryImages,
     );
 });
 </script>

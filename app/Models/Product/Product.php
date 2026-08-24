@@ -5,9 +5,12 @@ namespace App\Models\Product;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Product\Certificate;
+use App\Models\Product\ProductGallery;
+use App\Models\Product\ProductFeatures;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 
 class Product extends Model
@@ -52,7 +55,10 @@ class Product extends Model
     {
         return $this->belongsToMany(Group::class, 'product_group');
     }
-
+    public function gallery(): HasMany
+    {
+        return $this->hasMany(ProductGallery::class);
+    }
     public function certificates(): BelongsToMany
         {
             return $this->belongsToMany(
@@ -76,5 +82,9 @@ class Product extends Model
     public function method(): HasOne
     {
         return $this->hasOne(Method::class);
+    }
+    public function features(): HasOne
+    {
+        return $this->hasOne(ProductFeatures::class);
     }
 }
