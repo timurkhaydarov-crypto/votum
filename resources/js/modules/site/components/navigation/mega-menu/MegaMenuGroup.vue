@@ -6,9 +6,7 @@
 
         <div
             v-if="visibleProducts.length"
-            class="grid grid-cols-1
-                   gap-0.5
-                   sm:grid-cols-2"
+            class="grid grid-cols-1 gap-0.5 sm:grid-cols-2"
         >
 
             <RouterLink
@@ -18,6 +16,7 @@
                 class="product-link"
                 @mouseenter="$emit('product-hover', product.id)"
                 @mouseleave="$emit('product-hover', null)"
+                @click="handleNavigation"
             >
 
                 <span class="product-dot"></span>
@@ -35,8 +34,7 @@
 
         <div
             v-else
-            class="px-2 py-3
-                   text-sm text-gray-400"
+            class="px-2 py-3 text-sm text-gray-400"
         >
             {{ t('megaMenu.noProducts') }}
         </div>
@@ -52,6 +50,7 @@
             <RouterLink
                 :to="group.href"
                 class="all-products-link"
+                @click="handleNavigation"
             >
 
                 <span>
@@ -74,15 +73,24 @@
 import {
     computed
 } from 'vue'
-import { useI18n } from 'vue-i18n'
+
+import {
+    useI18n
+} from 'vue-i18n'
 
 import {
     resolveProductById
 } from '../navigation.data.js'
 
+
 const { t } = useI18n()
 
-const emit = defineEmits(['product-hover'])
+
+const emit = defineEmits([
+    'product-hover',
+    'navigate'
+])
+
 
 const props = defineProps({
 
@@ -106,7 +114,10 @@ const props = defineProps({
 
 const groupProducts = computed(() => {
 
-    if (Array.isArray(props.group.products) && props.group.products.length) {
+    if (
+        Array.isArray(props.group.products) &&
+        props.group.products.length
+    ) {
         return props.group.products
     }
 
@@ -133,6 +144,15 @@ const visibleProducts = computed(() => {
     )
 
 })
+
+
+/**
+ * Закрытие mega-menu после перехода
+ */
+const handleNavigation = () => {
+    emit('product-hover', null)
+    emit('navigate')
+}
 
 </script>
 
@@ -227,4 +247,3 @@ const visibleProducts = computed(() => {
 }
 
 </style>
-

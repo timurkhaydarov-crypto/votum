@@ -280,7 +280,7 @@ return [
     ],
 
     [
-        'article' => 'VTM-5000-PKM',
+        'article' => 'VTM-5000-COMPOSITE',
         'name' => [
             'ru' => 'РОБОСКОП ВТМ-5000/КОМПОЗИТ',
             'en' => 'ROBOSCOP VTM-5000/COMPOSITE',
@@ -305,8 +305,8 @@ return [
         'price' => 0,
         'quantity' => 10,
         'status' => true,
-        'image_url' => 'roboskop-vtm-5000-pkm',
-        'video_url' => 'roboskop-vtm-5000-pkm',
+        'image_url' => 'roboskop-vtm-5000-composite',
+        'video_url' => 'roboskop-vtm-5000-composite',
     ],
 
     [
@@ -369,8 +369,8 @@ return [
         'price' => 0,
         'quantity' => 10,
         'status' => true,
-        'image_url' => 'roboskop-vtm-5000-kv',
-        'video_url' => 'roboskop-vtm-5000-kv',
+        'image_url' => 'roboskop-vtm-5000-frame',
+        'video_url' => 'roboskop-vtm-5000-frame',
     ],
 
     [

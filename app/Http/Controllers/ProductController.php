@@ -67,6 +67,7 @@ class ProductController extends Controller
             'name' => $product->name,
             'short_description' => $product->short_description,
             'full_description' => $product->full_description,
+            'has_features' => $product->features()->exists(),
             'category' => $product->category ? [
                 'id' => $product->category->id,
                 'slug' => $product->category->slug,
@@ -103,6 +104,10 @@ class ProductController extends Controller
             ] : null,
             'image_url' => $product->image_url,
             'video_url' => $product->video_url,
+            'pdf_url' => [
+                'en' => file_exists(public_path('document/specification/en/'.$product->image_url.'.pdf')),
+                'ru' => file_exists(public_path('document/specification/ru/'.$product->image_url.'.pdf')),
+            ],
             'price' => $product->price,
             'quantity' => $product->quantity,
             'status' => $product->status,

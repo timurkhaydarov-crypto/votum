@@ -13,29 +13,34 @@ class MethodSeeder extends Seeder
      */
     public function run(): void
     {
-        Product::query()
-            ->orderBy('id')
-            ->limit(5)
-            ->pluck('id')
-            ->each(function ($productId) {
-                $methods = [
-                    'ut_method' => (bool) random_int(0, 1),
-                    'et_method' => (bool) random_int(0, 1),
-                    'mia_method' => (bool) random_int(0, 1),
-                    'iet_method' => (bool) random_int(0, 1),
-                    'mt_method' => (bool) random_int(0, 1),
-                    'vt_method' => (bool) random_int(0, 1),
-                ];
+        $methods = require __DIR__.'/data/methods.php';
 
-                if (!in_array(true, $methods, true)) {
-                    $randomMethod = array_rand($methods);
-                    $methods[$randomMethod] = true;
-                }
+        foreach ($methods as $item) {
+            $product = Product::query()
+                ->where('article', $item['article'])
+                ->first();
 
-                Method::query()->create([
-                    'product_id' => $productId,
-                    ...$methods,
-                ]);
-            });
+            if (!$product) {
+                $this->command->warn(
+                    "Product not found: {$item['article']}"
+                );
+
+                continue;
+            }
+
+            Method::query()->updateOrCreate(
+                [
+                    'product_id' => $product->id,
+                ],
+                [
+                    'ut_method' => $item['ut_method'],
+                    'et_method' => $item['et_method'],
+                    'mia_method' => $item['mia_method'],
+                    'iet_method' => $item['iet_method'],
+                    'mt_method' => $item['mt_method'],
+                    'vt_method' => $item['vt_method'],
+                ]
+            );
+        }
     }
 }

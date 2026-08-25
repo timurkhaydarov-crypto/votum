@@ -53,7 +53,7 @@
                     description: t('megaMenu.needHelpDescription'),
                     button: t('megaMenu.contactUs'),
                     link: '/contacts'
-                }" />
+                }" @close="productsOpen = false" />
 
         </div>
 
@@ -90,7 +90,7 @@
                     description: t('megaMenu.needHelpDescription'),
                     button: t('megaMenu.contactUs'),
                     link: '/contacts'
-                }" />
+                }" @close="servicesOpen = false" />
 
         </div>
 

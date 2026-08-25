@@ -105,12 +105,21 @@ return [
     </div>
 
     <!-- IMAGE 1 -->
-    <div class="space-y-4">
-        <img
-            src="/image/service/image-outline-icon.webp"
-            alt="Блендоскоп WIZARD"
-            class="w-full rounded-xl border border-slate-200"
-        />
+    <div class="space-y-3">
+        <div
+            class="flex aspect-video items-center justify-center overflow-hidden rounded-2xl border border-slate-200 bg-slate-50 p-4 sm:p-6"
+        >
+            <img
+                src="/image/upload/features/blending_scope_wizard_1.webp"
+                alt="Блендоскоп WIZARD"
+                class="h-full w-full object-contain"
+                loading="lazy"
+            />
+        </div>
+
+        <p class="text-center text-xs leading-6 text-slate-500">
+            Блендоскоп поставляется в следующих исполнениях.
+        </p>
     </div>
 
     <!-- MILLING MODULE -->
@@ -208,14 +217,19 @@ return [
     </div>
 
     <!-- IMAGE 2 -->
-    <div class="space-y-4">
-        <img
-            src="/image/service/image-outline-icon.webp"
-            alt="Фрезерный и капиллярный модуль WIZARD"
-            class="w-full rounded-xl border border-slate-200"
-        />
+    <div class="space-y-3">
+        <div
+            class="flex aspect-video items-center justify-center overflow-hidden rounded-2xl border border-slate-200 bg-slate-50 p-4 sm:p-6"
+        >
+            <img
+                src="/image/upload/features/blending_scope_wizard_2.webp"
+                alt="Фрезерный и капиллярный модуль WIZARD"
+                class="h-full w-full object-contain"
+                loading="lazy"
+            />
+        </div>
 
-        <p class="text-center text-sm text-slate-500">
+        <p class="text-center text-xs leading-6 text-slate-500">
             Фрезерный / капиллярный модуль.
             Рабочее положение 80°–100°.
         </p>
@@ -260,14 +274,19 @@ return [
     </div>
 
     <!-- IMAGE 3 -->
-    <div class="space-y-4">
-        <img
-            src="/image/service/image-outline-icon.webp"
-            alt="Фрезерный инструмент WIZARD"
-            class="w-full rounded-xl border border-slate-200"
-        />
+    <div class="space-y-3">
+        <div
+            class="flex aspect-video items-center justify-center overflow-hidden rounded-2xl border border-slate-200 bg-slate-50 p-4 sm:p-6"
+        >
+            <img
+                src="/image/upload/features/blending_scope_wizard_3.webp"
+                alt="Фрезерный инструмент WIZARD"
+                class="h-full w-full object-contain"
+                loading="lazy"
+            />
+        </div>
 
-        <p class="text-center text-sm text-slate-500">
+        <p class="text-center text-xs leading-6 text-slate-500">
             Фрезерный инструмент.
         </p>
     </div>
@@ -373,12 +392,21 @@ return [
     </div>
 
     <!-- IMAGE 1 -->
-    <div class="space-y-4">
-        <img
-            src="/image/service/image-outline-icon.webp"
-            alt="WIZARD blendoscope"
-            class="w-full rounded-xl border border-slate-200"
-        />
+    <div class="space-y-3">
+        <div
+            class="flex aspect-video items-center justify-center overflow-hidden rounded-2xl border border-slate-200 bg-slate-50 p-4 sm:p-6"
+        >
+            <img
+                src="/image/upload/features/blending_scope_wizard_1.webp"
+                alt="WIZARD blendoscope"
+                class="h-full w-full object-contain"
+                loading="lazy"
+            />
+        </div>
+
+        <p class="text-center text-xs leading-6 text-slate-500">
+            The WIZARD blendoscope is available in the following configurations.
+        </p>
     </div>
 
     <!-- MILLING MODULE -->
@@ -471,14 +499,19 @@ return [
     </div>
 
     <!-- IMAGE 2 -->
-    <div class="space-y-4">
-        <img
-            src="/image/service/image-outline-icon.webp"
-            alt="WIZARD milling and liquid penetrant module"
-            class="w-full rounded-xl border border-slate-200"
-        />
+    <div class="space-y-3">
+        <div
+            class="flex aspect-video items-center justify-center overflow-hidden rounded-2xl border border-slate-200 bg-slate-50 p-4 sm:p-6"
+        >
+            <img
+                src="/image/upload/features/blending_scope_wizard_2.webp"
+                alt="WIZARD milling and liquid penetrant module"
+                class="h-full w-full object-contain"
+                loading="lazy"
+            />
+        </div>
 
-        <p class="text-center text-sm text-slate-500">
+        <p class="text-center text-xs leading-6 text-slate-500">
             Milling / liquid penetrant module.
             Working position 80°–100°.
         </p>
@@ -522,14 +555,19 @@ return [
     </div>
 
     <!-- IMAGE 3 -->
-    <div class="space-y-4">
-        <img
-            src="/image/service/image-outline-icon.webp"
-            alt="WIZARD milling tool"
-            class="w-full rounded-xl border border-slate-200"
-        />
+    <div class="space-y-3">
+        <div
+            class="flex aspect-video items-center justify-center overflow-hidden rounded-2xl border border-slate-200 bg-slate-50 p-4 sm:p-6"
+        >
+            <img
+                src="/image/upload/features/blending_scope_wizard_3.webp"
+                alt="WIZARD milling tool"
+                class="h-full w-full object-contain"
+                loading="lazy"
+            />
+        </div>
 
-        <p class="text-center text-sm text-slate-500">
+        <p class="text-center text-xs leading-6 text-slate-500">
             Milling tool.
         </p>
     </div>

@@ -62,7 +62,8 @@
                            hover:bg-[#f8f8f8]
                            active:scale-[0.995]"
                     :class="{
-                        'border-gray-200 bg-[#f5f5f5]': isGroupOpen(group.id)
+                        'border-gray-200 bg-[#f5f5f5]':
+                            isGroupOpen(group.id)
                     }"
                     @mouseenter="hoveredGroupId = group.id"
                     @mouseleave="hoveredGroupId = null"
@@ -169,6 +170,7 @@
                                 :all-link="group.href"
                                 :all-label="t('megaMenu.showAllProducts')"
                                 @product-hover="emit('product-hover', $event)"
+                                @navigate="closeMegaMenu"
                             />
 
                         </div>
@@ -193,9 +195,10 @@
             <RouterLink
                 :to="category.href"
                 class="group inline-flex items-center gap-[6px]
-                       text-[11px] font-semibold text-[#252525]
-                       transition-all duration-[220ms]
-                       hover:gap-2 hover:text-black"
+                    text-[11px] font-semibold text-[#252525]
+                    transition-all duration-[220ms]
+                    hover:gap-2 hover:text-black"
+                @click="emit('navigate')"
             >
 
                 <span>
@@ -231,16 +234,22 @@ import {
     ref,
     watch
 } from 'vue'
+
 import { useI18n } from 'vue-i18n'
 
 import MegaMenuGroup from './MegaMenuGroup.vue'
-import { Icon } from '../../../constants/icons.js'
+
+import {
+    Icon
+} from '../../../constants/icons.js'
+
 
 const { t } = useI18n()
 
 
 const emit = defineEmits([
-    'product-hover'
+    'product-hover',
+    'navigate'
 ])
 
 
@@ -313,6 +322,30 @@ const isGroupHighlighted = (groupId) => {
         hoveredGroupId.value === groupId ||
         openGroupId.value === groupId
     )
+
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Close mega menu
+|--------------------------------------------------------------------------
+|
+| Передаём событие родительскому компоненту.
+| Сам этот компонент не управляет состоянием
+| всего mega-menu.
+|
+*/
+
+const closeMegaMenu = () => {
+
+    hoveredGroupId.value = null
+
+    openGroupId.value = null
+
+    emit('product-hover', null)
+
+    emit('navigate')
 
 }
 

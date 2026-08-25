@@ -29,6 +29,33 @@ return [
         </div>
     </div>
 
+    <!-- IMAGE -->
+    <div class="flex justify-center">
+        <figure
+            class="w-full overflow-hidden rounded-2xl border border-slate-200 bg-slate-50"
+        >
+            <div
+                class="flex min-h-[260px] items-center justify-center p-4
+                       sm:min-h-[340px] sm:p-6 lg:min-h-[400px]"
+            >
+                <img
+                    src="/image/upload/features/dami_c09_1.webp"
+                    alt="ДАМИ-С09"
+                    class="max-h-[400px] w-auto max-w-full object-contain"
+                    loading="lazy"
+                />
+            </div>
+
+            <figcaption
+                class="border-t border-slate-200 bg-white px-4 py-3 text-center"
+            >
+                <p class="text-sm leading-6 text-slate-500">
+                    Дефектоскоп ДАМИ-С09.
+                </p>
+            </figcaption>
+        </figure>
+    </div>
+
     <!-- FUNCTIONAL FEATURES -->
     <div class="space-y-5">
 
@@ -243,6 +270,33 @@ return [
             </p>
 
         </div>
+    </div>
+
+    <!-- IMAGE -->
+    <div class="flex justify-center">
+        <figure
+            class="w-full overflow-hidden rounded-2xl border border-slate-200 bg-slate-50"
+        >
+            <div
+                class="flex min-h-[260px] items-center justify-center p-4
+                       sm:min-h-[340px] sm:p-6 lg:min-h-[400px]"
+            >
+                <img
+                    src="/image/upload/features/dami_c09_1.webp"
+                    alt="DAMI-C09"
+                    class="max-h-[400px] w-auto max-w-full object-contain"
+                    loading="lazy"
+                />
+            </div>
+
+            <figcaption
+                class="border-t border-slate-200 bg-white px-4 py-3 text-center"
+            >
+                <p class="text-sm leading-6 text-slate-500">
+                    DAMI-C09 flaw detector.
+                </p>
+            </figcaption>
+        </figure>
     </div>
 
     <!-- FUNCTIONAL FEATURES -->

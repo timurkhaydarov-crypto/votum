@@ -27,35 +27,46 @@ return [
         </p>
     </div>
 
-    <!-- A-SCAN -->
-    <div class="space-y-4">
-        <img
-            src="/image/service/image-outline-icon.webp"
-            alt="Развертка А"
-            class="w-full rounded-xl border border-slate-200"
-        />
+    <!-- IMAGES 1–2 -->
+    <div class="grid gap-6 md:grid-cols-2">
 
-        <p class="text-sm leading-7 text-slate-700">
-            <strong>Развертка — А.</strong>
-            Превышение амплитуды сигнала заданного браковочного уровня.
-        </p>
-    </div>
+        <figure
+            class="overflow-hidden rounded-xl border border-slate-200 bg-slate-50 p-2"
+        >
+            <img
+                src="/image/upload/features/tomographic_ud4_tm_269_1.webp"
+                alt="Развертка А"
+                class="mx-auto h-auto max-h-[360px] w-auto max-w-full object-contain"
+                loading="lazy"
+            />
 
-    <!-- B-SCAN -->
-    <div class="space-y-4">
-        <img
-            src="/image/service/image-outline-icon.webp"
-            alt="Развертка В"
-            class="w-full rounded-xl border border-slate-200"
-        />
+            <figcaption
+                class="border-t border-slate-200 px-4 py-3 text-center text-sm leading-6 text-slate-600"
+            >
+                Развертка — А.
+                Превышение амплитуды сигнала заданного браковочного уровня.
+            </figcaption>
+        </figure>
 
-        <p class="text-sm leading-7 text-slate-700">
-            <strong>Развертка — В.</strong>
-            В данную развертку попадают все отражатели (дефекты),
-            находящиеся в перьях подошвы — левая и правая грань,
-            в проекции шейки в подошву, а также очаги коррозии
-            на поверхности перьев подошвы.
-        </p>
+        <figure
+            class="overflow-hidden rounded-xl border border-slate-200 bg-slate-50 p-2"
+        >
+            <img
+                src="/image/upload/features/tomographic_ud4_tm_269_2.webp"
+                alt="Развертка В"
+                class="mx-auto h-auto max-h-[360px] w-auto max-w-full object-contain"
+                loading="lazy"
+            />
+
+            <figcaption
+                class="border-t border-slate-200 px-4 py-3 text-center text-sm leading-6 text-slate-600"
+            >
+                Развертка — В.
+                Все отражатели (дефекты), находящиеся в перьях подошвы,
+                а также очаги коррозии на поверхности перьев подошвы.
+            </figcaption>
+        </figure>
+
     </div>
 
     <!-- CALIBRATION -->
@@ -67,36 +78,60 @@ return [
             Настройка ручных искателей проводится на стандартном
             образце СО-3Р.
         </p>
-
-        <img
-            src="/image/service/image-outline-icon.webp"
-            alt="Схема расположения искусственного дефекта"
-            class="w-full rounded-xl border border-slate-200"
-        />
-
-        <p class="text-center text-sm text-slate-500">
-            Рис. 1. Схема расположения искусственного дефекта.
-            Сверление диаметром 5 мм + 0,2 мм.
-        </p>
     </div>
 
-    <!-- ULTRASONIC PRINCIPLE -->
-    <div class="space-y-4">
-        <img
-            src="/image/service/image-outline-icon.webp"
-            alt="Принцип трансформации УЗК волн"
-            class="w-full rounded-xl border border-slate-200"
-        />
+    <!-- IMAGES 3–4 -->
+    <div class="grid gap-6 md:grid-cols-2">
 
-        <p class="text-center text-sm text-slate-500">
-            Рис. 2. Принцип трансформации УЗК волн.
-        </p>
+        <figure
+            class="overflow-hidden rounded-xl border border-slate-200 bg-slate-50 p-2"
+        >
+            <img
+                src="/image/upload/features/tomographic_ud4_tm_269_3.webp"
+                alt="Схема расположения искусственного дефекта"
+                class="mx-auto h-auto max-h-[360px] w-auto max-w-full object-contain"
+                loading="lazy"
+            />
 
-        <p class="text-sm leading-7 text-slate-700">
-            «Слепая» зона составляет 350 мм —
-            расстояние от точки выхода луча искательной системы
-            до подошвы рельса под углом 50°.
-        </p>
+            <figcaption
+                class="border-t border-slate-200 px-4 py-3 text-center"
+            >
+                <p class="text-sm font-medium text-slate-600">
+                    Рис. 1. Схема расположения искусственного дефекта.
+                </p>
+
+                <p class="mt-1 text-xs text-slate-500">
+                    Сверление диаметром 5 мм + 0,2 мм.
+                </p>
+            </figcaption>
+        </figure>
+
+        <figure
+            class="overflow-hidden rounded-xl border border-slate-200 bg-slate-50 p-2"
+        >
+            <img
+                src="/image/upload/features/tomographic_ud4_tm_269_4.webp"
+                alt="Принцип трансформации УЗК волн"
+                class="mx-auto h-auto max-h-[360px] w-auto max-w-full object-contain"
+                loading="lazy"
+            />
+
+            <figcaption
+                class="border-t border-slate-200 px-4 py-3 text-center"
+            >
+                <p class="text-sm font-medium text-slate-600">
+                    Рис. 2. Принцип трансформации УЗК волн.
+                </p>
+
+                <p class="mt-2 text-sm leading-7 text-slate-700">
+                    «Слепая» зона составляет
+                    <strong>350 мм</strong> —
+                    расстояние от точки выхода луча искательной системы
+                    до подошвы рельса под углом 50°.
+                </p>
+            </figcaption>
+        </figure>
+
     </div>
 
     <!-- APPLICATION -->
@@ -109,6 +144,61 @@ return [
             подвержены коррозии.
         </p>
     </div>
+
+    <!-- DEFECT CONFIRMATION -->
+    <div class="space-y-5">
+        <div>
+            <h3 class="text-base font-bold tracking-tight text-slate-900">
+                Фактическое подтверждение дефекта
+            </h3>
+
+            <div class="mt-2 h-px bg-slate-200"></div>
+        </div>
+
+        <p class="text-sm leading-7 text-slate-700">
+            Фактическое подтверждение обнаруженного дефекта
+            методом механического долома.
+        </p>
+    </div>
+
+    <!-- IMAGES 5–6 -->
+    <div class="grid gap-6 md:grid-cols-2">
+
+        <figure
+            class="overflow-hidden rounded-xl border border-slate-200 bg-slate-50 p-2"
+        >
+            <img
+                src="/image/upload/features/tomographic_ud4_tm_269_5.webp"
+                alt="Фактическое подтверждение дефекта методом механического долома"
+                class="mx-auto h-auto max-h-[360px] w-auto max-w-full object-contain"
+                loading="lazy"
+            />
+        </figure>
+
+        <figure
+            class="overflow-hidden rounded-xl border border-slate-200 bg-slate-50 p-2"
+        >
+            <img
+                src="/image/upload/features/tomographic_ud4_tm_269_6.webp"
+                alt="Фактическое подтверждение дефекта методом механического долома"
+                class="mx-auto h-auto max-h-[360px] w-auto max-w-full object-contain"
+                loading="lazy"
+            />
+        </figure>
+
+    </div>
+
+    <!-- IMAGE 7 -->
+    <figure
+        class="mx-auto w-full max-w-3xl overflow-hidden rounded-xl border border-slate-200 bg-slate-50 p-2"
+    >
+        <img
+            src="/image/upload/features/tomographic_ud4_tm_269_7.webp"
+            alt="ТОМОГРАФИК УД4-ТМ"
+            class="mx-auto h-auto max-h-[420px] w-auto max-w-full object-contain"
+            loading="lazy"
+        />
+    </figure>
 
     <!-- DELIVERY SET -->
     <div class="space-y-5">
@@ -182,36 +272,46 @@ return [
         </p>
     </div>
 
-    <!-- A-SCAN -->
-    <div class="space-y-4">
-        <img
-            src="/image/service/image-outline-icon.webp"
-            alt="A-scan"
-            class="w-full rounded-xl border border-slate-200"
-        />
+    <!-- IMAGES 1–2 -->
+    <div class="grid gap-6 md:grid-cols-2">
 
-        <p class="text-sm leading-7 text-slate-700">
-            <strong>A-scan.</strong>
-            Exceeding the signal amplitude of the specified rejection level.
-        </p>
-    </div>
+        <figure
+            class="overflow-hidden rounded-xl border border-slate-200 bg-slate-50 p-2"
+        >
+            <img
+                src="/image/upload/features/tomographic_ud4_tm_269_1.webp"
+                alt="A-scan"
+                class="mx-auto h-auto max-h-[360px] w-auto max-w-full object-contain"
+                loading="lazy"
+            />
 
-    <!-- B-SCAN -->
-    <div class="space-y-4">
-        <img
-            src="/image/service/image-outline-icon.webp"
-            alt="B-scan"
-            class="w-full rounded-xl border border-slate-200"
-        />
+            <figcaption
+                class="border-t border-slate-200 px-4 py-3 text-center text-sm leading-6 text-slate-600"
+            >
+                A-scan.
+                Exceeding the signal amplitude of the specified rejection level.
+            </figcaption>
+        </figure>
 
-        <p class="text-sm leading-7 text-slate-700">
-            <strong>B-scan.</strong>
-            This scan contains all reflectors (defects) located
-            in the rail foot flanges — the left and right faces,
-            in the projection of the rail web into the foot,
-            as well as corrosion areas on the surface
-            of the rail foot flanges.
-        </p>
+        <figure
+            class="overflow-hidden rounded-xl border border-slate-200 bg-slate-50 p-2"
+        >
+            <img
+                src="/image/upload/features/tomographic_ud4_tm_269_2.webp"
+                alt="B-scan"
+                class="mx-auto h-auto max-h-[360px] w-auto max-w-full object-contain"
+                loading="lazy"
+            />
+
+            <figcaption
+                class="border-t border-slate-200 px-4 py-3 text-center text-sm leading-6 text-slate-600"
+            >
+                B-scan.
+                All reflectors (defects) located in the rail foot flanges,
+                as well as corrosion areas on their surface.
+            </figcaption>
+        </figure>
+
     </div>
 
     <!-- CALIBRATION -->
@@ -224,36 +324,60 @@ return [
             Manual probes are calibrated using the standard
             SO-3R reference block.
         </p>
-
-        <img
-            src="/image/service/image-outline-icon.webp"
-            alt="Artificial defect location scheme"
-            class="w-full rounded-xl border border-slate-200"
-        />
-
-        <p class="text-center text-sm text-slate-500">
-            Fig. 1. Artificial defect location scheme.
-            Drilled hole diameter: 5 mm + 0.2 mm.
-        </p>
     </div>
 
-    <!-- ULTRASONIC PRINCIPLE -->
-    <div class="space-y-4">
-        <img
-            src="/image/service/image-outline-icon.webp"
-            alt="Principle of ultrasonic wave transformation"
-            class="w-full rounded-xl border border-slate-200"
-        />
+    <!-- IMAGES 3–4 -->
+    <div class="grid gap-6 md:grid-cols-2">
 
-        <p class="text-center text-sm text-slate-500">
-            Fig. 2. Principle of ultrasonic wave transformation.
-        </p>
+        <figure
+            class="overflow-hidden rounded-xl border border-slate-200 bg-slate-50 p-2"
+        >
+            <img
+                src="/image/upload/features/tomographic_ud4_tm_269_3.webp"
+                alt="Artificial defect location scheme"
+                class="mx-auto h-auto max-h-[360px] w-auto max-w-full object-contain"
+                loading="lazy"
+            />
 
-        <p class="text-sm leading-7 text-slate-700">
-            The blind zone is 350 mm —
-            the distance from the exit point of the inspection beam
-            to the rail foot at an angle of 50°.
-        </p>
+            <figcaption
+                class="border-t border-slate-200 px-4 py-3 text-center"
+            >
+                <p class="text-sm font-medium text-slate-600">
+                    Fig. 1. Artificial defect location scheme.
+                </p>
+
+                <p class="mt-1 text-xs text-slate-500">
+                    Drilled hole diameter: 5 mm + 0.2 mm.
+                </p>
+            </figcaption>
+        </figure>
+
+        <figure
+            class="overflow-hidden rounded-xl border border-slate-200 bg-slate-50 p-2"
+        >
+            <img
+                src="/image/upload/features/tomographic_ud4_tm_269_4.webp"
+                alt="Principle of ultrasonic wave transformation"
+                class="mx-auto h-auto max-h-[360px] w-auto max-w-full object-contain"
+                loading="lazy"
+            />
+
+            <figcaption
+                class="border-t border-slate-200 px-4 py-3 text-center"
+            >
+                <p class="text-sm font-medium text-slate-600">
+                    Fig. 2. Principle of ultrasonic wave transformation.
+                </p>
+
+                <p class="mt-2 text-sm leading-7 text-slate-700">
+                    The blind zone is
+                    <strong>350 mm</strong> —
+                    the distance from the exit point of the inspection beam
+                    to the rail foot at an angle of 50°.
+                </p>
+            </figcaption>
+        </figure>
+
     </div>
 
     <!-- APPLICATION -->
@@ -266,6 +390,61 @@ return [
             susceptible to corrosion.
         </p>
     </div>
+
+    <!-- DEFECT CONFIRMATION -->
+    <div class="space-y-5">
+        <div>
+            <h3 class="text-base font-bold tracking-tight text-slate-900">
+                Actual Defect Confirmation
+            </h3>
+
+            <div class="mt-2 h-px bg-slate-200"></div>
+        </div>
+
+        <p class="text-sm leading-7 text-slate-700">
+            Actual confirmation of the detected defect
+            by mechanical breaking.
+        </p>
+    </div>
+
+    <!-- IMAGES 5–6 -->
+    <div class="grid gap-6 md:grid-cols-2">
+
+        <figure
+            class="overflow-hidden rounded-xl border border-slate-200 bg-slate-50 p-2"
+        >
+            <img
+                src="/image/upload/features/tomographic_ud4_tm_269_5.webp"
+                alt="Actual defect confirmation by mechanical breaking"
+                class="mx-auto h-auto max-h-[360px] w-auto max-w-full object-contain"
+                loading="lazy"
+            />
+        </figure>
+
+        <figure
+            class="overflow-hidden rounded-xl border border-slate-200 bg-slate-50 p-2"
+        >
+            <img
+                src="/image/upload/features/tomographic_ud4_tm_269_6.webp"
+                alt="Actual defect confirmation by mechanical breaking"
+                class="mx-auto h-auto max-h-[360px] w-auto max-w-full object-contain"
+                loading="lazy"
+            />
+        </figure>
+
+    </div>
+
+    <!-- IMAGE 7 -->
+    <figure
+        class="mx-auto w-full max-w-3xl overflow-hidden rounded-xl border border-slate-200 bg-slate-50 p-2"
+    >
+        <img
+            src="/image/upload/features/tomographic_ud4_tm_269_7.webp"
+            alt="TOMOGRAPHIC UD4-TM"
+            class="mx-auto h-auto max-h-[420px] w-auto max-w-full object-contain"
+            loading="lazy"
+        />
+    </figure>
 
     <!-- DELIVERY SET -->
     <div class="space-y-5">

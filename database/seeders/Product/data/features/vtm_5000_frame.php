@@ -103,44 +103,155 @@ return [
         </div>
 
         <ul class="list-disc space-y-3 pl-5 text-sm leading-7 text-slate-700">
-            <li>
-                Робот-манипулятор.
-            </li>
-
-            <li>
-                Ультразвуковой канал дефектоскопии.
-            </li>
-
-            <li>
-                Вихретоковый канал дефектоскопии.
-            </li>
-
-            <li>
-                Высокоточные лазерные 2D-сканеры.
-            </li>
-
-            <li>
-                Специализированное ПО.
-            </li>
-
-            <li>
-                Терминал управления.
-            </li>
-
-            <li>
-                Механизм перемещения.
-            </li>
+            <li>Робот-манипулятор.</li>
+            <li>Ультразвуковой канал дефектоскопии.</li>
+            <li>Вихретоковый канал дефектоскопии.</li>
+            <li>Высокоточные лазерные 2D-сканеры.</li>
+            <li>Специализированное ПО.</li>
+            <li>Терминал управления.</li>
+            <li>Механизм перемещения.</li>
         </ul>
 
     </div>
 
-    <!-- IMAGE -->
-    <div class="overflow-hidden rounded-xl border border-slate-200">
-        <img
-            src="/image/service/image-outline-icon.webp"
-            alt="РОБОСКОП ВТМ-5000/ФРЕЙМ"
-            class="h-auto w-full object-contain"
-        />
+    <!-- CONTROL REPORT -->
+    <div class="space-y-4">
+
+        <div>
+            <h3 class="text-base font-bold tracking-tight text-slate-900">
+                Результаты контроля
+            </h3>
+
+            <div class="mt-2 h-px bg-slate-200"></div>
+        </div>
+
+        <div class="overflow-x-auto rounded-xl border border-slate-200">
+            <table class="w-full min-w-[760px] border-collapse text-sm">
+
+                <thead>
+                    <tr class="bg-slate-900 text-white">
+                        <th
+                            colspan="6"
+                            class="px-4 py-3 text-left text-sm font-semibold"
+                        >
+                            Журнал контроля структуры валов №719Е
+                        </th>
+                    </tr>
+
+                    <tr class="bg-slate-50 text-slate-700">
+                        <th class="border-b border-r border-slate-200 px-3 py-3 text-left text-xs font-semibold">
+                            № детали
+                        </th>
+
+                        <th class="border-b border-r border-slate-200 px-3 py-3 text-left text-xs font-semibold">
+                            T<sub>изм</sub>, мкс
+                        </th>
+
+                        <th class="border-b border-r border-slate-200 px-3 py-3 text-left text-xs font-semibold">
+                            b<sub>изм</sub>, мм
+                        </th>
+
+                        <th class="border-b border-r border-slate-200 px-3 py-3 text-left text-xs font-semibold">
+                            V<sub>расчетн.</sub>, м/с
+                        </th>
+
+                        <th class="border-b border-r border-slate-200 px-3 py-3 text-left text-xs font-semibold">
+                            V<sub>доп.</sub>, м/с
+                        </th>
+
+                        <th class="border-b border-slate-200 px-3 py-3 text-left text-xs font-semibold">
+                            Заключение
+                        </th>
+                    </tr>
+                </thead>
+
+                <tbody class="divide-y divide-slate-100">
+
+                    <tr class="transition hover:bg-slate-50">
+                        <td class="border-r border-slate-100 px-3 py-3 font-medium text-slate-900">1</td>
+                        <td class="border-r border-slate-100 px-3 py-3 text-slate-600">11.975</td>
+                        <td class="border-r border-slate-100 px-3 py-3 text-slate-600">31.23</td>
+                        <td class="border-r border-slate-100 px-3 py-3 text-slate-600">5.776</td>
+                        <td class="border-r border-slate-100 px-3 py-3 text-slate-600">5.700</td>
+                        <td class="px-3 py-3 font-semibold text-emerald-600">Годен</td>
+                    </tr>
+
+                    <tr class="transition hover:bg-slate-50">
+                        <td class="border-r border-slate-100 px-3 py-3 font-medium text-slate-900">2</td>
+                        <td class="border-r border-slate-100 px-3 py-3 text-slate-600">12.000</td>
+                        <td class="border-r border-slate-100 px-3 py-3 text-slate-600">31.25</td>
+                        <td class="border-r border-slate-100 px-3 py-3 text-slate-600">5.703</td>
+                        <td class="border-r border-slate-100 px-3 py-3 text-slate-600">5.700</td>
+                        <td class="px-3 py-3 font-semibold text-emerald-600">Годен</td>
+                    </tr>
+
+                    <tr class="transition hover:bg-slate-50">
+                        <td class="border-r border-slate-100 px-3 py-3 font-medium text-slate-900">3</td>
+                        <td class="border-r border-slate-100 px-3 py-3 text-slate-600">12.000</td>
+                        <td class="border-r border-slate-100 px-3 py-3 text-slate-600">31.23</td>
+                        <td class="border-r border-slate-100 px-3 py-3 text-slate-600">5.734</td>
+                        <td class="border-r border-slate-100 px-3 py-3 text-slate-600">5.700</td>
+                        <td class="px-3 py-3 font-semibold text-emerald-600">Годен</td>
+                    </tr>
+
+                    <tr class="transition hover:bg-slate-50">
+                        <td class="border-r border-slate-100 px-3 py-3 font-medium text-slate-900">4</td>
+                        <td class="border-r border-slate-100 px-3 py-3 text-slate-600">11.975</td>
+                        <td class="border-r border-slate-100 px-3 py-3 text-slate-600">31.27</td>
+                        <td class="border-r border-slate-100 px-3 py-3 text-slate-600">5.767</td>
+                        <td class="border-r border-slate-100 px-3 py-3 text-slate-600">5.700</td>
+                        <td class="px-3 py-3 font-semibold text-emerald-600">Годен</td>
+                    </tr>
+
+                    <tr class="bg-red-50/60 transition hover:bg-red-50">
+                        <td class="border-r border-red-100 px-3 py-3 font-medium text-slate-900">5</td>
+                        <td class="border-r border-red-100 px-3 py-3 text-slate-600">12.350</td>
+                        <td class="border-r border-red-100 px-3 py-3 text-slate-600">31.26</td>
+                        <td class="border-r border-red-100 px-3 py-3 text-slate-600">5.648</td>
+                        <td class="border-r border-red-100 px-3 py-3 text-slate-600">5.700</td>
+                        <td class="px-3 py-3 font-semibold text-red-600">Брак</td>
+                    </tr>
+
+                    <tr class="transition hover:bg-slate-50">
+                        <td class="border-r border-slate-100 px-3 py-3 font-medium text-slate-900">6</td>
+                        <td class="border-r border-slate-100 px-3 py-3 text-slate-600">11.975</td>
+                        <td class="border-r border-slate-100 px-3 py-3 text-slate-600">31.19</td>
+                        <td class="border-r border-slate-100 px-3 py-3 text-slate-600">5.781</td>
+                        <td class="border-r border-slate-100 px-3 py-3 text-slate-600">5.700</td>
+                        <td class="px-3 py-3 font-semibold text-emerald-600">Годен</td>
+                    </tr>
+
+                    <tr class="transition hover:bg-slate-50">
+                        <td class="border-r border-slate-100 px-3 py-3 font-medium text-slate-900">7</td>
+                        <td class="border-r border-slate-100 px-3 py-3 text-slate-600">12.000</td>
+                        <td class="border-r border-slate-100 px-3 py-3 text-slate-600">31.23</td>
+                        <td class="border-r border-slate-100 px-3 py-3 text-slate-600">5.803</td>
+                        <td class="border-r border-slate-100 px-3 py-3 text-slate-600">5.700</td>
+                        <td class="px-3 py-3 font-semibold text-emerald-600">Годен</td>
+                    </tr>
+
+                    <tr class="transition hover:bg-slate-50">
+                        <td class="border-r border-slate-100 px-3 py-3 font-medium text-slate-900">8</td>
+                        <td class="border-r border-slate-100 px-3 py-3 text-slate-600">12.000</td>
+                        <td class="border-r border-slate-100 px-3 py-3 text-slate-600">31.23</td>
+                        <td class="border-r border-slate-100 px-3 py-3 text-slate-600">5.793</td>
+                        <td class="border-r border-slate-100 px-3 py-3 text-slate-600">5.700</td>
+                        <td class="px-3 py-3 font-semibold text-emerald-600">Годен</td>
+                    </tr>
+
+                    <tr class="transition hover:bg-slate-50">
+                        <td class="border-r border-slate-100 px-3 py-3 font-medium text-slate-900">9</td>
+                        <td class="border-r border-slate-100 px-3 py-3 text-slate-600">12.000</td>
+                        <td class="border-r border-slate-100 px-3 py-3 text-slate-600">31.23</td>
+                        <td class="border-r border-slate-100 px-3 py-3 text-slate-600">5.819</td>
+                        <td class="border-r border-slate-100 px-3 py-3 text-slate-600">5.700</td>
+                        <td class="px-3 py-3 font-semibold text-emerald-600">Годен</td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+
     </div>
 
     <!-- ADDITIONAL SOFTWARE -->
@@ -296,13 +407,144 @@ return [
 
     </div>
 
-    <!-- IMAGE -->
-    <div class="overflow-hidden rounded-xl border border-slate-200">
-        <img
-            src="/image/service/image-outline-icon.webp"
-            alt="ROBOSCOPE VTM-5000/FRAME"
-            class="h-auto w-full object-contain"
-        />
+    <!-- CONTROL REPORT -->
+    <div class="space-y-4">
+
+        <div>
+            <h3 class="text-base font-bold tracking-tight text-slate-900">
+                Inspection Results
+            </h3>
+
+            <div class="mt-2 h-px bg-slate-200"></div>
+        </div>
+
+        <div class="overflow-x-auto rounded-xl border border-slate-200">
+            <table class="w-full min-w-[760px] border-collapse text-sm">
+
+                <thead>
+                    <tr class="bg-slate-900 text-white">
+                        <th
+                            colspan="6"
+                            class="px-4 py-3 text-left text-sm font-semibold"
+                        >
+                            Shaft Structure Inspection Report No. 719E
+                        </th>
+                    </tr>
+
+                    <tr class="bg-slate-50 text-slate-700">
+                        <th class="border-b border-r border-slate-200 px-3 py-3 text-left text-xs font-semibold">
+                            Part No.
+                        </th>
+
+                        <th class="border-b border-r border-slate-200 px-3 py-3 text-left text-xs font-semibold">
+                            T<sub>meas</sub>, μs
+                        </th>
+
+                        <th class="border-b border-r border-slate-200 px-3 py-3 text-left text-xs font-semibold">
+                            b<sub>meas</sub>, mm
+                        </th>
+
+                        <th class="border-b border-r border-slate-200 px-3 py-3 text-left text-xs font-semibold">
+                            V<sub>calculated</sub>, m/s
+                        </th>
+
+                        <th class="border-b border-r border-slate-200 px-3 py-3 text-left text-xs font-semibold">
+                            V<sub>allowed</sub>, m/s
+                        </th>
+
+                        <th class="border-b border-slate-200 px-3 py-3 text-left text-xs font-semibold">
+                            Conclusion
+                        </th>
+                    </tr>
+                </thead>
+
+                <tbody class="divide-y divide-slate-100">
+
+                    <tr class="transition hover:bg-slate-50">
+                        <td class="border-r border-slate-100 px-3 py-3 font-medium text-slate-900">1</td>
+                        <td class="border-r border-slate-100 px-3 py-3 text-slate-600">11.975</td>
+                        <td class="border-r border-slate-100 px-3 py-3 text-slate-600">31.23</td>
+                        <td class="border-r border-slate-100 px-3 py-3 text-slate-600">5.776</td>
+                        <td class="border-r border-slate-100 px-3 py-3 text-slate-600">5.700</td>
+                        <td class="px-3 py-3 font-semibold text-emerald-600">Pass</td>
+                    </tr>
+
+                    <tr class="transition hover:bg-slate-50">
+                        <td class="border-r border-slate-100 px-3 py-3 font-medium text-slate-900">2</td>
+                        <td class="border-r border-slate-100 px-3 py-3 text-slate-600">12.000</td>
+                        <td class="border-r border-slate-100 px-3 py-3 text-slate-600">31.25</td>
+                        <td class="border-r border-slate-100 px-3 py-3 text-slate-600">5.703</td>
+                        <td class="border-r border-slate-100 px-3 py-3 text-slate-600">5.700</td>
+                        <td class="px-3 py-3 font-semibold text-emerald-600">Pass</td>
+                    </tr>
+
+                    <tr class="transition hover:bg-slate-50">
+                        <td class="border-r border-slate-100 px-3 py-3 font-medium text-slate-900">3</td>
+                        <td class="border-r border-slate-100 px-3 py-3 text-slate-600">12.000</td>
+                        <td class="border-r border-slate-100 px-3 py-3 text-slate-600">31.23</td>
+                        <td class="border-r border-slate-100 px-3 py-3 text-slate-600">5.734</td>
+                        <td class="border-r border-slate-100 px-3 py-3 text-slate-600">5.700</td>
+                        <td class="px-3 py-3 font-semibold text-emerald-600">Pass</td>
+                    </tr>
+
+                    <tr class="transition hover:bg-slate-50">
+                        <td class="border-r border-slate-100 px-3 py-3 font-medium text-slate-900">4</td>
+                        <td class="border-r border-slate-100 px-3 py-3 text-slate-600">11.975</td>
+                        <td class="border-r border-slate-100 px-3 py-3 text-slate-600">31.27</td>
+                        <td class="border-r border-slate-100 px-3 py-3 text-slate-600">5.767</td>
+                        <td class="border-r border-slate-100 px-3 py-3 text-slate-600">5.700</td>
+                        <td class="px-3 py-3 font-semibold text-emerald-600">Pass</td>
+                    </tr>
+
+                    <tr class="bg-red-50/60 transition hover:bg-red-50">
+                        <td class="border-r border-red-100 px-3 py-3 font-medium text-slate-900">5</td>
+                        <td class="border-r border-red-100 px-3 py-3 text-slate-600">12.350</td>
+                        <td class="border-r border-red-100 px-3 py-3 text-slate-600">31.26</td>
+                        <td class="border-r border-red-100 px-3 py-3 text-slate-600">5.648</td>
+                        <td class="border-r border-red-100 px-3 py-3 text-slate-600">5.700</td>
+                        <td class="px-3 py-3 font-semibold text-red-600">Rejected</td>
+                    </tr>
+
+                    <tr class="transition hover:bg-slate-50">
+                        <td class="border-r border-slate-100 px-3 py-3 font-medium text-slate-900">6</td>
+                        <td class="border-r border-slate-100 px-3 py-3 text-slate-600">11.975</td>
+                        <td class="border-r border-slate-100 px-3 py-3 text-slate-600">31.19</td>
+                        <td class="border-r border-slate-100 px-3 py-3 text-slate-600">5.781</td>
+                        <td class="border-r border-slate-100 px-3 py-3 text-slate-600">5.700</td>
+                        <td class="px-3 py-3 font-semibold text-emerald-600">Pass</td>
+                    </tr>
+
+                    <tr class="transition hover:bg-slate-50">
+                        <td class="border-r border-slate-100 px-3 py-3 font-medium text-slate-900">7</td>
+                        <td class="border-r border-slate-100 px-3 py-3 text-slate-600">12.000</td>
+                        <td class="border-r border-slate-100 px-3 py-3 text-slate-600">31.23</td>
+                        <td class="border-r border-slate-100 px-3 py-3 text-slate-600">5.803</td>
+                        <td class="border-r border-slate-100 px-3 py-3 text-slate-600">5.700</td>
+                        <td class="px-3 py-3 font-semibold text-emerald-600">Pass</td>
+                    </tr>
+
+                    <tr class="transition hover:bg-slate-50">
+                        <td class="border-r border-slate-100 px-3 py-3 font-medium text-slate-900">8</td>
+                        <td class="border-r border-slate-100 px-3 py-3 text-slate-600">12.000</td>
+                        <td class="border-r border-slate-100 px-3 py-3 text-slate-600">31.23</td>
+                        <td class="border-r border-slate-100 px-3 py-3 text-slate-600">5.793</td>
+                        <td class="border-r border-slate-100 px-3 py-3 text-slate-600">5.700</td>
+                        <td class="px-3 py-3 font-semibold text-emerald-600">Pass</td>
+                    </tr>
+
+                    <tr class="transition hover:bg-slate-50">
+                        <td class="border-r border-slate-100 px-3 py-3 font-medium text-slate-900">9</td>
+                        <td class="border-r border-slate-100 px-3 py-3 text-slate-600">12.000</td>
+                        <td class="border-r border-slate-100 px-3 py-3 text-slate-600">31.23</td>
+                        <td class="border-r border-slate-100 px-3 py-3 text-slate-600">5.819</td>
+                        <td class="border-r border-slate-100 px-3 py-3 text-slate-600">5.700</td>
+                        <td class="px-3 py-3 font-semibold text-emerald-600">Pass</td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+
     </div>
 
     <!-- ADDITIONAL SOFTWARE -->

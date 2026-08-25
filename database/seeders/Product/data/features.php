@@ -1,7 +1,7 @@
 <?php
 $vtm_5000_kp = require __DIR__ . '/features/vtm_5000_kp.php';
 $foton_1200 = require __DIR__ . '/features/foton_1200.php';
-$vtm_5000_pkm = require __DIR__ . '/features/vtm_5000_pkm.php';
+$vtm_5000_composite = require __DIR__ . '/features/vtm_5000_composite.php';
 $vtm_5000_disk = require __DIR__ . '/features/vtm_5000_disk.php';
 $vtm_5000_as = require __DIR__ . '/features/vtm_5000_as.php';
 $vtm_5000_rsp = require __DIR__ . '/features/vtm_5000_rsp.php';
@@ -49,8 +49,8 @@ return [
         'features' => $foton_1200,
     ],
     [
-        'article' => 'VTM-5000-PKM',
-        'features' => $vtm_5000_pkm,
+        'article' => 'VTM-5000-COMPOSITE',
+        'features' => $vtm_5000_composite,
     ],
     [
         'article' => 'VTM-5000-DISK',

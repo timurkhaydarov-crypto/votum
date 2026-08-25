@@ -39,8 +39,13 @@ class ProductFeaturesController extends Controller
      */
     public function show(Product $product): JsonResponse
     {
+        $features = $product->features()
+            ->with('gallery')
+            ->first();
+
         return response()->json([
-            'features' => $product->features?->features,
+            'features' => $features?->features,
+            'gallery' => $features?->gallery,
         ]);
     }
 

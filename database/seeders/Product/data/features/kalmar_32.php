@@ -38,18 +38,48 @@ return [
     </div>
 
     <!-- IMAGES -->
-    <div class="grid gap-6 md:grid-cols-2">
-        <img
-            src="/image/kalmar/kalmar_32_path.webp"
-            alt="КАЛЬМАР 32+ / ПУТЬ"
-            class="w-full rounded-xl border border-slate-200"
-        />
+    <div class="grid gap-5 md:grid-cols-2">
 
-        <img
-            src="/image/kalmar/kalmar_32_rsp.webp"
-            alt="КАЛЬМАР 32+ / РСП"
-            class="w-full rounded-xl border border-slate-200"
-        />
+        <!-- IMAGE 1 -->
+        <figure
+            class="overflow-hidden rounded-xl border border-slate-200 bg-slate-50"
+        >
+            <div class="flex h-56 items-center justify-center p-3">
+                <img
+                    src="/image/upload/features/kalmar_1.webp"
+                    alt="КАЛЬМАР 32+ / ПУТЬ"
+                    class="max-h-full max-w-full object-contain"
+                    loading="lazy"
+                />
+            </div>
+
+            <figcaption
+                class="border-t border-slate-200 bg-white px-4 py-2.5 text-center text-sm leading-6 text-slate-600"
+            >
+                Рис. 1. Кальмар 32+ / ПУТЬ
+            </figcaption>
+        </figure>
+
+        <!-- IMAGE 2 -->
+        <figure
+            class="overflow-hidden rounded-xl border border-slate-200 bg-slate-50"
+        >
+            <div class="flex h-56 items-center justify-center p-3">
+                <img
+                    src="/image/upload/features/kalmar_2.webp"
+                    alt="КАЛЬМАР 32+ / РСП"
+                    class="max-h-full max-w-full object-contain"
+                    loading="lazy"
+                />
+            </div>
+
+            <figcaption
+                class="border-t border-slate-200 bg-white px-4 py-2.5 text-center text-sm leading-6 text-slate-600"
+            >
+                Рис. 2. Кальмар 32+ / РСП
+            </figcaption>
+        </figure>
+
     </div>
 
     <!-- DESCRIPTION CONTINUED -->
@@ -144,18 +174,48 @@ return [
     </div>
 
     <!-- IMAGES -->
-    <div class="grid gap-6 md:grid-cols-2">
-        <img
-            src="/image/kalmar/kalmar_32_path.webp"
-            alt="KALMAR 32+ / TRACK"
-            class="w-full rounded-xl border border-slate-200"
-        />
+    <div class="grid gap-5 md:grid-cols-2">
 
-        <img
-            src="/image/kalmar/kalmar_32_rsp.webp"
-            alt="KALMAR 32+ / RWP"
-            class="w-full rounded-xl border border-slate-200"
-        />
+        <!-- IMAGE 1 -->
+        <figure
+            class="overflow-hidden rounded-xl border border-slate-200 bg-slate-50"
+        >
+            <div class="flex h-56 items-center justify-center p-3">
+                <img
+                    src="/image/upload/features/kalmar_1.webp"
+                    alt="KALMAR 32+ / TRACK"
+                    class="max-h-full max-w-full object-contain"
+                    loading="lazy"
+                />
+            </div>
+
+            <figcaption
+                class="border-t border-slate-200 bg-white px-4 py-2.5 text-center text-sm leading-6 text-slate-600"
+            >
+                Fig. 1. KALMAR 32+ / TRACK
+            </figcaption>
+        </figure>
+
+        <!-- IMAGE 2 -->
+        <figure
+            class="overflow-hidden rounded-xl border border-slate-200 bg-slate-50"
+        >
+            <div class="flex h-56 items-center justify-center p-3">
+                <img
+                    src="/image/upload/features/kalmar_2.webp"
+                    alt="KALMAR 32+ / RWP"
+                    class="max-h-full max-w-full object-contain"
+                    loading="lazy"
+                />
+            </div>
+
+            <figcaption
+                class="border-t border-slate-200 bg-white px-4 py-2.5 text-center text-sm leading-6 text-slate-600"
+            >
+                Fig. 2. KALMAR 32+ / RWP
+            </figcaption>
+        </figure>
+
     </div>
 
     <!-- DESCRIPTION CONTINUED -->

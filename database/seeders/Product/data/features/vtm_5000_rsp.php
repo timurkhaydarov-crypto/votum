@@ -254,7 +254,7 @@ return [
                 class="flex aspect-[4/3] items-center justify-center overflow-hidden rounded-xl border border-slate-200 bg-slate-50"
             >
                 <img
-                    src="/image/service/image-outline-icon.webp"
+                    src="/image/upload/features/vtm_5000_rsp_1.webp"
                     alt="РОБОСКОП ВТМ-5000/РСП"
                     class="h-full w-full object-contain p-8"
                 />
@@ -264,7 +264,7 @@ return [
                 class="flex aspect-[4/3] items-center justify-center overflow-hidden rounded-xl border border-slate-200 bg-slate-50"
             >
                 <img
-                    src="/image/service/image-outline-icon.webp"
+                    src="/image/upload/features/vtm_5000_rsp_2.webp"
                     alt="РОБОСКОП ВТМ-5000/РСП"
                     class="h-full w-full object-contain p-8"
                 />
@@ -274,7 +274,7 @@ return [
                 class="flex aspect-[4/3] items-center justify-center overflow-hidden rounded-xl border border-slate-200 bg-slate-50"
             >
                 <img
-                    src="/image/service/image-outline-icon.webp"
+                    src="/image/upload/features/vtm_5000_rsp_3.webp"
                     alt="РОБОСКОП ВТМ-5000/РСП"
                     class="h-full w-full object-contain p-8"
                 />
@@ -284,7 +284,7 @@ return [
                 class="flex aspect-[4/3] items-center justify-center overflow-hidden rounded-xl border border-slate-200 bg-slate-50"
             >
                 <img
-                    src="/image/service/image-outline-icon.webp"
+                    src="/image/upload/features/vtm_5000_rsp_4.webp"
                     alt="РОБОСКОП ВТМ-5000/РСП"
                     class="h-full w-full object-contain p-8"
                 />
@@ -553,7 +553,7 @@ return [
                 class="flex aspect-[4/3] items-center justify-center overflow-hidden rounded-xl border border-slate-200 bg-slate-50"
             >
                 <img
-                    src="/image/service/image-outline-icon.webp"
+                    src="/image/upload/features/vtm_5000_rsp_1.webp"
                     alt="ROBOSCOP VTM-5000/RSP"
                     class="h-full w-full object-contain p-8"
                 />
@@ -563,7 +563,7 @@ return [
                 class="flex aspect-[4/3] items-center justify-center overflow-hidden rounded-xl border border-slate-200 bg-slate-50"
             >
                 <img
-                    src="/image/service/image-outline-icon.webp"
+                    src="/image/upload/features/vtm_5000_rsp_2.webp"
                     alt="ROBOSCOP VTM-5000/RSP"
                     class="h-full w-full object-contain p-8"
                 />
@@ -573,7 +573,7 @@ return [
                 class="flex aspect-[4/3] items-center justify-center overflow-hidden rounded-xl border border-slate-200 bg-slate-50"
             >
                 <img
-                    src="/image/service/image-outline-icon.webp"
+                    src="/image/upload/features/vtm_5000_rsp_3.webp"
                     alt="ROBOSCOP VTM-5000/RSP"
                     class="h-full w-full object-contain p-8"
                 />
@@ -583,7 +583,7 @@ return [
                 class="flex aspect-[4/3] items-center justify-center overflow-hidden rounded-xl border border-slate-200 bg-slate-50"
             >
                 <img
-                    src="/image/service/image-outline-icon.webp"
+                    src="/image/upload/features/vtm_5000_rsp_4.webp"
                     alt="ROBOSCOP VTM-5000/RSP"
                     class="h-full w-full object-contain p-8"
                 />

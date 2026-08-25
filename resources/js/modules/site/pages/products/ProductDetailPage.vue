@@ -51,9 +51,9 @@
                 gallery-sub-title="certificates"
                 type="certificate"
             />
-
             <!-- GALLERY -->
             <ProductGallery
+            v-if="galleryImages.length"
                 :product="product"
                 :images="galleryImages"
             />

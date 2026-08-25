@@ -87,24 +87,45 @@
                             </div>
                         </div>
 
-                        <!-- FEATURES -->
+                        <!-- DATA -->
                         <div
-                            v-else-if="
-                                infoKey === 'features' &&
-                                infoData
-                            "
-                            class="space-y-6"
+                            v-else-if="infoData"
+                            class="space-y-8"
                         >
+                            <!-- FEATURES TEXT -->
                             <div
+                                v-if="text"
                                 class="prose prose-slate max-w-none text-sm leading-7"
-                                v-html="featuresText"
+                                v-html="text"
                             ></div>
+                            <!-- GALLERY -->
+                            <FeaturesGallery
+                                :gallery="gallery"
+                                :title="modalTitle"
+                            />
+
+                            <!-- EMPTY -->
+                            <EmptyInfo
+                                v-if="
+                                    !text &&
+                                    !gallery.length
+                                "
+                                :title="
+                                    $t(
+                                        'product.info.notAvailable',
+                                    )
+                                "
+                            />
                         </div>
 
-                        <!-- EMPTY -->
+                        <!-- NO DATA -->
                         <EmptyInfo
                             v-else
-                            :title="$t('product.info.notAvailable')"
+                            :title="
+                                $t(
+                                    'product.info.notAvailable',
+                                )
+                            "
                         />
                     </div>
                 </div>
@@ -118,6 +139,7 @@ import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import EmptyInfo from '@/modules/site/components/shared/EmptyInfo.vue';
+import FeaturesGallery from './FeaturesGallery.vue';
 
 const { locale } = useI18n();
 
@@ -159,63 +181,71 @@ const emit = defineEmits([
 */
 
 const modalTitle = computed(() => {
-    switch (props.infoKey) {
-        case 'features':
-            return locale.value === 'en'
-                ? 'Functional Features'
-                : 'Функциональные особенности';
+    const titles = {
+        features: {
+            en: 'Functional Features',
+            ru: 'Функциональные особенности',
+        },
 
-        case 'technical':
-            return locale.value === 'en'
-                ? 'Technical Specifications'
-                : 'Технические характеристики';
+        technical: {
+            en: 'Technical Specifications',
+            ru: 'Технические характеристики',
+        },
 
-        case 'documentation':
-            return locale.value === 'en'
-                ? 'Documentation'
-                : 'Документация';
+        documentation: {
+            en: 'Documentation',
+            ru: 'Документация',
+        },
 
-        case 'details':
-            return locale.value === 'en'
-                ? 'Details'
-                : 'Подробнее';
+        details: {
+            en: 'Details',
+            ru: 'Подробнее',
+        },
+    };
 
-        default:
-            return (
-                props.product.name ||
-                (
-                    locale.value === 'en'
-                        ? 'Product Information'
-                        : 'Информация о продукте'
-                )
-            );
-    }
+    return (
+        titles[props.infoKey]?.[locale.value] ||
+        props.product.name ||
+        (
+            locale.value === 'en'
+                ? 'Product Information'
+                : 'Информация о продукте'
+        )
+    );
 });
 
 /*
 |--------------------------------------------------------------------------
-| Features
+| Features text
 |--------------------------------------------------------------------------
 */
 
-const featuresText = computed(() => {
+const text = computed(() => {
     if (!props.infoData) {
         return '';
     }
-
-    /*
-     * API:
-     *
-     * {
-     *     ru: "<div>...</div>",
-     *     en: "<div>...</div>"
-     * }
-     */
 
     if (
         typeof props.infoData === 'object' &&
         !Array.isArray(props.infoData)
     ) {
+        const features = props.infoData.features;
+
+        if (
+            features &&
+            typeof features === 'object'
+        ) {
+            return (
+                features[locale.value] ||
+                features.ru ||
+                features.en ||
+                ''
+            );
+        }
+
+        /*
+         * Поддержка старого формата.
+         */
         return (
             props.infoData[locale.value] ||
             props.infoData.ru ||
@@ -224,10 +254,34 @@ const featuresText = computed(() => {
         );
     }
 
-    if (typeof props.infoData === 'string') {
+    if (
+        typeof props.infoData === 'string'
+    ) {
         return props.infoData;
     }
 
     return '';
+});
+
+/*
+|--------------------------------------------------------------------------
+| Gallery
+|--------------------------------------------------------------------------
+*/
+
+const gallery = computed(() => {
+    if (
+        !props.infoData ||
+        typeof props.infoData !== 'object' ||
+        Array.isArray(props.infoData)
+    ) {
+        return [];
+    }
+
+    return Array.isArray(
+        props.infoData.gallery,
+    )
+        ? props.infoData.gallery
+        : [];
 });
 </script>

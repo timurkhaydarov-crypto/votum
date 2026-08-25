@@ -6,6 +6,7 @@ use Database\Seeders\Contacts\EmailSeeder;
 use Database\Seeders\Contacts\OperatingHoursSeeder;
 use Database\Seeders\Contacts\PhoneSeeder;
 use Database\Seeders\Contacts\SocialMediaSeeder;
+use Database\Seeders\Product\FeaturesGallerySeeder;
 use Database\Seeders\Product\BrandSeeder;
 use Database\Seeders\Product\CategorySeeder;
 use Database\Seeders\Product\GroupSeeder;
@@ -50,6 +51,7 @@ class DatabaseSeeder extends Seeder
             && Schema::hasTable('methods')
             && Schema::hasTable('product_features')
             && Schema::hasTable('product_galleries')
+            && Schema::hasTable('features_galleries')
         ) {
             $this->call([
                 CategorySeeder::class,
@@ -61,6 +63,7 @@ class DatabaseSeeder extends Seeder
                 MethodSeeder::class,
                 ProductFeaturesSeeder::class,
                 ProductGallerySeeder::class,
+                FeaturesGallerySeeder::class,
             ]);
         }
     }

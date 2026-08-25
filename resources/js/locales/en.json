@@ -76,7 +76,7 @@
         "noName": "Untitled",
         "defaultDescription": "Professional non-destructive testing equipment.",
         "priceOnRequest": "On request",
-
+        "pdf": "PDF Document",
         "video": {
             "playing": "Playing",
             "photo": "Photo",
@@ -104,6 +104,7 @@
             },
 
             "available": "Available",
+            "more": "More",
             "notAvailable": "No data",
             "empty": "Information is unavailable"
         },
