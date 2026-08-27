@@ -3,7 +3,6 @@
         class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-[0_8px_30px_rgba(15,23,42,0.06)]"
     >
         <div class="grid lg:grid-cols-[1.05fr_0.95fr]">
-
             <!-- IMAGE / VIDEO -->
             <div
                 class="group/media relative min-h-[340px] overflow-hidden bg-slate-50 sm:min-h-[400px] lg:min-h-[450px]"
@@ -58,65 +57,10 @@
                 </RouterLink>
 
                 <!-- CONTROL METHODS -->
-                <div
-                    v-if="controlMethods.length"
-                    class="absolute right-4 top-4 z-20 flex items-center gap-1.5"
-                >
-                    <div
-                        v-for="method in controlMethods"
-                        :key="method.code"
-                        class="group/method relative flex h-8 w-8 cursor-default items-center justify-center rounded-lg border border-white/80 bg-white/85 text-slate-500 shadow-md backdrop-blur-md transition-colors duration-200 hover:border-slate-300 hover:text-slate-900"
-                    >
-                        <i
-                            :class="[
-                                'bi',
-                                method.icon,
-                                'text-[13px]',
-                            ]"
-                        ></i>
 
-                        <!-- METHOD TOOLTIP -->
-                        <div
-                            class="pointer-events-none absolute right-0 top-full mt-2 w-[340px] translate-y-1 rounded-xl border border-slate-200 bg-white p-4 text-left opacity-0 shadow-xl transition-all duration-200 group-hover/method:translate-y-0 group-hover/method:opacity-100"
-                        >
-                            <!-- METHOD HEADER -->
-                            <div class="flex items-center gap-2">
-                                <span
-                                    class="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-slate-600"
-                                >
-                                    <i
-                                        :class="[
-                                            'bi',
-                                            method.icon,
-                                            'text-[13px]',
-                                        ]"
-                                    ></i>
-                                </span>
-
-                                <div>
-                                    <div
-                                        class="text-[10px] font-bold uppercase tracking-[0.08em] text-slate-900"
-                                    >
-                                        {{ method.title }}
-                                    </div>
-
-                                    <div
-                                        class="mt-0.5 text-[9px] font-semibold uppercase tracking-[0.1em] text-slate-400"
-                                    >
-                                        {{ method.code }}
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- METHOD DESCRIPTION -->
-                            <div
-                                class="mt-3 text-[11px] leading-[1.65] text-slate-500"
-                            >
-                                {{ method.description }}
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <ProductControlMethods
+                    :methods="product.method"
+                />
 
                 <!-- PRODUCT IMAGE / VIDEO -->
                 <div
@@ -265,15 +209,13 @@
 
 <script setup>
 import { computed, ref } from 'vue';
-import { useI18n } from 'vue-i18n';
 
-import { fetchProductFeatures } from '@/modules/site/services/productInfoService';
+import { fetchProductFeatures, fetchProductSpecifications } from '@/modules/site/services/productInfoService';
 
+import ProductControlMethods from './ProductControlMethods.vue';
 import ProductQuickInfo from './ProductQuickInfo.vue';
 import ProductPurchaseActions from './ProductPurchaseActions.vue';
 import ProductInfoModal from './ProductInfoModal.vue';
-
-const { locale } = useI18n();
 
 const props = defineProps({
     product: {
@@ -326,119 +268,6 @@ const infoError = ref(null);
 
 /*
 |--------------------------------------------------------------------------
-| CONTROL METHODS
-|--------------------------------------------------------------------------
-*/
-
-const controlMethodMap = {
-    UT: {
-        icon: 'bi-soundwave',
-
-        title: {
-            ru: 'Ультразвуковой контроль',
-            en: 'Ultrasonic Testing',
-        },
-
-        description: {
-            ru: 'Ультразвуковой контроль использует высокочастотные звуковые волны для обнаружения внутренних дефектов и неоднородностей материала. Метод позволяет выявлять трещины, расслоения, непровары, поры и другие дефекты, определять их расположение и глубину залегания. Применяется для контроля металлов, сварных соединений, композитов и других конструкционных материалов.',
-            en: 'Ultrasonic Testing uses high-frequency sound waves to detect internal defects and material discontinuities. The method can identify cracks, delaminations, lack of fusion, voids and other defects, while determining their location and depth. It is widely used for testing metals, welds, composites and other structural materials.',
-        },
-    },
-
-    ET: {
-        icon: 'bi-activity',
-
-        title: {
-            ru: 'Вихретоковый контроль',
-            en: 'Eddy Current Testing',
-        },
-
-        description: {
-            ru: 'Вихретоковый контроль основан на анализе электромагнитного взаимодействия вихревых токов с контролируемым материалом. Метод позволяет обнаруживать поверхностные и подповерхностные трещины, коррозионные повреждения, нарушения структуры и изменения толщины. Особенно эффективен для электропроводящих материалов и широко применяется в авиационной, энергетической и машиностроительной промышленности.',
-            en: 'Eddy Current Testing analyzes the electromagnetic interaction between induced eddy currents and the inspected material. It can detect surface and near-surface cracks, corrosion damage, structural changes and variations in thickness. The method is particularly effective for electrically conductive materials and is widely used in aerospace, power generation and mechanical engineering.',
-        },
-    },
-
-    MIA: {
-        icon: 'bi-graph-up',
-
-        title: {
-            ru: 'Механический импедансный анализ',
-            en: 'Mechanical Impedance Analysis',
-        },
-
-        description: {
-            ru: 'Механический импедансный анализ оценивает состояние объекта по изменению его механических характеристик при контролируемом воздействии. Метод позволяет выявлять дефекты, ослабление соединений, нарушения целостности и изменения жёсткости конструкции. Применяется для диагностики композитных конструкций, клеевых соединений, многослойных материалов и других объектов.',
-            en: 'Mechanical Impedance Analysis evaluates the condition of a structure by analyzing changes in its mechanical response under controlled excitation. The method can detect defects, weakened bonds, integrity issues and changes in structural stiffness. It is used for testing composite structures, bonded joints, layered materials and other components.',
-        },
-    },
-
-    IET: {
-        icon: 'bi-bullseye',
-
-        title: {
-            ru: 'Ударно-эховый метод',
-            en: 'Impact-Echo Testing',
-        },
-
-        description: {
-            ru: 'Ударно-эховый метод основан на анализе отражения упругих волн, возникающих после механического импульса. Метод позволяет обнаруживать внутренние дефекты, пустоты, расслоения, трещины и другие нарушения сплошности, а также оценивать толщину конструкций. Особенно широко применяется для контроля бетона, железобетона, каменных и других массивных конструкций.',
-            en: 'Impact-Echo Testing analyzes the reflection of stress waves generated by a mechanical impact. It can detect internal defects, voids, delaminations, cracks and other discontinuities, as well as determine structural thickness. The method is particularly useful for inspecting concrete, reinforced concrete, masonry and other solid structures.',
-        },
-    },
-
-    MT: {
-        icon: 'bi-magnet',
-
-        title: {
-            ru: 'Магнитопорошковый контроль',
-            en: 'Magnetic Particle Testing',
-        },
-
-        description: {
-            ru: 'Магнитопорошковый контроль применяется для выявления поверхностных и близко расположенных подповерхностных дефектов в ферромагнитных материалах. Контролируемый объект намагничивается, а специальные магнитные частицы концентрируются в местах утечки магнитного поля, образуя видимый индикатор дефекта. Метод эффективен для обнаружения трещин, непроваров и других нарушений сплошности.',
-            en: 'Magnetic Particle Testing is used to detect surface and near-surface defects in ferromagnetic materials. The inspected component is magnetized, and magnetic particles accumulate at locations where magnetic flux leaks, forming a visible indication of the defect. The method is effective for detecting cracks, lack of fusion and other discontinuities.',
-        },
-    },
-
-    VT: {
-        icon: 'bi-eye',
-
-        title: {
-            ru: 'Визуальный контроль',
-            en: 'Visual Testing',
-        },
-
-        description: {
-            ru: 'Визуальный контроль является одним из основных методов неразрушающего контроля и основан на непосредственном или оптическом осмотре поверхности объекта. Метод позволяет обнаруживать видимые трещины, коррозию, механические повреждения, деформации, нарушения геометрии и качество сварных соединений. Для расширения возможностей контроля могут использоваться камеры, эндоскопы, увеличительные системы и специализированные системы визуализации.',
-            en: 'Visual Testing is one of the fundamental non-destructive testing methods and is based on direct or optical inspection of an object’s surface. It can reveal visible cracks, corrosion, mechanical damage, deformation, geometric irregularities and weld quality issues. Cameras, video endoscopes, magnification systems and specialized imaging equipment can be used to extend inspection capabilities.',
-        },
-    },
-};
-
-const controlMethods = computed(() => {
-    if (!props.product.method) {
-        return [];
-    }
-
-    return props.product.method
-        .split(',')
-        .map((method) => method.trim().toUpperCase())
-        .filter((code) => controlMethodMap[code])
-        .map((code) => ({
-            code,
-            icon: controlMethodMap[code].icon,
-            title:
-                controlMethodMap[code].title[locale.value] ||
-                controlMethodMap[code].title.en,
-            description:
-                controlMethodMap[code].description[locale.value] ||
-                controlMethodMap[code].description.en,
-        }));
-});
-
-/*
-|--------------------------------------------------------------------------
 | INFO MODAL
 |--------------------------------------------------------------------------
 */
@@ -461,6 +290,13 @@ const openInfoModal = async (key) => {
             case 'features':
                 selectedInfoData.value =
                     await fetchProductFeatures(
+                        props.product.id,
+                    );
+                break;
+
+            case 'specifications':
+                selectedInfoData.value =
+                    await fetchProductSpecifications(
                         props.product.id,
                     );
                 break;

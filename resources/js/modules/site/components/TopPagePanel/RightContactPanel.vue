@@ -1,6 +1,6 @@
 <template>
     <details
-        v-if="contactArray.length > 1 || contactArray[0]?.phones?.length > 1"
+        v-if="contactArray.length > 1 || contactArray[0]?.contacts?.length > 1"
         :open="isOpen"
         class="group relative"
         @mouseenter="$emit('open')"
@@ -41,7 +41,7 @@
     </details>
     <span v-else class="inline-flex items-center gap-1.5">
         <i :class="`bi ` + iconClass + ` text-[14px] leading-none`" aria-hidden="true"></i>
-        <span class="capitalize" v-if="contactArray.length === 1 && contactArray[0]?.contacts?.length === 1">
+        <span class="lowercase" v-if="contactArray.length === 1 && contactArray[0]?.contacts?.length === 1">
             {{ props.contactType !== ContactType.OPERATING_HOUR ? contact[props.contactType] : `${$t(`weekdays.${contact.from}`)} - ${$t(`weekdays.${contact.to}`)} ${contact.time}` }}
        </span>
         <div

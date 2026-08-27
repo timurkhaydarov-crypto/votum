@@ -1,5 +1,5 @@
 <template>
-    <section>
+    <section ref="gallerySection">
         <!-- HEADER -->
         <SectionHeader
             :title="$t('gallery.title')"
@@ -15,8 +15,8 @@
                     class="flex h-7 w-7 items-center justify-center rounded-lg text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
                     :aria-label="
                         isOpen
-                            ? $t('gallery.collapse')
-                            : $t('gallery.expand')
+                            ? $t('common.collapse')
+                            : $t('common.showAll')
                     "
                     @click="toggleSection"
                 >
@@ -41,15 +41,22 @@
             leave-from-class="max-h-[3000px] opacity-100 translate-y-0"
             leave-to-class="max-h-0 opacity-0 -translate-y-2"
         >
-            <div v-if="isOpen" class="mt-4">
+            <div
+                v-if="isOpen"
+                class="mt-4"
+            >
                 <!-- GALLERY -->
                 <div
                     v-if="images.length"
-                    class="grid grid-cols-2 gap-3 md:grid-cols-3"
+                    class="grid grid-cols-2 gap-3 md:grid-cols-4"
                 >
                     <button
                         v-for="(image, index) in visibleImages"
-                        :key="image.id || image.image_url || index"
+                        :key="
+                            image.id ||
+                            image.image_url ||
+                            index
+                        "
                         type="button"
                         class="group relative aspect-[4/3] overflow-visible text-left"
                         @click="openModal(image)"
@@ -79,7 +86,9 @@
                                 <div
                                     class="flex h-11 w-11 scale-90 items-center justify-center rounded-full bg-slate-900/70 text-white shadow-lg backdrop-blur-sm transition-transform duration-300 group-hover:scale-100"
                                 >
-                                    <i class="bi bi-search text-base"></i>
+                                    <i
+                                        class="bi bi-search text-base"
+                                    ></i>
                                 </div>
                             </div>
                         </div>
@@ -102,28 +111,28 @@
                     <EmptyData />
                 </div>
 
-                <!-- SHOW MORE / LESS -->
+                <!-- SHOW MORE / COLLAPSE -->
                 <div
-                    v-if="images.length > 3"
+                    v-if="images.length > 4"
                     class="mt-4 flex justify-center"
                 >
                     <button
                         type="button"
                         class="group inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-xs font-semibold text-slate-600 shadow-sm transition hover:border-slate-300 hover:text-slate-900"
-                        @click="showAll = !showAll"
+                        @click="toggleImages"
                     >
                         <span>
                             {{
-                                showAll
-                                    ? $t('gallery.showLess')
-                                    : $t('gallery.showMore')
+                                isAllImagesVisible
+                                    ? $t('common.collapse')
+                                    : $t('common.showMore')
                             }}
                         </span>
 
                         <i
                             class="bi transition-transform duration-300"
                             :class="
-                                showAll
+                                isAllImagesVisible
                                     ? 'bi-chevron-up'
                                     : 'bi-chevron-down'
                             "
@@ -152,7 +161,7 @@
                     <button
                         type="button"
                         class="absolute right-4 top-4 z-20 flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 text-white transition hover:bg-white/20 sm:right-6 sm:top-6"
-                        :aria-label="$t('gallery.close')"
+                        :aria-label="$t('common.close')"
                         @click="closeModal"
                     >
                         <i class="bi bi-x-lg"></i>
@@ -203,31 +212,129 @@ const props = defineProps({
     },
 });
 
+/*
+|--------------------------------------------------------------------------
+| Section
+|--------------------------------------------------------------------------
+*/
+
 const isOpen = ref(true);
-const showAll = ref(false);
+
+const gallerySection = ref(null);
+
+/*
+|--------------------------------------------------------------------------
+| Gallery
+|--------------------------------------------------------------------------
+|
+| По умолчанию показываем 4 изображения.
+|
+| Каждое нажатие "Показать ещё"
+| добавляет следующий ряд из 4 изображений.
+|
+| Когда открыты все изображения,
+| кнопка становится "Свернуть".
+|
+*/
+
+const visibleCount = ref(4);
+
 const selectedImage = ref(null);
 
+/*
+|--------------------------------------------------------------------------
+| Visible images
+|--------------------------------------------------------------------------
+*/
+
 const visibleImages = computed(() => {
-    return showAll.value
-        ? props.images
-        : props.images.slice(0, 3);
+    return props.images.slice(
+        0,
+        visibleCount.value
+    );
 });
+
+/*
+|--------------------------------------------------------------------------
+| Is all images visible
+|--------------------------------------------------------------------------
+*/
+
+const isAllImagesVisible = computed(() => {
+    return (
+        visibleCount.value >=
+        props.images.length
+    );
+});
+
+/*
+|--------------------------------------------------------------------------
+| Toggle section
+|--------------------------------------------------------------------------
+*/
 
 const toggleSection = () => {
     isOpen.value = !isOpen.value;
 
     if (!isOpen.value) {
-        showAll.value = false;
+        visibleCount.value = 4;
     }
 };
 
+/*
+|--------------------------------------------------------------------------
+| Toggle images
+|--------------------------------------------------------------------------
+*/
+
+const toggleImages = () => {
+    /*
+     * Если все изображения уже открыты —
+     * возвращаемся к первым четырём
+     * и прокручиваем страницу
+     * к началу галереи.
+     */
+    if (isAllImagesVisible.value) {
+        visibleCount.value = 4;
+
+        requestAnimationFrame(() => {
+            gallerySection.value?.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start',
+            });
+        });
+
+        return;
+    }
+
+    /*
+     * Показываем следующий ряд из 4.
+     */
+    visibleCount.value = Math.min(
+        visibleCount.value + 4,
+        props.images.length
+    );
+};
+
+/*
+|--------------------------------------------------------------------------
+| Modal
+|--------------------------------------------------------------------------
+*/
+
 const openModal = (image) => {
     selectedImage.value = image;
-    document.body.classList.add('overflow-hidden');
+
+    document.body.classList.add(
+        'overflow-hidden'
+    );
 };
 
 const closeModal = () => {
     selectedImage.value = null;
-    document.body.classList.remove('overflow-hidden');
+
+    document.body.classList.remove(
+        'overflow-hidden'
+    );
 };
 </script>

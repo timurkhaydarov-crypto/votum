@@ -49,7 +49,7 @@
             <div
                 class="absolute left-3 top-3 z-20 rounded-lg border border-white/80 bg-white/80 px-2 py-1 text-[8px] font-semibold uppercase tracking-[0.1em] text-slate-500 shadow-sm backdrop-blur-md"
             >
-                {{type}} image
+                {{$t('gallery.' + type)}}
             </div>
         </div>
 

@@ -41,6 +41,8 @@ export const normalizeProduct = (product, locale = 'ru') => ({
     shortDescription: pickLocalized(product.short_description, locale),
     fullDescription: pickLocalized(product.full_description, locale),
     hasFeatures: product.has_features,
+    hasSpecifications: product.has_specifications,
+    compatible_products: product.compatible_products,
     certificates: product.certificates,
     gallery: product.gallery,
     categorySlug: product.category?.slug || null,

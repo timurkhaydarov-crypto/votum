@@ -2,9 +2,9 @@
 
 namespace Database\Seeders\Contacts;
 
-use Illuminate\Database\Seeder;
-use App\Models\Department;
 use App\Models\Contacts\Phone;
+use App\Models\Department;
+use Illuminate\Database\Seeder;
 
 class PhoneSeeder extends Seeder
 {
@@ -13,11 +13,18 @@ class PhoneSeeder extends Seeder
      */
     public function run(): void
     {
-        Department::query()->get()->each(function ($department) {
-            Phone::factory(2)->create([
-                'department_id' => $department->id,
-                'phone' => '+7(499)995-' . fake()->numerify('##-##'),
+        $phones = [
+            1 => '+7(499)995-00-61',
+            2 => '+7(499)995-00-62',
+            3 => '+7(499)995-24-75',
+        ];
+        $departmentId = 1;
+        foreach ($phones as $departmentId => $phone) {
+            Phone::factory()->create([
+                'department_id' => $departmentId,
+                'phone' => $phone,
             ]);
-        });
+        }
+
     }
 }

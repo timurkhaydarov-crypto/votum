@@ -1,25 +1,16 @@
 <template>
-    <ProductsLayout
-        :title="pageTitle"
-        :subtitle="$t('productDetail.subtitle')"
-    >
+    <ProductsLayout :title="pageTitle" :subtitle="$t('productDetail.subtitle')">
         <!-- LOADING -->
         <ProductDetailLoading v-if="isLoading" />
 
         <!-- ERROR -->
-        <ProductDetailError
-            v-else-if="errorMessage"
-            :message="errorMessage"
-        />
+        <ProductDetailError v-else-if="errorMessage" :message="errorMessage" />
 
         <!-- NOT FOUND -->
         <ProductDetailNotFound v-else-if="isNotFound" />
 
         <!-- PRODUCT -->
-        <div
-            v-else-if="product"
-            class="space-y-6"
-        >
+        <div v-else-if="product" class="space-y-6">
             <!-- BREADCRUMBS -->
             <ProductBreadcrumbs :items="breadcrumbs" />
 
@@ -34,13 +25,13 @@
                 :back-link="backLink"
                 :back-label="backLabel"
             />
-
-            <!-- TRANSDUCERS -->
-            <ProductTransducers
-                :transducers="transducers"
-                :is-loading="isLoadingTransducers"
-                :error-message="transducersErrorMessage"
-                :has-product-transducers="hasProductTransducers"
+            <ProductCompatible
+                v-if="
+                    Object.values(product.compatible_products || {}).some(
+                        (products) => products?.length
+                    )
+                "
+                :compatible-products="product.compatible_products"
             />
 
             <!-- CERTIFICATES -->
@@ -53,7 +44,7 @@
             />
             <!-- GALLERY -->
             <ProductGallery
-            v-if="galleryImages.length"
+                v-if="galleryImages.length"
                 :product="product"
                 :images="galleryImages"
             />
@@ -85,7 +76,7 @@ import ProductDetailError from '../../components/products/detail/ProductDetailEr
 import ProductDetailNotFound from '../../components/products/detail/ProductDetailNotFound.vue';
 
 import ProductDetailHero from '../../components/products/detail/ProductDetailHero.vue';
-import ProductTransducers from '../../components/products/detail/ProductTransducers.vue';
+import ProductCompatible from '../../components/products/detail/ProductCompatible.vue';
 import ProductGallery from '../../components/products/detail/ProductGallery.vue';
 import ProductImageGallery from '../../components/products/detail/ProductImageGallery.vue';
 import ProductDetailCta from '../../components/products/detail/ProductDetailCta.vue';
@@ -103,13 +94,7 @@ const { t, locale } = useI18n();
 |--------------------------------------------------------------------------
 */
 
-const {
-    product,
-    isLoading,
-    isNotFound,
-    errorMessage,
-    loadProductById,
-} = useProductDetails();
+const { product, isLoading, isNotFound, errorMessage, loadProductById } = useProductDetails();
 
 /*
 |--------------------------------------------------------------------------
@@ -175,11 +160,7 @@ const productTitle = computed(() => {
 |--------------------------------------------------------------------------
 */
 
-const {
-    breadcrumbs,
-    backLink,
-    backLabel,
-} = useProductBreadcrumbs({
+const { breadcrumbs, backLink, backLabel } = useProductBreadcrumbs({
     categorySlug,
     categoryTitle,
     groupSlug,
@@ -220,10 +201,7 @@ const normalizeArray = (value) => {
 */
 
 const hasProductTransducers = computed(() => {
-    const value =
-        product.value?.transducers ??
-        product.value?.probes ??
-        product.value?.converters;
+    const value = product.value?.transducers ?? product.value?.probes ?? product.value?.converters;
 
     return Array.isArray(value) && value.length > 0;
 });
@@ -233,10 +211,7 @@ const loadStandardTransducers = () => {
         return;
     }
 
-    loadProductsByGroup(
-        'transducers',
-        'ultrasonic',
-    );
+    loadProductsByGroup('transducers', 'ultrasonic');
 };
 
 const loadDetails = async () => {
@@ -258,22 +233,19 @@ watch(
     },
     {
         immediate: true,
-    },
+    }
 );
 
 watch(
     product,
     () => {
-        if (
-            product.value &&
-            !hasProductTransducers.value
-        ) {
+        if (product.value && !hasProductTransducers.value) {
             loadStandardTransducers();
         }
     },
     {
         immediate: true,
-    },
+    }
 );
 
 watch(locale, () => {
@@ -293,11 +265,7 @@ const imageSrc = computed(() => {
         return '/image/logo.svg';
     }
 
-    if (
-        image.startsWith('http://') ||
-        image.startsWith('https://') ||
-        image.startsWith('/')
-    ) {
+    if (image.startsWith('http://') || image.startsWith('https://') || image.startsWith('/')) {
         return image;
     }
 
@@ -305,9 +273,7 @@ const imageSrc = computed(() => {
         return `/image/product/${image}`;
     }
 
-    const imageName = image.includes('.')
-        ? image
-        : `${image}.webp`;
+    const imageName = image.includes('.') ? image : `${image}.webp`;
 
     return `/image/product/${product.value.categorySlug}/${imageName}`;
 });
@@ -329,9 +295,7 @@ const isInStock = computed(() => {
 */
 
 const priceLabel = computed(() => {
-    return product.value?.price
-        ? `${product.value.price} ₽`
-        : t('product.priceOnRequest');
+    return product.value?.price ? `${product.value.price} ₽` : t('common.byRequest');
 });
 
 /*
@@ -379,10 +343,7 @@ const groupBadgeClasses = computed(() => {
 */
 
 const productTransducers = computed(() => {
-    const value =
-        product.value?.transducers ??
-        product.value?.probes ??
-        product.value?.converters;
+    const value = product.value?.transducers ?? product.value?.probes ?? product.value?.converters;
 
     if (!Array.isArray(value)) {
         return [];
@@ -407,9 +368,7 @@ const transducers = computed(() => {
 
 const galleryImages = computed(() => {
     return normalizeArray(
-        product.value?.photogallery ||
-        product.value?.gallery ||
-        product.value?.galleryImages,
+        product.value?.photogallery || product.value?.gallery || product.value?.galleryImages
     );
 });
 </script>

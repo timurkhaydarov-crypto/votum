@@ -6,16 +6,15 @@
         <!-- IMAGE -->
         <!-- ===================================================== -->
 
-        <div
-            class="relative h-[220px] shrink-0 overflow-hidden bg-slate-50 sm:h-[230px]"
-        >
+        <div class="relative h-[220px] shrink-0 overflow-hidden bg-slate-50 sm:h-[230px]">
             <!-- Product image -->
 
             <div class="absolute inset-0">
                 <img
                     :src="imageSrc"
-                    :alt="product.name"
+                    :alt="productName"
                     class="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.025]"
+                    loading="lazy"
                 />
             </div>
 
@@ -28,15 +27,13 @@
             <!-- Group -->
 
             <div
+                v-if="variant === 'default'"
                 class="absolute left-3 top-3 z-20 max-w-[calc(100%-100px)]"
             >
                 <span
                     class="inline-flex max-w-full items-center gap-1.5 rounded-lg bg-slate-900 px-2.5 py-1.5 text-[9px] font-semibold uppercase tracking-[0.08em] text-white shadow-sm"
                 >
-                    <span
-                        class="h-1.5 w-1.5 shrink-0 rounded-full"
-                        :class="groupDotClass"
-                    ></span>
+                    <span class="h-1.5 w-1.5 shrink-0 rounded-full" :class="groupDotClass"></span>
 
                     <span class="truncate">
                         {{ badgeText }}
@@ -46,9 +43,7 @@
 
             <!-- Actions -->
 
-            <div
-                class="absolute right-3 top-3 z-20 flex gap-1.5"
-            >
+            <div v-if="variant === 'default'" class="absolute right-3 top-3 z-20 flex gap-1.5">
                 <!-- Favorite -->
 
                 <button
@@ -91,17 +86,9 @@
                             d="M3 3h2l2.4 11.2a2 2 0 0 0 2 1.6h7.8a2 2 0 0 0 1.9-1.4L21 7H6"
                         />
 
-                        <circle
-                            cx="10"
-                            cy="20"
-                            r="1"
-                        />
+                        <circle cx="10" cy="20" r="1" />
 
-                        <circle
-                            cx="18"
-                            cy="20"
-                            r="1"
-                        />
+                        <circle cx="18" cy="20" r="1" />
                     </svg>
                 </button>
             </div>
@@ -111,38 +98,28 @@
         <!-- CONTENT -->
         <!-- ===================================================== -->
 
-        <div
-            class="flex flex-1 flex-col p-4"
-        >
+        <div class="flex flex-1 flex-col p-4">
             <!-- Article / Stock -->
 
-            <div
-                class="flex items-center gap-2"
-            >
+            <div class="flex items-center gap-2">
                 <span
                     class="truncate text-[9px] font-medium uppercase tracking-[0.12em] text-slate-400"
                 >
                     {{ product.article || '-' }}
                 </span>
 
-                <span
-                    class="h-1 w-1 shrink-0 rounded-full bg-slate-300"
-                ></span>
+                <span class="h-1 w-1 shrink-0 rounded-full bg-slate-300"></span>
 
                 <span
                     class="inline-flex shrink-0 items-center gap-1 text-[9px] font-semibold uppercase tracking-[0.08em]"
                     :class="
-                        Number(product.quantity || 0) > 0
-                            ? 'text-emerald-600'
-                            : 'text-slate-400'
+                        Number(product.quantity || 0) > 0 ? 'text-emerald-600' : 'text-slate-400'
                     "
                 >
                     <span
                         class="h-1.5 w-1.5 rounded-full"
                         :class="
-                            Number(product.quantity || 0) > 0
-                                ? 'bg-emerald-500'
-                                : 'bg-slate-300'
+                            Number(product.quantity || 0) > 0 ? 'bg-emerald-500' : 'bg-slate-300'
                         "
                     ></span>
 
@@ -155,61 +132,41 @@
             <h3
                 class="mt-2 line-clamp-2 min-h-[40px] text-base font-semibold leading-5 tracking-tight text-slate-900"
             >
-                {{ product.name || 'Untitled product' }}
+                {{ productName }}
             </h3>
 
             <!-- Description -->
 
-            <p
-                class="mt-1.5 line-clamp-2 min-h-[72px] text-xs leading-[18px] text-slate-500"
-            >
-                {{
-                    product.shortDescription ||
-                    product.fullDescription ||
-                    'No description'
-                }}
+            <p class="mt-1.5 line-clamp-2 min-h-[72px] text-xs leading-[18px] text-slate-500">
+                {{ productDescription }}
             </p>
 
             <!-- ================================================= -->
             <!-- PARAMETERS -->
             <!-- ================================================= -->
 
-            <div
-                class="mt-4 grid grid-cols-2 gap-1.5"
-            >
+            <div v-if="variant === 'default'" class="mt-4 grid grid-cols-2 gap-1.5">
                 <!-- Method -->
 
-                <div
-                    class="min-w-0 rounded-lg bg-slate-50 px-2.5 py-2"
-                >
-                    <div
-                        class="text-[8px] font-medium uppercase tracking-[0.1em] text-slate-400"
-                    >
+                <div class="min-w-0 rounded-lg bg-slate-50 px-2.5 py-2">
+                    <div class="text-[8px] font-medium uppercase tracking-[0.1em] text-slate-400">
                         {{ t('productCard.method') }}
                     </div>
 
-                    <div
-                        class="mt-0.5 truncate text-[11px] font-semibold text-slate-700"
-                    >
+                    <div class="mt-0.5 truncate text-[11px] font-semibold text-slate-700">
                         {{ product.method || '-' }}
                     </div>
                 </div>
 
                 <!-- Application -->
 
-                <div
-                    class="min-w-0 rounded-lg bg-slate-50 px-2.5 py-2"
-                >
-                    <div
-                        class="text-[8px] font-medium uppercase tracking-[0.1em] text-slate-400"
-                    >
+                <div class="min-w-0 rounded-lg bg-slate-50 px-2.5 py-2">
+                    <div class="text-[8px] font-medium uppercase tracking-[0.1em] text-slate-400">
                         {{ t('productCard.application') }}
                     </div>
 
-                    <div
-                        class="mt-0.5 truncate text-[11px] font-semibold text-slate-700"
-                    >
-                        {{ product.categoryTitle || '-' }}
+                    <div class="mt-0.5 truncate text-[11px] font-semibold text-slate-700">
+                        {{ categoryTitle || '-' }}
                     </div>
                 </div>
             </div>
@@ -218,19 +175,14 @@
             <!-- FOOTER -->
             <!-- ================================================= -->
 
-            <div
-                class="mt-auto pt-4"
-            >
-                <div
-                    class="mb-3 h-px bg-slate-100"
-                ></div>
+            <div class="mt-auto pt-4">
+                <div class="mb-3 h-px bg-slate-100"></div>
 
-                <div
-                    class="flex items-center justify-between gap-3"
-                >
+                <div class="flex items-center justify-between gap-3">
                     <!-- Price -->
 
-                    <div
+                    <!-- <div
+                        v-if="variant === 'default'"
                         class="min-w-0"
                     >
                         <div
@@ -244,19 +196,17 @@
                         >
                             {{ priceLabel }}
                         </div>
-                    </div>
+                    </div> -->
 
                     <!-- Actions -->
 
-                    <div
-                        class="flex shrink-0 gap-1.5"
-                    >
+                    <div class="flex w-full shrink-0 gap-1.5">
                         <!-- Cart -->
 
                         <button
                             type="button"
                             aria-label="Add to cart"
-                            class="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-600 transition hover:border-slate-900 hover:bg-slate-900 hover:text-white active:scale-95"
+                            class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-600 transition hover:border-slate-900 hover:bg-slate-900 hover:text-white active:scale-95"
                         >
                             <svg
                                 class="h-4 w-4"
@@ -271,17 +221,9 @@
                                     d="M3 3h2l2.4 11.2a2 2 0 0 0 2 1.6h7.8a2 2 0 0 0 1.9-1.4L21 7H6"
                                 />
 
-                                <circle
-                                    cx="10"
-                                    cy="20"
-                                    r="1"
-                                />
+                                <circle cx="10" cy="20" r="1" />
 
-                                <circle
-                                    cx="18"
-                                    cy="20"
-                                    r="1"
-                                />
+                                <circle cx="18" cy="20" r="1" />
                             </svg>
                         </button>
 
@@ -289,14 +231,14 @@
 
                         <RouterLink
                             :to="`/products/item/${product.id}`"
-                            class="inline-flex h-9 items-center justify-center gap-1.5 rounded-lg bg-slate-900 px-3 text-[11px] font-semibold text-white transition-all hover:bg-slate-800 hover:shadow-md active:scale-[0.98]"
+                            class="inline-flex h-9 min-w-0 flex-1 items-center justify-center gap-1.5 rounded-lg bg-slate-900 px-3 text-[11px] font-semibold text-white transition-all hover:bg-slate-800 hover:shadow-md active:scale-[0.98]"
                         >
-                            <span>
+                            <span class="truncate">
                                 {{ t('productCard.viewProduct') }}
                             </span>
 
                             <svg
-                                class="h-3.5 w-3.5"
+                                class="h-3.5 w-3.5 shrink-0"
                                 fill="none"
                                 viewBox="0 0 24 24"
                                 stroke="currentColor"
@@ -325,19 +267,88 @@ const props = defineProps({
         type: Object,
         required: true,
     },
+    variant: {
+        type: String,
+        default: 'default',
+    },
 });
 
-const { t } = useI18n();
+const { t, locale } = useI18n();
 
 /*
 |--------------------------------------------------------------------------
-| Group badge text
+| Localization
+|--------------------------------------------------------------------------
+*/
+
+const localizedValue = (value) => {
+    if (value === null || value === undefined) {
+        return null;
+    }
+
+    if (typeof value === 'string') {
+        return value;
+    }
+
+    if (typeof value === 'object') {
+        return value[locale.value] || value.ru || value.en || Object.values(value)[0] || null;
+    }
+
+    return String(value);
+};
+
+/*
+|--------------------------------------------------------------------------
+| Product name
+|--------------------------------------------------------------------------
+*/
+
+const productName = computed(() => {
+    return localizedValue(props.product.name) || t('productCard.untitledProduct');
+});
+
+/*
+|--------------------------------------------------------------------------
+| Description
+|--------------------------------------------------------------------------
+*/
+
+const productDescription = computed(() => {
+    return (
+        localizedValue(props.product.shortDescription) ||
+        localizedValue(props.product.short_description) ||
+        localizedValue(props.product.fullDescription) ||
+        localizedValue(props.product.full_description) ||
+        t('productCard.noDescription')
+    );
+});
+
+/*
+|--------------------------------------------------------------------------
+| Category
+|--------------------------------------------------------------------------
+*/
+
+const categoryTitle = computed(() => {
+    return (
+        localizedValue(props.product.categoryTitle) ||
+        localizedValue(props.product.category?.title) ||
+        localizedValue(props.product.category?.category) ||
+        null
+    );
+});
+
+/*
+|--------------------------------------------------------------------------
+| Group badge
 |--------------------------------------------------------------------------
 */
 
 const badgeText = computed(() => {
     return (
-        props.product.groupTitle ||
+        localizedValue(props.product.groupTitle) ||
+        localizedValue(props.product.group?.title) ||
+        localizedValue(props.product.group?.group) ||
         t('productCard.badgeFallback')
     );
 });
@@ -356,9 +367,7 @@ const badgeText = computed(() => {
 */
 
 const groupDotClass = computed(() => {
-    const groupSlug = String(
-        props.product.groupSlug || ''
-    )
+    const groupSlug = String(props.product.groupSlug || props.product.group?.slug || '')
         .trim()
         .toLowerCase();
 
@@ -390,9 +399,7 @@ const inStockLabel = computed(() => {
 */
 
 const priceLabel = computed(() => {
-    return props.product.price
-        ? `${props.product.price} ₽`
-        : t('productCard.byRequest');
+    return props.product.price ? `${props.product.price} ₽` : t('common.byRequest');
 });
 
 /*
@@ -402,28 +409,24 @@ const priceLabel = computed(() => {
 */
 
 const imageSrc = computed(() => {
-    const image = props.product.imageUrl;
+    const image = props.product.imageUrl || props.product.image_url;
 
     if (!image) {
         return '/image/logo.svg';
     }
 
-    if (
-        image.startsWith('http://') ||
-        image.startsWith('https://') ||
-        image.startsWith('/')
-    ) {
+    if (image.startsWith('http://') || image.startsWith('https://') || image.startsWith('/')) {
         return image;
     }
 
-    if (!props.product.categorySlug) {
-        return `/image/product/${image}`;
+    const categorySlug = props.product.categorySlug || props.product.category?.slug;
+
+    const imageName = image.includes('.') ? image : `${image}.webp`;
+
+    if (!categorySlug) {
+        return `/image/product/${imageName}`;
     }
 
-    const imageName = image.includes('.')
-        ? image
-        : `${image}.webp`;
-
-    return `/image/product/${props.product.categorySlug}/${imageName}`;
+    return `/image/product/${categorySlug}/${imageName}`;
 });
 </script>

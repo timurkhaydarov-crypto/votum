@@ -87,6 +87,27 @@
                             </div>
                         </div>
 
+                        <!-- SPECIFICATIONS -->
+                        <div
+                            v-else-if="
+                                infoKey === 'specifications' &&
+                                infoData?.specifications?.length
+                            "
+                            class="space-y-4"
+                        >
+                            <ProductSpecification
+                                :specifications="infoData.specifications"
+                            />
+                        </div>
+
+                        <!-- SPECIFICATIONS EMPTY -->
+                        <EmptyInfo
+                            v-else-if="
+                                infoKey === 'specifications'
+                            "
+                            :title="$t('common.notAvailable')"
+                        />
+
                         <!-- DATA -->
                         <div
                             v-else-if="infoData"
@@ -98,34 +119,25 @@
                                 class="prose prose-slate max-w-none text-sm leading-7"
                                 v-html="text"
                             ></div>
+
                             <!-- GALLERY -->
                             <FeaturesGallery
+                                v-if="gallery.length"
                                 :gallery="gallery"
                                 :title="modalTitle"
                             />
 
                             <!-- EMPTY -->
                             <EmptyInfo
-                                v-if="
-                                    !text &&
-                                    !gallery.length
-                                "
-                                :title="
-                                    $t(
-                                        'product.info.notAvailable',
-                                    )
-                                "
+                                v-if="!text && !gallery.length"
+                                :title="$t('common.notAvailable')"
                             />
                         </div>
 
                         <!-- NO DATA -->
                         <EmptyInfo
                             v-else
-                            :title="
-                                $t(
-                                    'product.info.notAvailable',
-                                )
-                            "
+                            :title="$t('common.notAvailable')"
                         />
                     </div>
                 </div>
@@ -140,6 +152,7 @@ import { useI18n } from 'vue-i18n';
 
 import EmptyInfo from '@/modules/site/components/shared/EmptyInfo.vue';
 import FeaturesGallery from './FeaturesGallery.vue';
+import ProductSpecification from './ProductSpecification.vue';
 
 const { locale } = useI18n();
 
@@ -201,6 +214,11 @@ const modalTitle = computed(() => {
             en: 'Details',
             ru: 'Подробнее',
         },
+
+        specifications: {
+            en: 'Technical Specifications',
+            ru: 'Технические характеристики',
+        },
     };
 
     return (
@@ -222,6 +240,14 @@ const modalTitle = computed(() => {
 
 const text = computed(() => {
     if (!props.infoData) {
+        return '';
+    }
+
+    /*
+     * Specifications имеют отдельную структуру
+     * и не должны обрабатываться как обычный текст.
+     */
+    if (props.infoKey === 'specifications') {
         return '';
     }
 
@@ -275,6 +301,13 @@ const gallery = computed(() => {
         typeof props.infoData !== 'object' ||
         Array.isArray(props.infoData)
     ) {
+        return [];
+    }
+
+    /*
+     * Specifications не используют gallery.
+     */
+    if (props.infoKey === 'specifications') {
         return [];
     }
 

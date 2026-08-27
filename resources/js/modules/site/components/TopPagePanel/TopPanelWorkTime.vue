@@ -4,7 +4,7 @@
         <summary @click.prevent="$emit('toggle')"
             class="inline-flex list-none cursor-pointer items-center gap-1.5 transition hover:text-amber-300">
             <i class="bi bi-clock text-[14px] leading-none" aria-hidden="true"></i>
-            <span class="hidden sm:inline">$t('contacts.work_time')</span>
+            <span class="hidden sm:inline">$t('contacts.workTime')</span>
             <i class="bi bi-chevron-down text-[12px] leading-none transition group-open:rotate-180"
                 aria-hidden="true"></i>
         </summary>

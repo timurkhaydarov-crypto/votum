@@ -16,6 +16,7 @@ use Database\Seeders\Product\SectorSeeder;
 use Database\Seeders\Product\CertificateSeeder;
 use Database\Seeders\Product\ProductFeaturesSeeder;
 use Database\Seeders\Product\ProductGallerySeeder;
+use Database\Seeders\Product\ProductCompatibilitySeeder;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -52,6 +53,7 @@ class DatabaseSeeder extends Seeder
             && Schema::hasTable('product_features')
             && Schema::hasTable('product_galleries')
             && Schema::hasTable('features_galleries')
+            && Schema::hasTable('product_compatibilities')
         ) {
             $this->call([
                 CategorySeeder::class,
@@ -64,6 +66,7 @@ class DatabaseSeeder extends Seeder
                 ProductFeaturesSeeder::class,
                 ProductGallerySeeder::class,
                 FeaturesGallerySeeder::class,
+                ProductCompatibilitySeeder::class,
             ]);
         }
     }

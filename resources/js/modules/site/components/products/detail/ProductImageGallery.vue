@@ -1,5 +1,5 @@
 <template>
-    <section>
+    <section ref="certificatesSection">
         <!-- HEADER -->
         <SectionHeader
             :title="$t('certificates.title')"
@@ -17,8 +17,8 @@
                     class="flex h-7 w-7 items-center justify-center rounded-lg text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
                     :aria-label="
                         isOpen
-                            ? $t('certificates.collapse')
-                            : $t('certificates.expand')
+                            ? $t('common.collapse')
+                            : $t('common.showAll')
                     "
                     @click="toggleSection"
                 >
@@ -43,15 +43,22 @@
             leave-from-class="max-h-[3000px] opacity-100 translate-y-0"
             leave-to-class="max-h-0 opacity-0 -translate-y-2"
         >
-            <div v-if="isOpen" class="mt-4">
+            <div
+                v-if="isOpen"
+                class="mt-4"
+            >
                 <!-- GALLERY -->
                 <div
                     v-if="images.length"
                     class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
                 >
                     <ProductImageCard
-                        v-for="(image, index) in images"
-                        :key="image.id || image.src || index"
+                        v-for="(image, index) in visibleImages"
+                        :key="
+                            image.id ||
+                            image.src ||
+                            index
+                        "
                         :image-src="image.src"
                         :thumbnail="image.thumbnail"
                         :alt="
@@ -60,7 +67,9 @@
                         "
                         :type="type"
                         :title="image.title?.ru || ''"
-                        :description="image.description?.ru || ''"
+                        :description="
+                            image.description?.ru || ''
+                        "
                     />
                 </div>
 
@@ -76,10 +85,41 @@
                             <i class="bi bi-images text-lg"></i>
                         </div>
 
-                        <p class="text-xs font-medium text-slate-500">
+                        <p
+                            class="text-xs font-medium text-slate-500"
+                        >
                             {{ $t('gallery.empty') }}
                         </p>
                     </div>
+                </div>
+
+                <!-- SHOW MORE / COLLAPSE -->
+                <div
+                    v-if="images.length > 4"
+                    class="mt-4 flex justify-center"
+                >
+                    <button
+                        type="button"
+                        class="group inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-xs font-semibold text-slate-600 shadow-sm transition hover:border-slate-300 hover:text-slate-900"
+                        @click="toggleImages"
+                    >
+                        <span>
+                            {{
+                                isAllImagesVisible
+                                    ? $t('common.collapse')
+                                    : $t('common.showMore')
+                            }}
+                        </span>
+
+                        <i
+                            class="bi transition-transform duration-300"
+                            :class="
+                                isAllImagesVisible
+                                    ? 'bi-chevron-up'
+                                    : 'bi-chevron-down'
+                            "
+                        ></i>
+                    </button>
                 </div>
             </div>
         </Transition>
@@ -87,12 +127,12 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 
 import ProductImageCard from './ProductImageCard.vue';
 import SectionHeader from '../SectionHeader.vue';
 
-defineProps({
+const props = defineProps({
     images: {
         type: Array,
         default: () => [],
@@ -104,9 +144,112 @@ defineProps({
     },
 });
 
+/*
+|--------------------------------------------------------------------------
+| Section
+|--------------------------------------------------------------------------
+*/
+
 const isOpen = ref(true);
+
+const certificatesSection = ref(null);
+
+/*
+|--------------------------------------------------------------------------
+| Visible count
+|--------------------------------------------------------------------------
+|
+| Один ряд = 4 сертификата.
+|
+| По умолчанию показываем первые 4.
+|
+*/
+
+const visibleCount = ref(4);
+
+/*
+|--------------------------------------------------------------------------
+| Visible images
+|--------------------------------------------------------------------------
+*/
+
+const visibleImages = computed(() => {
+    return props.images.slice(
+        0,
+        visibleCount.value
+    );
+});
+
+/*
+|--------------------------------------------------------------------------
+| All images visible
+|--------------------------------------------------------------------------
+*/
+
+const isAllImagesVisible = computed(() => {
+    return (
+        visibleCount.value >=
+        props.images.length
+    );
+});
+
+/*
+|--------------------------------------------------------------------------
+| Toggle section
+|--------------------------------------------------------------------------
+*/
 
 const toggleSection = () => {
     isOpen.value = !isOpen.value;
+
+    /*
+     * При сворачивании секции
+     * возвращаемся к первым 4 сертификатам.
+     */
+    if (!isOpen.value) {
+        visibleCount.value = 4;
+    }
+};
+
+/*
+|--------------------------------------------------------------------------
+| Toggle images
+|--------------------------------------------------------------------------
+*/
+
+const toggleImages = () => {
+    /*
+     * Если все сертификаты уже показаны —
+     * возвращаемся к первым 4
+     * и прокручиваем страницу
+     * к началу секции.
+     */
+    if (isAllImagesVisible.value) {
+        visibleCount.value = 4;
+
+        /*
+         * Ждём обновления DOM,
+         * после чего выполняем плавный scroll.
+         */
+        requestAnimationFrame(() => {
+            certificatesSection.value?.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start',
+            });
+        });
+
+        return;
+    }
+
+    /*
+     * Показываем следующий ряд из 4.
+     *
+     * Если осталось меньше 4 —
+     * показываем оставшиеся.
+     */
+    visibleCount.value = Math.min(
+        visibleCount.value + 4,
+        props.images.length
+    );
 };
 </script>

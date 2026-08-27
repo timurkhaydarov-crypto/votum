@@ -12,10 +12,11 @@ class SocialMediaSeeder extends Seeder
      */
     public function run(): void
     {
-        $platforms = ['whatsapp', 'telegram', 'instagram'];
+        $platforms = ['whatsapp'];
         foreach ($platforms as $platform) {
             SocialMedia::factory()->create([
                 'platform' => $platform,
+                'url' => 'https://wa.me/message/EI6YVQKAHJVXD1',
             ]);
         }
     }

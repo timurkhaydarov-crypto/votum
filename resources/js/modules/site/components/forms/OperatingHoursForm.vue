@@ -10,8 +10,8 @@
         <Select v-model="day.to" :name="'day_to'" :options="weekDaysOptions" option-value="id" option-label="label"
             :label="$t('periods.to')" :placeholder="`-- ${t('periods.to')} --`" :icon="`bi ` + Icon.CALENDAR"
             :required="true" :error="dayError" />
-        <Input v-model="time" :name="'time'" :label="$t('contacts.operating_hours')"
-            :placeholder="$t('contacts.operating_hours')" :icon="`bi ` + Icon.TIME" :required="true"
+        <Input v-model="time" :name="'time'" :label="$t('contacts.operatingHours')"
+            :placeholder="$t('contacts.operatingHours')" :icon="`bi ` + Icon.TIME" :required="true"
             :mask="'##:##-##:##'" :type="'text'" :error="timeError" />
     </div>
 </template>

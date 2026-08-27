@@ -11,19 +11,18 @@ class EmailSeeder extends Seeder
     /**
      * Run the database seeds.
      */
-public function run(): void
-{
-    $prefixes = [
-        1 => 'info',
-        2 => 'sales',
-        3 => 'support',
-    ];
+    public function run(): void
+    {
+        $prefixes = [
+            1 => 'info',
+        ];
 
-    Department::query()->get()->each(function ($department) use ($prefixes) {
-        Email::factory()->create([
-            'department_id' => $department->id,
-            'email' => ($prefixes[$department->id] ?? 'info') . '@votum.ru',
-        ]);
-    });
-}
+        Department::query()->get()->each(function ($department) use ($prefixes) {
+            Email::factory()->create([
+                'department_id' => $department->id,
+                'email' => ($prefixes[$department->id] ?? 'info').'@votum.ru',
+            ]);
+        });
+
+    }
 }

@@ -134,7 +134,7 @@ const infoItems = [
         icon: 'bi-info-circle',
 
         value: () =>
-            props.product.fullDescription ? t('product.info.more') : t('product.info.notAvailable'),
+            props.product.fullDescription ? t('common.more') : t('common.notAvailable'),
 
         disabled: () => false,
     },
@@ -147,24 +147,22 @@ const infoItems = [
         icon: 'bi-stars',
 
         value: () =>
-            props.product.hasFeatures ? t('product.info.more') : t('product.info.notAvailable'),
+            props.product.hasFeatures ? t('common.more') : t('common.notAvailable'),
 
         disabled: () => !props.product.hasFeatures,
     },
 
     {
-        key: 'technical',
+        key: 'specifications',
 
-        label: () => t('product.info.technical.title'),
+        label: () => t('product.info.specifications.title'),
 
         icon: 'bi-sliders',
 
         value: () =>
-            props.product.frequency || props.product.display || props.product.channels
-                ? t('product.info.available')
-                : t('product.info.notAvailable'),
+            props.product.hasSpecifications ? t('common.more') : t('common.notAvailable'),
 
-        disabled: () => false,
+        disabled: () => !props.product.hasSpecifications,
     },
 
     {
@@ -178,10 +176,10 @@ const infoItems = [
             props.product.documentationUrl ||
             props.product.characteristicsUrl ||
             props.product.technicalSpecificationsUrl
-                ? t('product.info.available')
-                : t('product.info.notAvailable'),
+                ? t('common.available')
+                : t('common.notAvailable'),
 
-        disabled: () => false,
+        disabled: () => true,
     },
 ];
 </script>

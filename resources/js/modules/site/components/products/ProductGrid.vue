@@ -189,7 +189,7 @@ const groups = computed(() => {
     return [
         {
             slug: 'all',
-            title: t('productGrid.all'),
+            title: t('common.all'),
             dot: 'bg-slate-400',
             count: props.products.length,
         },

@@ -18,7 +18,7 @@ const {
 const { t, locale } = useI18n();
 
 const updateDocumentTitle = () => {
-    document.title = t('logo.Title') || 'TECHNOVOTUM';
+    document.title = t('logo.title') || 'TECHNOVOTUM';
 };
 
 onMounted(updateDocumentTitle);

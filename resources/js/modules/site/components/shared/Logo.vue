@@ -7,10 +7,10 @@
 
         <div class="hidden w-[220px] flex-col text-[#00979f] sm:flex">
             <span class="block w-full text-xl font-bold leading-none tracking-[0.06em]">
-                {{ $t('logo.Title') }}
+                {{ $t('logo.title') }}
             </span>
             <span :class="['block w-full text-[7px] font-medium leading-none', subtitleTrackingClass]">
-                {{ $t('logo.Subtitle') }}
+                {{ $t('logo.subtitle') }}
             </span>
         </div>
     </RouterLink>
