@@ -11,6 +11,23 @@ import ProductsAllPage from '../modules/site/pages/products/ProductsAllPage.vue'
 import ProductsByCategoryPage from '../modules/site/pages/products/ProductsByCategoryPage.vue';
 import ProductsByGroupPage from '../modules/site/pages/products/ProductsByGroupPage.vue';
 import ProductDetailPage from '../modules/site/pages/products/ProductDetailPage.vue';
+import ContactsPage from '../modules/site/pages/ContactsPage.vue';
+import AboutPage from '../modules/site/pages/AboutPage.vue';
+import CartPage from '../modules/site/pages/CartPage.vue';
+
+import SpecialistsPage from '../modules/site/pages/services/training/Specialists.vue'
+import SeminarsPage from '../modules/site/pages/services/training/Seminars.vue'
+import QualificationPage from '../modules/site/pages/services/training/Qualification.vue'
+
+import CalibrationPage from '../modules/site/pages/services/metrology/Calibration.vue'
+import MetrologyExpertisePage from '../modules/site/pages/services/metrology/Expertise.vue'
+import VerificationPage from '../modules/site/pages/services/metrology/Verification.vue'
+
+import EquipmentPage from '../modules/site/pages/services/diagnostics/Equipment.vue'
+import DiagnosticExpertisePage from '../modules/site/pages/services/diagnostics/Expertise.vue'
+import TechnicalPage from '../modules/site/pages/services/diagnostics/Technical.vue'
+
+
 
 const router = createRouter({
     history: createWebHistory(),
@@ -76,7 +93,70 @@ const router = createRouter({
                 },
             ],
         },
+        {
+            path: '/cart',
+            name: 'cart',
+            component: CartPage,
+        },
+        {
+            path: '/contacts',
+            name: 'contacts',
+            component: ContactsPage,
+        },
+        {
+            path: '/about',
+            name: 'about',
+            component: AboutPage,
+        },
+        {
+            path: '/services/training/specialists',
+            component: SpecialistsPage,
+        },
+        {
+            path: '/services/training/qualification',
+            component: QualificationPage,
+        },
+        {
+            path: '/services/training/seminars',
+            component: SeminarsPage,
+        },
+        {
+            path: '/services/metrology/verification',
+            component: VerificationPage,
+        },
+        {
+            path: '/services/metrology/calibration',
+            component: CalibrationPage,
+        },
+        {
+            path: '/services/metrology/expertise',
+            component: MetrologyExpertisePage,
+        },
+        {
+            path: '/services/diagnostics/technical',
+            component: TechnicalPage,
+        },
+        {
+            path: '/services/diagnostics/equipment',
+            component: EquipmentPage,
+        },
+        {
+            path: '/services/diagnostics/expertise',
+            component: DiagnosticExpertisePage,
+        },
     ],
+
+    scrollBehavior(to, from, savedPosition) {
+        if (savedPosition) {
+            return savedPosition;
+        }
+
+        return {
+            top: 0,
+            left: 0,
+            behavior: 'smooth',
+        };
+    },
 });
 
 export default router;

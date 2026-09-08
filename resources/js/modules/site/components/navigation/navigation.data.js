@@ -19,11 +19,6 @@ export const mainMenu = [
         title: 'menu.contacts',
         href: '/contacts',
         icon: 'bi-geo-alt'
-    },
-    {
-        title: 'menu.cart',
-        href: '/cart',
-        icon: 'bi-cart3'
     }
 ]
 

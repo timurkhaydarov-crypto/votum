@@ -1,9 +1,9 @@
 <template>
-    <section ref="certificatesSection">
+    <section ref="gallerySection">
         <!-- HEADER -->
         <SectionHeader
-            :title="$t('certificates.title')"
-            :description="$t('certificates.description')"
+            :title="$t(galleryTitle)"
+            :description="$t(gallerySubTitle)"
         >
             <!-- IMAGE COUNT -->
             <template #meta>
@@ -50,7 +50,7 @@
                 <!-- GALLERY -->
                 <div
                     v-if="images.length"
-                    class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+                    class="grid grid-cols-2 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
                 >
                     <ProductImageCard
                         v-for="(image, index) in visibleImages"
@@ -63,13 +63,12 @@
                         :thumbnail="image.thumbnail"
                         :alt="
                             image.alt ||
+                            localizedTitle(image) ||
                             `${$t('gallery.image')} ${index + 1}`
                         "
                         :type="type"
-                        :title="image.title?.ru || ''"
-                        :description="
-                            image.description?.ru || ''
-                        "
+                        :title="localizedTitle(image)"
+                        :description="localizedDescription(image)"
                     />
                 </div>
 
@@ -128,9 +127,12 @@
 
 <script setup>
 import { computed, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 import ProductImageCard from './ProductImageCard.vue';
 import SectionHeader from '../SectionHeader.vue';
+
+const { locale } = useI18n();
 
 const props = defineProps({
     images: {
@@ -140,9 +142,75 @@ const props = defineProps({
 
     type: {
         type: String,
-        default: 'Product',
+        default: 'product',
+    },
+
+    galleryTitle: {
+        type: String,
+        default: '',
+    },
+
+    gallerySubTitle: {
+        type: String,
+        default: '',
     },
 });
+
+/*
+|--------------------------------------------------------------------------
+| Locale
+|--------------------------------------------------------------------------
+*/
+
+const currentLocale = computed(() => {
+    return locale.value === 'en' ? 'en' : 'ru';
+});
+
+/*
+|--------------------------------------------------------------------------
+| Localized title
+|--------------------------------------------------------------------------
+*/
+
+const localizedTitle = (image) => {
+    if (!image?.title) {
+        return '';
+    }
+
+    if (typeof image.title === 'string') {
+        return image.title;
+    }
+
+    return (
+        image.title[currentLocale.value] ??
+        image.title.ru ??
+        image.title.en ??
+        ''
+    );
+};
+
+/*
+|--------------------------------------------------------------------------
+| Localized description
+|--------------------------------------------------------------------------
+*/
+
+const localizedDescription = (image) => {
+    if (!image?.description) {
+        return '';
+    }
+
+    if (typeof image.description === 'string') {
+        return image.description;
+    }
+
+    return (
+        image.description[currentLocale.value] ??
+        image.description.ru ??
+        image.description.en ??
+        ''
+    );
+};
 
 /*
 |--------------------------------------------------------------------------
@@ -152,17 +220,12 @@ const props = defineProps({
 
 const isOpen = ref(true);
 
-const certificatesSection = ref(null);
+const gallerySection = ref(null);
 
 /*
 |--------------------------------------------------------------------------
 | Visible count
 |--------------------------------------------------------------------------
-|
-| Один ряд = 4 сертификата.
-|
-| По умолчанию показываем первые 4.
-|
 */
 
 const visibleCount = ref(4);
@@ -202,10 +265,6 @@ const isAllImagesVisible = computed(() => {
 const toggleSection = () => {
     isOpen.value = !isOpen.value;
 
-    /*
-     * При сворачивании секции
-     * возвращаемся к первым 4 сертификатам.
-     */
     if (!isOpen.value) {
         visibleCount.value = 4;
     }
@@ -218,21 +277,11 @@ const toggleSection = () => {
 */
 
 const toggleImages = () => {
-    /*
-     * Если все сертификаты уже показаны —
-     * возвращаемся к первым 4
-     * и прокручиваем страницу
-     * к началу секции.
-     */
     if (isAllImagesVisible.value) {
         visibleCount.value = 4;
 
-        /*
-         * Ждём обновления DOM,
-         * после чего выполняем плавный scroll.
-         */
         requestAnimationFrame(() => {
-            certificatesSection.value?.scrollIntoView({
+            gallerySection.value?.scrollIntoView({
                 behavior: 'smooth',
                 block: 'start',
             });
@@ -241,15 +290,10 @@ const toggleImages = () => {
         return;
     }
 
-    /*
-     * Показываем следующий ряд из 4.
-     *
-     * Если осталось меньше 4 —
-     * показываем оставшиеся.
-     */
     visibleCount.value = Math.min(
         visibleCount.value + 4,
         props.images.length
     );
 };
 </script>
+

@@ -1,7 +1,7 @@
 <template>
     <section class="min-h-screen bg-gray-300 text-slate-100 sm:pt-[100px]">
         <TopPagePanel class="hidden sm:block" />
-        <MainMenu class="hidden bg-white sm:!fixed sm:inset-x-0 sm:top-[40px] sm:z-[60] sm:block" />
+        <MainMenu class="hidden sm:block bg-white sm:!fixed sm:inset-x-0 sm:top-[40px] sm:z-[60]" />
         <HeroSection />
     </section>
 </template>

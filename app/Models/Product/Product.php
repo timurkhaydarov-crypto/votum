@@ -2,6 +2,8 @@
 
 namespace App\Models\Product;
 
+use App\Models\Cart\CartItem;
+use App\Models\Request\RequestItem;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -36,6 +38,22 @@ class Product extends Model
         'image_url',
         'video_url',
     ];
+
+    /**
+     * Cart items.
+     */
+    public function cartItems(): HasMany
+    {
+        return $this->hasMany(CartItem::class);
+    }
+
+    /**
+     * Request items.
+     */
+    public function requestItems(): HasMany
+    {
+        return $this->hasMany(RequestItem::class);
+    }
 
     public function category(): BelongsTo
     {
@@ -85,8 +103,8 @@ class Product extends Model
     public function features(): HasOne
     {
         return $this->hasOne(ProductFeatures::class);
-    }    
-    
+    }
+
     public function specifications(): HasOne
     {
         return $this->hasOne(ProductSpecification::class);

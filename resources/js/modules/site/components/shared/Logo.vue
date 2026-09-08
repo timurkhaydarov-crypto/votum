@@ -5,7 +5,7 @@
             <img :src="'/image/logo.svg'" alt="Logo" class="h-9 w-9" />
         </div>
 
-        <div class="hidden w-[220px] flex-col text-[#00979f] sm:flex">
+        <div class="hidden w-[220px] flex-col text-[#0f172b] sm:flex">
             <span class="block w-full text-xl font-bold leading-none tracking-[0.06em]">
                 {{ $t('logo.title') }}
             </span>

@@ -14,7 +14,9 @@ use App\Http\Controllers\MethodController;
 use App\Http\Controllers\SectorController;
 use App\Http\Controllers\ProductFeaturesController;
 use App\Http\Controllers\ProductSpecificationController;
-
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\RequestController;
+use App\Http\Controllers\DealerController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -163,3 +165,37 @@ Route::prefix('products')->group(function () {
         [ProductSpecificationController::class, 'show']
     );
 });
+
+/*
+|--------------------------------------------------------------------------
+| Cart
+|--------------------------------------------------------------------------
+*/
+Route::prefix('cart')->group(function () {
+    Route::get('/', [CartController::class, 'index']);
+
+    Route::post('/items', [CartController::class, 'store']);
+
+    Route::patch('/items/{product}', [CartController::class, 'update']);
+
+    Route::delete('/items/{product}', [CartController::class, 'destroy']);
+
+    Route::delete('/', [CartController::class, 'clear']);
+});
+Route::get('/dealers', [DealerController::class, 'index']);
+Route::get('/dealers/{dealer}', [DealerController::class, 'show']);
+/*
+|--------------------------------------------------------------------------
+| Requests
+|--------------------------------------------------------------------------
+*/
+
+Route::post(
+    '/requests',
+    [RequestController::class, 'store']
+);
+
+Route::get(
+    '/requests/{request}',
+    [RequestController::class, 'show']
+);

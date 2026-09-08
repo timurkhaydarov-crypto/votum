@@ -187,10 +187,10 @@
                 />
 
                 <ProductPurchaseActions
-                    :price-label="priceLabel"
                     :is-in-stock="isInStock"
                     :back-link="backLink"
                     :back-label="backLabel"
+                    :product="product"
                 />
             </div>
         </div>
@@ -231,11 +231,6 @@ const props = defineProps({
     isInStock: {
         type: Boolean,
         default: false,
-    },
-
-    priceLabel: {
-        type: String,
-        default: '',
     },
 
     groupDotClass: {

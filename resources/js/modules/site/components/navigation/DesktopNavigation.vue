@@ -1,3 +1,4 @@
+vue
 <template>
 
     <nav
@@ -178,14 +179,38 @@
 
         </RouterLink>
 
+
+        <!-- ========================================== -->
+        <!-- КОРЗИНА -->
+        <!-- ========================================== -->
+
+        <div
+            class="flex items-center
+                   rounded-xl px-3 py-2
+                   transition hover:bg-gray-100"
+        >
+            <CartBadge />
+        </div>
+
     </nav>
 
 </template>
 
 <script setup>
-import { onMounted, onBeforeUnmount, ref, watch } from 'vue'
-import { useI18n } from 'vue-i18n'
+import {
+    onMounted,
+    onBeforeUnmount,
+    ref,
+    watch,
+} from 'vue'
+
+import {
+    useI18n,
+} from 'vue-i18n'
+
 import MegaMenu from './mega-menu/MegaMenu.vue'
+
+import CartBadge from '../shared/CartBadge.vue'
 
 import {
     mainMenu,
@@ -193,7 +218,10 @@ import {
     fetchProductCategories,
 } from './navigation.data.js'
 
-const { t, locale } = useI18n()
+const {
+    t,
+    locale,
+} = useI18n()
 
 const productsOpen = ref(false)
 const servicesOpen = ref(false)
@@ -316,3 +344,4 @@ onBeforeUnmount(() => {
     }
 }
 </style>
+

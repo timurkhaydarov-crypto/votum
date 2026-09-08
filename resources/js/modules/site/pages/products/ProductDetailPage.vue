@@ -19,7 +19,6 @@
                 :product="product"
                 :image-src="imageSrc"
                 :is-in-stock="isInStock"
-                :price-label="priceLabel"
                 :group-dot-class="groupDotClass"
                 :group-badge-classes="groupBadgeClasses"
                 :back-link="backLink"
@@ -38,8 +37,8 @@
             <ProductImageGallery
                 v-if="product.certificates?.length"
                 :images="product.certificates"
-                gallery-title="certificates-gallery"
-                gallery-sub-title="certificates"
+                gallery-title="certificates.eyebrow"
+                gallery-sub-title="certificates.title"
                 type="certificate"
             />
             <!-- GALLERY -->
@@ -286,16 +285,6 @@ const imageSrc = computed(() => {
 
 const isInStock = computed(() => {
     return Number(product.value?.quantity || 0) > 0;
-});
-
-/*
-|--------------------------------------------------------------------------
-| Price
-|--------------------------------------------------------------------------
-*/
-
-const priceLabel = computed(() => {
-    return product.value?.price ? `${product.value.price} ₽` : t('common.byRequest');
 });
 
 /*

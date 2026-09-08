@@ -97,7 +97,7 @@
 
         <!-- Вся категория -->
 
-        <div class="mt-6 border-t
+        <!-- <div class="mt-6 border-t
              border-gray-100 pt-4">
 
                 <RouterLink :to="category.href" class="inline-flex items-center gap-2
@@ -111,7 +111,7 @@
 
             </RouterLink>
 
-        </div>
+        </div> -->
 
     </div>
 

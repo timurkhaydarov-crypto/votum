@@ -17,6 +17,7 @@ use Database\Seeders\Product\CertificateSeeder;
 use Database\Seeders\Product\ProductFeaturesSeeder;
 use Database\Seeders\Product\ProductGallerySeeder;
 use Database\Seeders\Product\ProductCompatibilitySeeder;
+use Database\Seeders\DealerSeeder;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -67,6 +68,7 @@ class DatabaseSeeder extends Seeder
                 ProductGallerySeeder::class,
                 FeaturesGallerySeeder::class,
                 ProductCompatibilitySeeder::class,
+                DealerSeeder::class,
             ]);
         }
     }

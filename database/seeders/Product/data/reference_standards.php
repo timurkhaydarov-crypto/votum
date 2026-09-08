@@ -10,7 +10,7 @@ return [
         'certificates' => [],
         'short_description' => [
             'ru' => 'Стандартная мера дефектов из комплекта «КМД Вотум» для толщинометрии.',
-            'en' => 'A standard measure of defects from the CMD VOTUM set for thickness evaluation.',
+            'en' => 'A standard measure of defects from the CMD TECHNOVOTUM set for thickness evaluation.',
         ],
         'full_description' => [
             'ru' => 'Настроечный образец для ЭМА толщинометрии. Выполнен из неферромагнитного сплава. Используется совместно с универсальным дефектоскопом Томографик УД4-ТМ для настройки и проверки акустического тракта дефектоскопа и электромагнито-акустических преобразователей.',
