@@ -19,7 +19,7 @@
                 @click="handleNavigation"
             >
 
-                <span class="product-dot"></span>
+                <MenuDot />
 
                 <span class="truncate">
                     {{ product.title }}
@@ -81,6 +81,8 @@ import {
 import {
     resolveProductById
 } from '../navigation.data.js'
+
+import MenuDot from '@/modules/site/components/shared/MenuDot.vue'
 
 
 const { t } = useI18n()
@@ -194,23 +196,7 @@ const handleNavigation = () => {
 }
 
 
-.product-dot {
-    width: 5px;
-    height: 5px;
-
-    flex-shrink: 0;
-
-    border-radius: 999px;
-
-    background: #d1d1d1;
-
-    transition:
-        background-color 180ms ease,
-        transform 180ms ease;
-}
-
-
-.product-link:hover .product-dot {
+.product-link:hover :deep(.menu-dot) {
     background: #252525;
 
     transform: scale(1.25);
@@ -247,3 +233,4 @@ const handleNavigation = () => {
 }
 
 </style>
+

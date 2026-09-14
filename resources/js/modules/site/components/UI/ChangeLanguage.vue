@@ -1,32 +1,56 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 const { locale } = useI18n()
 
-// Список доступных языков с кодами стран для флагов
 const languages = [
-  { code: 'ru', name: 'Ру', flag: '🇷🇺' },
-  { code: 'en', name: 'En', flag: '🇬🇧' },
+    { code: 'ru', name: 'Ру', flag: '🇷🇺' },
+    { code: 'en', name: 'En', flag: '🇬🇧' },
 ]
 
-// Получаем текущий выбранный объект языка
 const currentLanguage = computed(() => {
-  return languages.find(lang => lang.code === locale.value) || languages[0]
+    return (
+        languages.find(lang => lang.code === locale.value) ||
+        languages[0]
+    )
 })
 
-// Метод смены языка
 const changeLanguage = (code) => {
-  locale.value = code
+    locale.value = code
+}
+
+const toggleLanguage = () => {
+    const nextLanguage = languages.find(
+        lang => lang.code !== currentLanguage.value.code
+    )
+
+    if (nextLanguage) {
+        changeLanguage(nextLanguage.code)
+    }
 }
 </script>
 
 <template>
     <button
         type="button"
-        class="inline-flex cursor-pointer text-2xl items-center justify-center rounded transition hover:bg-slate-800 hover:text-red-400"
-        @click="changeLanguage(languages.find(lang => lang.code !== currentLanguage.code).code)"
+        class="
+            inline-flex
+            h-10
+            w-10
+            cursor-pointer
+            items-center
+            justify-center
+            rounded-xl
+            text-2xl
+            transition
+            hover:bg-slate-800
+            hover:text-red-400
+            active:bg-slate-800
+            active:text-red-400
+        "
+        @click="toggleLanguage"
     >
-    {{ languages.find(lang => lang.code !== currentLanguage.code).flag }}
+        {{ languages.find(lang => lang.code !== currentLanguage.code).flag }}
     </button>
 </template>

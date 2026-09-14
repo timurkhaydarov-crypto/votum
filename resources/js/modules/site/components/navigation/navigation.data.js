@@ -6,11 +6,6 @@
 
 export const mainMenu = [
     {
-        title: 'menu.home',
-        href: '/',
-        icon: 'bi-house-door'
-    },
-    {
         title: 'menu.about',
         href: '/about',
         icon: 'bi-person'

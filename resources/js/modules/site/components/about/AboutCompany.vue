@@ -5,7 +5,7 @@
         >
             <div class="overflow-hidden rounded-[2rem] bg-slate-100">
                 <img
-                    :src="'/image/about/about-company.webp'"
+                    :src="'/image/about/about_development.webp'"
                     :alt="t('about.company.imageAlt')"
                     class="aspect-[4/3] w-full object-cover"
                 />

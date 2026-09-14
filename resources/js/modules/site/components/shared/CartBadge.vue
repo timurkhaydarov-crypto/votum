@@ -4,7 +4,7 @@
         class="relative inline-flex items-center justify-center"
         aria-label="Cart"
     >
-        <i class="bi bi-cart3 text-xl"></i>
+        <i class=" text-[#252525] bi bi-cart3 text-xl"></i>
 
         <span
             v-if="count > 0"

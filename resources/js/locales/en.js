@@ -118,7 +118,200 @@ export default {
         close: 'Close',
         copyright: 'All Rights Reserved.',
     },
+    company: {
+        about: {
+            eyebrow: 'ABOUT US',
 
+            title: 'NDT technologies engineered for real-world applications',
+
+            description:
+                'TECHNOVOTUM develops and manufactures non-destructive testing equipment. We create instruments, automated systems and specialized solutions for industry, transport, energy and other sectors where quality and safety are critical.',
+
+            stats: {
+                products: 'Equipment models',
+                methods: 'Testing methods',
+                industries: 'Application industries',
+            },
+        },
+
+        manufacturing: {
+            eyebrow: 'MANUFACTURING',
+
+            title: 'From engineering concept to finished system',
+
+            description:
+                'We combine electronics, software, mechanics and measurement technologies into a single engineering and manufacturing process.',
+
+            items: {
+                engineering: {
+                    title: 'Engineering & Design',
+                    description:
+                        'Design of specialized NDT systems and equipment for specific inspection requirements.',
+                },
+
+                electronics: {
+                    title: 'Electronics & Measurement',
+                    description:
+                        'Development and integration of electronic modules, sensors, measurement channels and signal processing systems.',
+                },
+
+                software: {
+                    title: 'Software & Control',
+                    description:
+                        'Development of control software, inspection visualization, measurement automation and data processing.',
+                },
+
+                testing: {
+                    title: 'Testing & Calibration',
+                    description:
+                        'Performance verification, equipment configuration and functional testing before delivery.',
+                },
+            },
+        },
+
+        quality: {
+            eyebrow: 'QUALITY',
+
+            title: 'From requirements to operational deployment',
+
+            description:
+                'Every solution goes through a structured process of engineering, manufacturing, testing and preparation for operation.',
+
+            steps: {
+                requirements: {
+                    title: 'Requirements',
+                    description:
+                        'We define the inspection object, operating conditions and required NDT methods.',
+                },
+
+                design: {
+                    title: 'Design',
+                    description: 'We develop the technical solution and equipment configuration.',
+                },
+
+                manufacturing: {
+                    title: 'Manufacturing',
+                    description:
+                        'Components are manufactured, assembled and integrated into the system.',
+                },
+
+                testing: {
+                    title: 'Testing',
+                    description:
+                        'Key characteristics and compliance with applicable requirements are verified.',
+                },
+
+                delivery: {
+                    title: 'Deployment',
+                    description: 'Equipment is delivered with the required technical support.',
+                },
+            },
+        },
+
+        certifications: {
+            eyebrow: 'CERTIFICATIONS',
+
+            title: 'Compliance with requirements and standards',
+
+            description:
+                'Certificates, documentation and test results demonstrate compliance with applicable requirements.',
+
+            items: {
+                quality: {
+                    title: 'Quality',
+                    description: 'Quality control throughout development and manufacturing.',
+                },
+
+                safety: {
+                    title: 'Safety',
+                    description: 'Equipment safety and operational requirements.',
+                },
+
+                metrology: {
+                    title: 'Metrology',
+                    description: 'Control of metrological characteristics of measurement systems.',
+                },
+
+                ndt: {
+                    title: 'NDT',
+                    description: 'Requirements for NDT equipment and inspection methods.',
+                },
+
+                production: {
+                    title: 'Manufacturing',
+                    description: 'Production process and finished product quality control.',
+                },
+
+                international: {
+                    title: 'International',
+                    description: 'Preparing products for use across different markets.',
+                },
+            },
+        },
+
+        global: {
+            eyebrow: 'GLOBAL PRESENCE',
+
+            title: 'Technologies designed for multiple industries',
+
+            description:
+                'TECHNOVOTUM equipment is designed for use in industry, transportation, energy, mechanical engineering and other demanding applications.',
+
+            mapLabel: 'Application geography',
+
+            locations: {
+                europe: 'Europe',
+                centralAsia: 'Central Asia',
+                middleEast: 'Middle East',
+                asia: 'Asia',
+                cis: 'CIS',
+                headquarters: 'TECHNOVOTUM',
+            },
+        },
+
+        getStarted: {
+            eyebrow: 'GET STARTED',
+
+            title: 'Let us find the right inspection solution',
+
+            description:
+                'Tell us about your inspection object, operating conditions and required method. TECHNOVOTUM specialists will help define the optimal equipment configuration.',
+
+            products: 'View equipment',
+            contact: 'Contact us',
+        },
+
+        contact: {
+            eyebrow: 'CONTACT US',
+
+            title: 'Let’s discuss your project',
+
+            description:
+                'Contact the TECHNOVOTUM team for advice on equipment, technical solutions and cooperation opportunities.',
+
+            items: {
+                address: {
+                    label: 'Address',
+                    value: 'Company address',
+                },
+
+                phone: {
+                    label: 'Phone',
+                    value: 'Company phone',
+                },
+
+                email: {
+                    label: 'E-mail',
+                    value: 'Company e-mail',
+                },
+
+                hours: {
+                    label: 'Working hours',
+                    value: 'Mon–Fri, 09:00–18:00',
+                },
+            },
+        },
+    },
     contacts: {
         address: 'Address',
         email: 'Email',
@@ -476,7 +669,18 @@ export default {
         from: 'From',
         to: 'To',
     },
-
+    trustedBy: {
+        eyebrow: 'INDUSTRIES',
+        title: 'Trusted by industry leaders worldwide',
+        industries: {
+            aerospace: 'Aerospace',
+            railway: 'Railway',
+            composites: 'Composites',
+            wind: 'Wind Energy',
+            shipbuilding: 'Shipbuilding',
+            oilGas: 'Oil & Gas',
+        },
+    },
     validation: {
         select: {
             required: 'Please select a value',

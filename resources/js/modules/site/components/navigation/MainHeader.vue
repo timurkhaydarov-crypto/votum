@@ -16,7 +16,7 @@
                items-center justify-center
                rounded-xl text-[#252525]
                transition hover:bg-gray-100
-               lg:hidden" @click="openMobileMenu">
+               md:hidden" @click="openMobileMenu">
                 <i class="bi bi-list text-2xl"></i>
             </button>
 

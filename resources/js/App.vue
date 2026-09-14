@@ -1,7 +1,7 @@
 <template>
     <Alert v-if="isVisible" :type="type" :message="message" />
-    <TopPagePanel class="hidden sm:block" />
-    <MainMenu class="bg-white sm:fixed sm:inset-x-0 sm:top-[40px] sm:z-[60]" />
+    <TopPagePanel class="hidden md:block" />
+    <MainMenu class="bg-white sm:fixed sm:inset-x-0 md:top-[40px] sm:z-[60]" />
         <router-view />
     <footer class="border-t border-slate-200 bg-white">
         <div

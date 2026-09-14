@@ -5,7 +5,7 @@ vue
         class="absolute left-1/2 hidden
            -translate-x-1/2
            items-center gap-1
-           lg:flex"
+           md:flex"
     >
 
         <!-- Главная -->
@@ -152,7 +152,7 @@ vue
         <!-- ========================================== -->
 
         <RouterLink
-            v-for="item in mainMenu.slice(1)"
+            v-for="item in mainMenu"
             :key="item.title"
             :to="item.href"
             class="group flex items-center gap-2
