@@ -1,54 +1,65 @@
-// function getCsrfToken() {
-//     return document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
-// }
-
-// async function fetchJson(url, options = {}) {
-//     const headers = {
-//         Accept: 'application/json',
-//         'Content-Type': 'application/json',
-//         'X-Requested-With': 'XMLHttpRequest',
-//         ...options.headers,
-//     };
-
-//     const csrfToken = getCsrfToken();
-//     if (csrfToken) {
-//         headers['X-CSRF-TOKEN'] = csrfToken;
-//     }
-
-//     const response = await fetch(url, {
-//         credentials: 'same-origin',
-//         ...options,
-//         headers,
-//     });
-
-//     const data = await response.json().catch(() => ({}));
-
-//     if (!response.ok) {
-//         const error = new Error(data?.message || 'Request failed');
-//         error.status = response.status;
-//         error.errors = data?.errors || {};
-//         throw error;
-//     }
-
-//     return data;
-// }
-
 import { fetchJsonApi } from './fetchJsonApi';
+
+const PRODUCT_API_URL = '/api/products';
 
 export const productsApi = {
     getAll() {
-        return fetchJsonApi('/api/products/item');
-    },
-
-    getById(productId) {
-        return fetchJsonApi(`/api/products/item/${encodeURIComponent(productId)}`);
+        return fetchJsonApi(`${PRODUCT_API_URL}/item`);
     },
 
     getByCategorySlug(categorySlug) {
-        return fetchJsonApi(`/api/products/category/${encodeURIComponent(categorySlug)}`);
+        return fetchJsonApi(
+            `${PRODUCT_API_URL}/category/${encodeURIComponent(categorySlug)}`
+        );
     },
 
     getByGroupSlug(categorySlug, groupSlug) {
-        return fetchJsonApi(`/api/products/category/${encodeURIComponent(categorySlug)}/group/${encodeURIComponent(groupSlug)}`);
+        return fetchJsonApi(
+            `${PRODUCT_API_URL}/category/${encodeURIComponent(categorySlug)}/group/${encodeURIComponent(groupSlug)}`
+        );
+    },
+
+    getById(productId) {
+        return fetchJsonApi(
+            `${PRODUCT_API_URL}/item/${encodeURIComponent(productId)}`
+        );
+    },
+
+    getCreate() {
+        return fetchJsonApi(
+            `${PRODUCT_API_URL}/item/create`
+        );
+    },
+
+    getEdit(productId) {
+        return fetchJsonApi(
+            `${PRODUCT_API_URL}/item/${encodeURIComponent(productId)}/edit`
+        );
+    },
+
+    create(payload) {
+        return fetchJsonApi(`${PRODUCT_API_URL}/item`, {
+            method: 'POST',
+            body: JSON.stringify(payload),
+        });
+    },
+
+    update(productId, payload) {
+        return fetchJsonApi(
+            `${PRODUCT_API_URL}/item/${encodeURIComponent(productId)}`,
+            {
+                method: 'PUT',
+                body: JSON.stringify(payload),
+            }
+        );
+    },
+
+    remove(productId) {
+        return fetchJsonApi(
+            `${PRODUCT_API_URL}/item/${encodeURIComponent(productId)}`,
+            {
+                method: 'DELETE',
+            }
+        );
     },
 };

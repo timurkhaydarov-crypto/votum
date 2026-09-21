@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('methods', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('product_id')->constrained('products')->nullOnDelete();
+            $table->foreignId('product_id')->constrained('products')->cascadeOnDelete();
             $table->boolean('ut_method');
             $table->boolean('et_method');
             $table->boolean('mia_method');

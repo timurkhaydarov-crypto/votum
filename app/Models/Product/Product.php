@@ -105,9 +105,9 @@ class Product extends Model
         return $this->hasOne(ProductFeatures::class);
     }
 
-    public function specifications(): HasOne
+    public function specifications(): HasMany
     {
-        return $this->hasOne(ProductSpecification::class);
+        return $this->hasMany(ProductSpecification::class);
     }
 
     /**

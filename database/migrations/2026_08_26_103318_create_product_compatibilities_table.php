@@ -21,9 +21,6 @@ return new class extends Migration
             $table->foreignId('compatible_product_id')
                 ->constrained('products')
                 ->cascadeOnDelete();
-
-            $table->timestamps();
-
             $table->unique([
                 'product_id',
                 'compatible_product_id',

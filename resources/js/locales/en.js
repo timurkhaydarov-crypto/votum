@@ -34,6 +34,7 @@ export default {
         resume: 'Resume',
         retry: 'Retry',
         save: 'Save',
+        saving: 'Saving',
         search: 'Search',
         select: 'Select',
         send: 'Send',
@@ -117,6 +118,9 @@ export default {
         byRequest: 'On request',
         close: 'Close',
         copyright: 'All Rights Reserved.',
+        loading: 'Loading...',
+        russian: 'Russian',
+        english: 'English',
     },
     company: {
         about: {
@@ -470,6 +474,161 @@ export default {
             documentation: {
                 title: 'Documentation',
                 open: 'Open document',
+            },
+            form: {
+                createTitle: 'Add Product',
+                editTitle: 'Edit Product',
+
+                createDescription: 'Fill in the details to add a new product to the catalog.',
+
+                editDescription: 'Edit the product details and save your changes.',
+
+                errors: {
+                    save: 'Failed to save the product.',
+                    delete: 'Failed to delete the product.',
+                },
+
+                basic: {
+                    title: 'Basic Information',
+                    description: 'Basic product information and units of measurement.',
+                },
+
+                article: 'Article',
+                unit: 'Unit',
+
+                name: {
+                    title: 'Name',
+                    ru: 'Name in Russian',
+                    en: 'Name in English',
+                },
+
+                shortDescription: {
+                    title: 'Short Description',
+                    ru: 'Short description in Russian',
+                    en: 'Short description in English',
+                },
+
+                fullDescription: {
+                    title: 'Full Description',
+                    ru: 'Full description in Russian',
+                    en: 'Full description in English',
+                },
+
+                classification: {
+                    title: 'Classification',
+                },
+
+                category: 'Category',
+                group: 'Primary Group',
+                brand: 'Brand',
+                additionalGroups: 'Additional Groups',
+
+                product: {
+                    title: 'Product Data',
+                },
+
+                price: 'Price',
+                quantity: 'Quantity',
+                image: 'Image',
+                video: 'Video',
+
+                note: {
+                    title: 'Additional Information',
+                    frequency: 'Frequency Range',
+                    display: 'Display',
+                },
+
+                status: 'Product is available',
+
+                method: {
+                    title: 'Inspection Methods',
+                },
+
+                sector: {
+                    title: 'Application Industries',
+                },
+
+                certificates: {
+                    title: 'Certificates',
+                    empty: 'No certificates available',
+                },
+
+                compatible: {
+                    title: 'Compatible Products',
+                },
+
+                gallery: {
+                    title: 'Gallery',
+                    add: 'Add Image',
+                    image: 'Image',
+                    titleRu: 'Title in Russian',
+                    titleEn: 'Title in English',
+                    descriptionRu: 'Description in Russian',
+                    descriptionEn: 'Description in English',
+                },
+
+                features: {
+                    title: 'Functional Features',
+                    ru: 'Functional features in Russian',
+                    en: 'Functional features in English',
+                },
+
+                featuresGallery: {
+                    title: 'Functional Features Gallery',
+                    add: 'Add Image',
+                    image: 'Image',
+                    titleRu: 'Title in Russian',
+                    titleEn: 'Title in English',
+                },
+
+                specifications: {
+                    title: 'Technical Specifications',
+                    add: 'Add Specification',
+                    nameRu: 'Name in Russian',
+                    nameEn: 'Name in English',
+                    valueRu: 'Value in Russian',
+                    valueEn: 'Value in English',
+                },
+
+                methods: {
+                    ut: 'Ultrasonic Testing (UT)',
+                    et: 'Eddy Current Testing (ET)',
+                    mia: 'Magnetic Induction Analysis (MIA)',
+                    iet: 'Impedance Testing (IET)',
+                    mt: 'Magnetic Particle Testing (MT)',
+                    vt: 'Visual Testing (VT)',
+                },
+
+                sectors: {
+                    railway: 'Railway Industry',
+                    aerospace: 'Aerospace Industry',
+                    oil: 'Oil & Gas Industry',
+                },
+                media: {
+                    title: 'Media',
+                    description: 'Product image and video.',
+                },
+
+                file: {
+                    choose: 'Choose file',
+                    placeholder: 'Select a file',
+                    current: 'Current file',
+                },
+
+                method: {
+                    title: 'Testing Methods',
+                    description: 'Select the available non-destructive testing methods.',
+                },
+
+                sector: {
+                    title: 'Application Sectors',
+                    description: 'Select the industries where the product is used.',
+                },
+            },
+
+            management: {
+                edit: 'Edit Product',
+                delete: 'Delete Product',
             },
         },
 

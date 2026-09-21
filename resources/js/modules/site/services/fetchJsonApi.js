@@ -31,11 +31,14 @@ export async function fetchJsonApi(url, options = {}) {
 
     const headers = {
         Accept: 'application/json',
-        'Content-Type': 'application/json',
         'X-Requested-With': 'XMLHttpRequest',
         ...options.headers,
     };
 
+    if (!(options.body instanceof FormData)) {
+        headers['Content-Type'] = 'application/json';
+    }
+    
     const xsrfToken = getXsrfToken();
 
     if (xsrfToken) {

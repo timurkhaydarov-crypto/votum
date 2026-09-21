@@ -87,7 +87,7 @@
                         <!-- VIDEO -->
                         <video
                             v-else
-                            key="video"
+                            :key="videoKey"
                             :src="videoSrc"
                             class="h-full w-full object-contain"
                             autoplay
@@ -210,7 +210,10 @@
 <script setup>
 import { computed, ref } from 'vue';
 
-import { fetchProductFeatures, fetchProductSpecifications } from '@/modules/site/services/productInfoService';
+import {
+    fetchProductFeatures,
+    fetchProductSpecifications,
+} from '@/modules/site/services/productInfoService';
 
 import ProductControlMethods from './ProductControlMethods.vue';
 import ProductQuickInfo from './ProductQuickInfo.vue';
@@ -260,6 +263,40 @@ const selectedInfo = ref(null);
 const selectedInfoData = ref(null);
 const isInfoLoading = ref(false);
 const infoError = ref(null);
+
+/*
+|--------------------------------------------------------------------------
+| VIDEO FORMAT
+|--------------------------------------------------------------------------
+*/
+
+const videoFormat = ref('webm');
+
+const videoBasename = computed(() => {
+    if (!props.product.videoUrl) {
+        return '';
+    }
+
+    return String(props.product.videoUrl).replace(
+        /\.(mp4|webm|mov)$/i,
+        '',
+    );
+});
+
+const videoSrc = computed(() => {
+    if (
+        !videoBasename.value ||
+        !props.product.categorySlug
+    ) {
+        return '';
+    }
+
+    return `/video/product/${props.product.categorySlug}/${videoBasename.value}.${videoFormat.value}`;
+});
+
+const videoKey = computed(() => {
+    return `video-${videoFormat.value}-${videoBasename.value}`;
+});
 
 /*
 |--------------------------------------------------------------------------
@@ -327,17 +364,16 @@ const closeInfoModal = () => {
 |--------------------------------------------------------------------------
 */
 
-const videoSrc = computed(() => {
-    if (!props.product.videoUrl) {
-        return '';
-    }
-
-    return `/video/product/${props.product.categorySlug}/${props.product.videoUrl}.mp4`;
-});
-
 const toggleVideo = () => {
     if (!props.product.videoUrl) {
         return;
+    }
+
+    if (!isPlaying.value) {
+        /*
+         * При новом запуске всегда сначала пробуем WebM.
+         */
+        videoFormat.value = 'webm';
     }
 
     isPlaying.value = !isPlaying.value;
@@ -345,9 +381,29 @@ const toggleVideo = () => {
 
 const handleVideoEnded = () => {
     isPlaying.value = false;
+    videoFormat.value = 'webm';
 };
 
 const handleVideoError = (event) => {
+    /*
+     * Если WebM не воспроизводится,
+     * переключаемся на MP4.
+     */
+    if (videoFormat.value === 'webm') {
+        console.warn(
+            'WebM video failed, switching to MP4:',
+            videoSrc.value,
+        );
+
+        videoFormat.value = 'mp4';
+
+        return;
+    }
+
+    /*
+     * Если не работает даже MP4 —
+     * прекращаем воспроизведение.
+     */
     console.error(
         'Unable to load product video:',
         videoSrc.value,

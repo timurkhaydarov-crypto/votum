@@ -2,18 +2,23 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreProductRequest;
-use App\Http\Requests\UpdateProductRequest;
+use App\Http\Requests\Product\StoreProductRequest;
+use App\Http\Requests\Product\UpdateProductRequest;
 use App\Models\Product\Category;
 use App\Models\Product\Group;
 use App\Models\Product\Product;
+use App\Services\ProductMediaService;
 use App\Services\ProductMenuService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Symfony\Component\HttpFoundation\Response;
 
 class ProductController extends Controller
 {
-    protected function formatMethod(?object $method): ?string
-    {
+    protected function formatMethod(
+        ?object $method
+    ): ?string {
         if (! $method) {
             return null;
         }
@@ -30,7 +35,13 @@ class ProductController extends Controller
         $active = [];
 
         foreach ($map as $field => $label) {
-            if ((bool) data_get($method, $field, false)) {
+            if (
+                (bool) data_get(
+                    $method,
+                    $field,
+                    false
+                )
+            ) {
                 $active[] = $label;
             }
         }
@@ -40,8 +51,9 @@ class ProductController extends Controller
             : implode(', ', $active);
     }
 
-    protected function formatApplication(?object $sector): ?string
-    {
+    protected function formatApplication(
+        ?object $sector
+    ): ?string {
         if (! $sector) {
             return null;
         }
@@ -55,7 +67,13 @@ class ProductController extends Controller
         $active = [];
 
         foreach ($map as $field => $label) {
-            if ((bool) data_get($sector, $field, false)) {
+            if (
+                (bool) data_get(
+                    $sector,
+                    $field,
+                    false
+                )
+            ) {
                 $active[] = $label;
             }
         }
@@ -63,6 +81,44 @@ class ProductController extends Controller
         return empty($active)
             ? null
             : implode(', ', $active);
+    }
+
+    /**
+     * Synchronize product compatibility.
+     *
+     * Compatibility is logically bidirectional.
+     */
+    protected function syncCompatibleProducts(
+        Product $product,
+        array $compatibleProductIds
+    ): void {
+        $ids = collect(
+            $compatibleProductIds
+        )
+            ->map(
+                fn ($id) => (int) $id
+            )
+            ->filter(
+                fn ($id) => $id !== (int) $product->id
+            )
+            ->unique()
+            ->values();
+
+        $product
+            ->compatibleProducts()
+            ->detach();
+
+        $product
+            ->compatibleWithProducts()
+            ->detach();
+
+        if ($ids->isNotEmpty()) {
+            $product
+                ->compatibleProducts()
+                ->attach(
+                    $ids->all()
+                );
+        }
     }
 
     protected function serializeProduct(
@@ -80,8 +136,13 @@ class ProductController extends Controller
 
             'full_description' => $product->full_description,
 
-            'has_features' => $product->features()->exists(),
-            'has_specifications' => $product->specifications()->exists(),
+            'has_features' => $product
+                ->features()
+                ->exists(),
+
+            'has_specifications' => $product
+                ->specifications()
+                ->exists(),
 
             /*
             |--------------------------------------------------------------------------
@@ -89,11 +150,21 @@ class ProductController extends Controller
             |--------------------------------------------------------------------------
             */
 
-            'category' => $product->category ? [
-                'id' => $product->category->id,
-                'slug' => $product->category->slug,
-                'title' => $product->category->category,
-            ] : null,
+            'category' => $product->category
+                    ? [
+                        'id' => $product
+                            ->category
+                            ->id,
+
+                        'slug' => $product
+                            ->category
+                            ->slug,
+
+                        'title' => $product
+                            ->category
+                            ->category,
+                    ]
+                    : null,
 
             /*
             |--------------------------------------------------------------------------
@@ -101,11 +172,21 @@ class ProductController extends Controller
             |--------------------------------------------------------------------------
             */
 
-            'group' => $product->group ? [
-                'id' => $product->group->id,
-                'slug' => $product->group->slug,
-                'title' => $product->group->group,
-            ] : null,
+            'group' => $product->group
+                    ? [
+                        'id' => $product
+                            ->group
+                            ->id,
+
+                        'slug' => $product
+                            ->group
+                            ->slug,
+
+                        'title' => $product
+                            ->group
+                            ->group,
+                    ]
+                    : null,
 
             /*
             |--------------------------------------------------------------------------
@@ -113,12 +194,17 @@ class ProductController extends Controller
             |--------------------------------------------------------------------------
             */
 
-            'groups' => $product->groups
-                ->map(fn ($group) => [
-                    'id' => $group->id,
-                    'slug' => $group->slug,
-                    'title' => $group->group,
-                ])
+            'groups' => $product
+                ->groups
+                ->map(
+                    fn ($group) => [
+                        'id' => $group->id,
+
+                        'slug' => $group->slug,
+
+                        'title' => $group->group,
+                    ]
+                )
                 ->values()
                 ->all(),
 
@@ -128,24 +214,27 @@ class ProductController extends Controller
             |--------------------------------------------------------------------------
             */
 
-            'certificates' => $product->certificates
-                ->map(fn ($certificate) => [
-                    'id' => $certificate->id,
+            'certificates' => $product
+                ->certificates
+                ->map(
+                    fn ($certificate) => [
+                        'id' => $certificate->id,
 
-                    'thumbnail' => '/image/certificates/thumbnails/'
-                        .$certificate->image_url
-                        .'.webp',
+                        'thumbnail' => '/image/certificates/thumbnails/'
+                            .$certificate->image_url
+                            .'.webp',
 
-                    'src' => '/image/certificates/'
-                        .$certificate->image_url
-                        .'.webp',
+                        'src' => '/image/certificates/'
+                            .$certificate->image_url
+                            .'.webp',
 
-                    'alt' => $certificate->image_url,
+                        'alt' => $certificate->image_url,
 
-                    'title' => $certificate->title,
+                        'title' => $certificate->title,
 
-                    'description' => $certificate->description,
-                ])
+                        'description' => $certificate->description,
+                    ]
+                )
                 ->values()
                 ->all(),
 
@@ -155,26 +244,29 @@ class ProductController extends Controller
             |--------------------------------------------------------------------------
             */
 
-            'gallery' => $product->gallery
-                ->map(fn ($gallery) => [
-                    'id' => $gallery->id,
+            'gallery' => $product
+                ->gallery
+                ->map(
+                    fn ($gallery) => [
+                        'id' => $gallery->id,
 
-                    'thumbnail' => '/image/gallery/'
-                        .$product->image_url
-                        .'/thumbnails/'
-                        .$gallery->image_url
-                        .'.webp',
+                        'thumbnail' => '/image/gallery/'
+                            .$product->image_url
+                            .'/thumbnails/'
+                            .$gallery->image_url
+                            .'.webp',
 
-                    'image_url' => '/image/gallery/'
-                        .$product->image_url
-                        .'/'
-                        .$gallery->image_url
-                        .'.webp',
+                        'image_url' => '/image/gallery/'
+                            .$product->image_url
+                            .'/'
+                            .$gallery->image_url
+                            .'.webp',
 
-                    'title' => $gallery->title,
+                        'title' => $gallery->title,
 
-                    'description' => $gallery->description,
-                ])
+                        'description' => $gallery->description,
+                    ]
+                )
                 ->values()
                 ->all(),
 
@@ -184,10 +276,17 @@ class ProductController extends Controller
             |--------------------------------------------------------------------------
             */
 
-            'brand' => $product->brand ? [
-                'id' => $product->brand->id,
-                'title' => $product->brand->brand,
-            ] : null,
+            'brand' => $product->brand
+                    ? [
+                        'id' => $product
+                            ->brand
+                            ->id,
+
+                        'title' => $product
+                            ->brand
+                            ->brand,
+                    ]
+                    : null,
 
             /*
             |--------------------------------------------------------------------------
@@ -247,19 +346,11 @@ class ProductController extends Controller
 
             /*
             |--------------------------------------------------------------------------
-            | Note data
+            | Note
             |--------------------------------------------------------------------------
             */
 
-            'frequency' => data_get(
-                $product->note,
-                'frequency'
-            ),
-
-            'display' => data_get(
-                $product->note,
-                'display'
-            ),
+            'note' => $product->note,
 
             /*
             |--------------------------------------------------------------------------
@@ -272,123 +363,121 @@ class ProductController extends Controller
             ),
         ];
 
-        /*
-        |--------------------------------------------------------------------------
-        | Compatible products
-        |--------------------------------------------------------------------------
-        |
-        | Добавляем совместимые товары только
-        | на странице конкретного товара.
-        |
-        | compatibleProducts:
-        | текущий товар -> совместимые товары
-        |
-        | compatibleWithProducts:
-        | другие товары -> текущий товар
-        |
-        | Объединяем обе стороны.
-        |
-        */
-
         if ($withCompatibleProducts) {
-            $compatibleProducts = $product
-                ->compatibleProducts
-                ->merge(
-                    $product->compatibleWithProducts
-                )
-                ->unique('id')
-                ->values();
+            $compatibleProducts =
+                $product
+                    ->compatibleProducts
+                    ->merge(
+                        $product
+                            ->compatibleWithProducts
+                    )
+                    ->unique('id')
+                    ->values();
 
-            /*
-            |--------------------------------------------------------------------------
-            | Categories from database
-            |--------------------------------------------------------------------------
-            |
-            | Раньше здесь был захардкоженный список:
-            |
-            | industrial-ndt
-            | flaw-detectors
-            | scanning-devices
-            | transducers
-            | reference-standards
-            |
-            | Теперь список категорий берётся из БД.
-            |
-            */
+            $allowedCategories =
+                Category::query()
+                    ->pluck('slug')
+                    ->filter()
+                    ->values()
+                    ->all();
 
-            $allowedCategories = Category::query()
-                ->pluck('slug')
-                ->filter()
-                ->values()
-                ->all();
+            $compatibleProductsByCategory =
+                $compatibleProducts
+                    ->filter(
+                        fn (
+                            Product $compatibleProduct
+                        ) => $compatibleProduct
+                            ->category !== null
+                            && in_array(
+                                $compatibleProduct
+                                    ->category
+                                    ->slug,
+                                $allowedCategories,
+                                true
+                            )
+                    )
+                    ->groupBy(
+                        fn (
+                            Product $compatibleProduct
+                        ) => $compatibleProduct
+                            ->category
+                            ->slug
+                    )
+                    ->map(
+                        fn ($products) => $products
+                            ->map(
+                                fn (
+                                    Product $compatibleProduct
+                                ) => [
+                                    'id' => $compatibleProduct
+                                        ->id,
 
-            /*
-            |--------------------------------------------------------------------------
-            | Group compatible products by category
-            |--------------------------------------------------------------------------
-            */
+                                    'article' => $compatibleProduct
+                                        ->article,
 
-            $compatibleProductsByCategory = $compatibleProducts
-                ->filter(
-                    fn (Product $compatibleProduct) => $compatibleProduct->category !== null
-                        && in_array(
-                            $compatibleProduct->category->slug,
-                            $allowedCategories,
-                            true
-                        )
-                )
-                ->groupBy(
-                    fn (Product $compatibleProduct) => $compatibleProduct->category->slug
-                )
-                ->map(
-                    fn ($products) => $products
-                        ->map(
-                            fn (Product $compatibleProduct) => [
-                                'id' => $compatibleProduct->id,
+                                    'name' => $compatibleProduct
+                                        ->name,
 
-                                'article' => $compatibleProduct->article,
+                                    'shortDescription' => $compatibleProduct
+                                        ->short_description,
 
-                                'name' => $compatibleProduct->name,
+                                    'fullDescription' => $compatibleProduct
+                                        ->full_description,
 
-                                'shortDescription' => $compatibleProduct->short_description,
+                                    'imageUrl' => $compatibleProduct
+                                        ->image_url,
 
-                                'fullDescription' => $compatibleProduct->full_description,
+                                    'videoUrl' => $compatibleProduct
+                                        ->video_url,
 
-                                'imageUrl' => $compatibleProduct->image_url,
+                                    'price' => $compatibleProduct
+                                        ->price,
 
-                                'videoUrl' => $compatibleProduct->video_url,
+                                    'quantity' => $compatibleProduct
+                                        ->quantity,
 
-                                'price' => $compatibleProduct->price,
+                                    'status' => $compatibleProduct
+                                        ->status,
 
-                                'quantity' => $compatibleProduct->quantity,
+                                    'method' => $this->formatMethod(
+                                        $compatibleProduct
+                                            ->method
+                                    ),
 
-                                'status' => $compatibleProduct->status,
+                                    'application' => $this->formatApplication(
+                                        $compatibleProduct
+                                            ->sector
+                                    ),
 
-                                'method' => $this->formatMethod(
-                                    $compatibleProduct->method
-                                ),
+                                    'categoryId' => $compatibleProduct
+                                        ->category
+                                        ->id,
 
-                                'application' => $this->formatApplication(
-                                    $compatibleProduct->sector
-                                ),
+                                    'categorySlug' => $compatibleProduct
+                                        ->category
+                                        ->slug,
 
-                                'categoryId' => $compatibleProduct->category->id,
+                                    'categoryTitle' => $compatibleProduct
+                                        ->category
+                                        ->category,
 
-                                'categorySlug' => $compatibleProduct->category->slug,
+                                    'groupId' => $compatibleProduct
+                                        ->group
+                                        ?->id,
 
-                                'categoryTitle' => $compatibleProduct->category->category,
+                                    'groupSlug' => $compatibleProduct
+                                        ->group
+                                        ?->slug,
 
-                                'groupId' => $compatibleProduct->group?->id,
-
-                                'groupSlug' => $compatibleProduct->group?->slug,
-
-                                'groupTitle' => $compatibleProduct->group?->group,
-                            ]
-                        )
-                        ->values()
-                        ->all()
-                )
-                ->all();
+                                    'groupTitle' => $compatibleProduct
+                                        ->group
+                                        ?->group,
+                                ]
+                            )
+                            ->values()
+                            ->all()
+                    )
+                    ->all();
 
             $data['compatible_products'] =
                 $compatibleProductsByCategory;
@@ -398,9 +487,9 @@ class ProductController extends Controller
     }
 
     /**
-     * Display a listing of the resource.
+     * Display a listing of products.
      */
-    public function index()
+    public function index(): JsonResponse
     {
         $products = Product::with([
             'brand',
@@ -417,7 +506,9 @@ class ProductController extends Controller
         return response()->json(
             $products
                 ->map(
-                    fn (Product $product) => $this->serializeProduct($product)
+                    fn (Product $product) => $this->serializeProduct(
+                        $product
+                    )
                 )
                 ->values()
                 ->all()
@@ -430,24 +521,30 @@ class ProductController extends Controller
     public function menu(
         ProductMenuService $menuService,
         Request $request
-    ) {
+    ): JsonResponse {
         $locale = $request->query(
             'lang',
             'ru'
         );
 
         return response()->json(
-            $menuService->buildMenu($locale)
+            $menuService->buildMenu(
+                $locale
+            )
         );
     }
 
     /**
      * Display products by group.
+     *
+     * The category and group are independent entities.
+     * The group filter is applied only within
+     * the selected category.
      */
     public function productsByGroup(
         Category $category,
         Group $group
-    ) {
+    ): JsonResponse {
         $products = Product::with([
             'brand',
             'category',
@@ -482,7 +579,9 @@ class ProductController extends Controller
         return response()->json(
             $products
                 ->map(
-                    fn (Product $product) => $this->serializeProduct($product)
+                    fn (Product $product) => $this->serializeProduct(
+                        $product
+                    )
                 )
                 ->values()
                 ->all()
@@ -494,7 +593,7 @@ class ProductController extends Controller
      */
     public function productsByCategory(
         Category $category
-    ) {
+    ): JsonResponse {
         $products = Product::with([
             'brand',
             'category',
@@ -513,7 +612,9 @@ class ProductController extends Controller
         return response()->json(
             $products
                 ->map(
-                    fn (Product $product) => $this->serializeProduct($product)
+                    fn (Product $product) => $this->serializeProduct(
+                        $product
+                    )
                 )
                 ->values()
                 ->all()
@@ -521,27 +622,226 @@ class ProductController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Return data required for creating a product.
      */
-    public function create()
+    public function create(): JsonResponse
     {
-        //
+        return response()->json([
+            'options' => $this->productFormOptions(),
+        ]);
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created product.
      */
     public function store(
-        StoreProductRequest $request
-    ) {
-        //
-    }
+        StoreProductRequest $request,
+        ProductMediaService $mediaService
+    ): JsonResponse {
+        $validated = $request->validated();
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Product $product)
-    {
+        /*
+        |--------------------------------------------------------------------------
+        | Category / Group
+        |--------------------------------------------------------------------------
+        */
+
+        $category = Category::findOrFail(
+            $validated['category_id']
+        );
+
+        $group = Group::findOrFail(
+            $validated['group_id']
+        );
+
+        /*
+        |--------------------------------------------------------------------------
+        | Product image
+        |--------------------------------------------------------------------------
+        */
+
+        $imageUrl =
+            $validated['image_url']
+            ?? null;
+
+        if (
+            ! empty(
+                $validated['image_upload_token']
+                ?? null
+            )
+        ) {
+            $imageUrl =
+                $mediaService->promoteProductImage(
+                    $validated['image_upload_token'],
+                    $category->slug
+                );
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Product video
+        |--------------------------------------------------------------------------
+        */
+
+        $videoUrl =
+            $validated['video_url']
+            ?? null;
+
+        if (
+            ! empty(
+                $validated['video_upload_token']
+                ?? null
+            )
+        ) {
+            $videoUrl =
+                $mediaService->promoteVideo(
+                    $validated['video_upload_token'],
+                    $category->slug
+                );
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Create product
+        |--------------------------------------------------------------------------
+        */
+
+        $product = DB::transaction(
+            function () use (
+                $validated,
+                $imageUrl,
+                $videoUrl
+            ) {
+                $product = Product::create([
+                    'article' => $validated['article'],
+
+                    'name' => $validated['name'],
+
+                    'short_description' => $validated['short_description'],
+
+                    'full_description' => $validated['full_description'],
+
+                    'category_id' => $validated['category_id'],
+
+                    'group_id' => $validated['group_id'],
+
+                    'brand_id' => $validated['brand_id'],
+
+                    'unit' => $validated['unit'],
+
+                    'price' => $validated['price'],
+
+                    'quantity' => $validated['quantity'],
+
+                    'status' => $validated['status'],
+
+                    'image_url' => $imageUrl,
+
+                    'video_url' => $videoUrl,
+                ]);
+
+                /*
+                |--------------------------------------------------------------------------
+                | Method
+                |--------------------------------------------------------------------------
+                */
+
+                $method =
+                    $validated['method']
+                    ?? [];
+
+                $product
+                    ->method()
+                    ->updateOrCreate(
+                        [
+                            'product_id' => $product->id,
+                        ],
+                        [
+                            'ut_method' => (bool) (
+                                $method[
+                                    'ut_method'
+                                ] ?? false
+                            ),
+
+                            'et_method' => (bool) (
+                                $method[
+                                    'et_method'
+                                ] ?? false
+                            ),
+
+                            'mia_method' => (bool) (
+                                $method[
+                                    'mia_method'
+                                ] ?? false
+                            ),
+
+                            'iet_method' => (bool) (
+                                $method[
+                                    'iet_method'
+                                ] ?? false
+                            ),
+
+                            'mt_method' => (bool) (
+                                $method[
+                                    'mt_method'
+                                ] ?? false
+                            ),
+
+                            'vt_method' => (bool) (
+                                $method[
+                                    'vt_method'
+                                ] ?? false
+                            ),
+                        ]
+                    );
+
+                /*
+                |--------------------------------------------------------------------------
+                | Application sectors
+                |--------------------------------------------------------------------------
+                */
+
+                $sector =
+                    $validated['sector']
+                    ?? [];
+
+                $product
+                    ->sector()
+                    ->updateOrCreate(
+                        [
+                            'product_id' => $product->id,
+                        ],
+                        [
+                            'railway' => (bool) (
+                                $sector[
+                                    'railway'
+                                ] ?? false
+                            ),
+
+                            'aerospace' => (bool) (
+                                $sector[
+                                    'aerospace'
+                                ] ?? false
+                            ),
+
+                            'oil' => (bool) (
+                                $sector[
+                                    'oil'
+                                ] ?? false
+                            ),
+                        ]
+                    );
+
+                return $product;
+            }
+        );
+
+        /*
+        |--------------------------------------------------------------------------
+        | Load product relations
+        |--------------------------------------------------------------------------
+        */
+
         $product->load([
             'brand',
             'category',
@@ -552,13 +852,35 @@ class ProductController extends Controller
             'method',
             'sector',
             'features',
+            'compatibleProducts.category',
+            'compatibleWithProducts.category',
+        ]);
 
-            /*
-            |--------------------------------------------------------------------------
-            | Compatible products
-            |--------------------------------------------------------------------------
-            */
+        return response()->json(
+            $this->serializeProduct(
+                $product,
+                true
+            ),
+            Response::HTTP_CREATED
+        );
+    }
 
+    /**
+     * Display the specified resource.
+     */
+    public function show(
+        Product $product
+    ): JsonResponse {
+        $product->load([
+            'brand',
+            'category',
+            'group',
+            'groups',
+            'certificates',
+            'gallery',
+            'method',
+            'sector',
+            'features',
             'compatibleProducts.category',
             'compatibleWithProducts.category',
         ]);
@@ -572,28 +894,463 @@ class ProductController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Return data required by the primary product form.
      */
-    public function edit(Product $product)
+    protected function productFormOptions(): array
     {
-        //
+        return [
+            'categories' => Category::query()
+                ->orderBy('id')
+                ->get([
+                    'id',
+                    'category',
+                    'slug',
+                ]),
+
+            'groups' => Group::query()
+                ->orderBy('id')
+                ->get([
+                    'id',
+                    'group',
+                    'slug',
+                ]),
+        ];
     }
 
     /**
-     * Update the specified resource in storage.
+     * Show the form for editing the specified product.
+     *
+     * Returns only the data required by the primary ProductForm.
+     * Secondary product data is loaded by separate forms/endpoints.
      */
-    public function update(
-        UpdateProductRequest $request,
+    public function edit(
         Product $product
-    ) {
-        //
+    ): JsonResponse {
+        $product->load([
+            'method',
+            'sector',
+        ]);
+
+        return response()->json([
+            'product' => [
+                'id' => $product->id,
+
+                'article' => $product->article,
+
+                'name' => $product->name,
+
+                'short_description' => $product->short_description,
+
+                'full_description' => $product->full_description,
+
+                'category_id' => $product->category_id,
+
+                'group_id' => $product->group_id,
+
+                'image_url' => $product->image_url,
+
+                'video_url' => $product->video_url,
+
+                'method' => [
+                    'ut_method' => (bool) (
+                        $product
+                            ->method
+                            ?->ut_method
+                        ?? false
+                    ),
+
+                    'et_method' => (bool) (
+                        $product
+                            ->method
+                            ?->et_method
+                        ?? false
+                    ),
+
+                    'mia_method' => (bool) (
+                        $product
+                            ->method
+                            ?->mia_method
+                        ?? false
+                    ),
+
+                    'iet_method' => (bool) (
+                        $product
+                            ->method
+                            ?->iet_method
+                        ?? false
+                    ),
+
+                    'mt_method' => (bool) (
+                        $product
+                            ->method
+                            ?->mt_method
+                        ?? false
+                    ),
+
+                    'vt_method' => (bool) (
+                        $product
+                            ->method
+                            ?->vt_method
+                        ?? false
+                    ),
+                ],
+
+                'sector' => [
+                    'railway' => (bool) (
+                        $product
+                            ->sector
+                            ?->railway
+                        ?? false
+                    ),
+
+                    'aerospace' => (bool) (
+                        $product
+                            ->sector
+                            ?->aerospace
+                        ?? false
+                    ),
+
+                    'oil' => (bool) (
+                        $product
+                            ->sector
+                            ?->oil
+                        ?? false
+                    ),
+                ],
+            ],
+        ]);
     }
+
+/**
+ * Update the specified resource in storage.
+ */
+public function update(
+    UpdateProductRequest $request,
+    Product $product,
+    ProductMediaService $mediaService
+): JsonResponse {
+    $validated =
+        $request->validated();
+
+    /*
+    |--------------------------------------------------------------------------
+    | Category / Group
+    |--------------------------------------------------------------------------
+    */
+
+    $category = Category::findOrFail(
+        $validated['category_id']
+    );
+
+    $group = Group::findOrFail(
+        $validated['group_id']
+    );
+
+    /*
+    |--------------------------------------------------------------------------
+    | Product image
+    |--------------------------------------------------------------------------
+    */
+
+    $imageUrl =
+        array_key_exists(
+            'image_url',
+            $validated
+        )
+            ? $validated['image_url']
+            : $product->image_url;
+
+    if (
+        ! empty(
+            $validated[
+                'image_upload_token'
+            ] ?? null
+        )
+    ) {
+        $imageUrl =
+            $mediaService->promoteProductImage(
+                $validated[
+                    'image_upload_token'
+                ],
+                $category->slug
+            );
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Product video
+    |--------------------------------------------------------------------------
+    */
+
+    $videoUrl =
+        array_key_exists(
+            'video_url',
+            $validated
+        )
+            ? $validated['video_url']
+            : $product->video_url;
+
+    if (
+        ! empty(
+            $validated[
+                'video_upload_token'
+            ] ?? null
+        )
+    ) {
+        $videoUrl =
+            $mediaService->promoteVideo(
+                $validated[
+                    'video_upload_token'
+                ],
+                $category->slug
+            );
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Update product
+    |--------------------------------------------------------------------------
+    */
+
+    DB::transaction(
+        function () use (
+            $validated,
+            $product,
+            $imageUrl,
+            $videoUrl
+        ) {
+            $product->update([
+                'article' =>
+                    $validated['article'],
+
+                'name' =>
+                    $validated['name'],
+
+                'short_description' =>
+                    $validated['short_description'],
+
+                'full_description' =>
+                    $validated['full_description'],
+
+                'category_id' =>
+                    $validated['category_id'],
+
+                'group_id' =>
+                    $validated['group_id'],
+
+                'brand_id' =>
+                    $validated['brand_id'],
+
+                'unit' =>
+                    $validated['unit'],
+
+                'price' =>
+                    $validated['price'],
+
+                'quantity' =>
+                    $validated['quantity'],
+
+                'status' =>
+                    $validated['status'],
+
+                'image_url' =>
+                    $imageUrl,
+
+                'video_url' =>
+                    $videoUrl,
+            ]);
+
+            /*
+            |--------------------------------------------------------------------------
+            | Method
+            |--------------------------------------------------------------------------
+            */
+
+            $method =
+                $validated['method']
+                ?? [];
+
+            $product
+                ->method()
+                ->updateOrCreate(
+                    [
+                        'product_id' =>
+                            $product->id,
+                    ],
+                    [
+                        'ut_method' =>
+                            (bool) (
+                                $method[
+                                    'ut_method'
+                                ] ?? false
+                            ),
+
+                        'et_method' =>
+                            (bool) (
+                                $method[
+                                    'et_method'
+                                ] ?? false
+                            ),
+
+                        'mia_method' =>
+                            (bool) (
+                                $method[
+                                    'mia_method'
+                                ] ?? false
+                            ),
+
+                        'iet_method' =>
+                            (bool) (
+                                $method[
+                                    'iet_method'
+                                ] ?? false
+                            ),
+
+                        'mt_method' =>
+                            (bool) (
+                                $method[
+                                    'mt_method'
+                                ] ?? false
+                            ),
+
+                        'vt_method' =>
+                            (bool) (
+                                $method[
+                                    'vt_method'
+                                ] ?? false
+                            ),
+                    ]
+                );
+
+            /*
+            |--------------------------------------------------------------------------
+            | Application sectors
+            |--------------------------------------------------------------------------
+            */
+
+            $sector =
+                $validated['sector']
+                ?? [];
+
+            $product
+                ->sector()
+                ->updateOrCreate(
+                    [
+                        'product_id' =>
+                            $product->id,
+                    ],
+                    [
+                        'railway' =>
+                            (bool) (
+                                $sector[
+                                    'railway'
+                                ] ?? false
+                            ),
+
+                        'aerospace' =>
+                            (bool) (
+                                $sector[
+                                    'aerospace'
+                                ] ?? false
+                            ),
+
+                        'oil' =>
+                            (bool) (
+                                $sector[
+                                    'oil'
+                                ] ?? false
+                            ),
+                    ]
+                );
+        }
+    );
+
+    /*
+    |--------------------------------------------------------------------------
+    | Load product relations
+    |--------------------------------------------------------------------------
+    */
+
+    $product->load([
+        'brand',
+        'category',
+        'group',
+        'groups',
+        'certificates',
+        'gallery',
+        'method',
+        'sector',
+        'features',
+        'compatibleProducts.category',
+        'compatibleWithProducts.category',
+    ]);
+
+    return response()->json(
+        $this->serializeProduct(
+            $product,
+            true
+        )
+    );
+}
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Product $product)
+    public function destroy(
+        Product $product
+    ): JsonResponse {
+        DB::transaction(
+            function () use ($product) {
+                $product
+                    ->compatibleProducts()
+                    ->detach();
+
+                $product
+                    ->compatibleWithProducts()
+                    ->detach();
+
+                $product->delete();
+            }
+        );
+
+        return response()->json([
+            'message' => 'Product deleted successfully.',
+        ]);
+    }
+
+    /**
+     * Return categories.
+     */
+    public function categories(): JsonResponse
     {
-        //
+        return response()->json(
+            Category::query()
+                ->orderBy('id')
+                ->get([
+                    'id',
+                    'category',
+                    'slug',
+                    'image_url',
+                    'description',
+                ])
+        );
+    }
+
+    /**
+     * Return groups.
+     */
+    public function groups(): JsonResponse
+    {
+        return response()->json(
+            Group::query()
+                ->orderBy('id')
+                ->get([
+                    'id',
+                    'group',
+                    'slug',
+                    'image_url',
+                    'description',
+                ])
+        );
     }
 }

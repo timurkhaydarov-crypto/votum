@@ -1,17 +1,12 @@
-vue
 <template>
     <article
         class="group flex h-full min-w-0 flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-lg hover:shadow-slate-200/50"
     >
-        <!-- ===================================================== -->
         <!-- IMAGE -->
-        <!-- ===================================================== -->
 
         <div
             class="relative h-[220px] shrink-0 overflow-hidden bg-slate-50 sm:h-[230px]"
         >
-            <!-- Product image -->
-
             <div class="absolute inset-0">
                 <img
                     :src="imageSrc"
@@ -21,8 +16,6 @@ vue
                 />
             </div>
 
-            <!-- Soft bottom overlay -->
-
             <div
                 class="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-white/30 to-transparent"
             ></div>
@@ -31,7 +24,7 @@ vue
 
             <div
                 v-if="variant === 'default'"
-                class="absolute left-3 top-3 z-20 max-w-[calc(100%-100px)]"
+                class="absolute left-3 top-3 z-10 max-w-[calc(100%-100px)]"
             >
                 <span
                     class="inline-flex max-w-full items-center gap-1.5 rounded-lg bg-slate-900 px-2.5 py-1.5 text-[9px] font-semibold uppercase tracking-[0.08em] text-white shadow-sm"
@@ -51,7 +44,7 @@ vue
 
             <div
                 v-if="variant === 'default'"
-                class="absolute right-3 top-3 z-20 flex gap-1.5"
+                class="absolute right-3 top-3 z-10 flex gap-1.5"
             >
                 <!-- Favorite -->
 
@@ -70,7 +63,7 @@ vue
                         <path
                             stroke-linecap="round"
                             stroke-linejoin="round"
-                            d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78Z"
+                            d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78 5.5 5.5 0 0 0 0-7.78Z"
                         />
                     </svg>
                 </button>
@@ -109,16 +102,42 @@ vue
                         />
 
                         <circle cx="10" cy="20" r="1" />
-
                         <circle cx="18" cy="20" r="1" />
                     </svg>
                 </button>
             </div>
+
+            <!-- MANAGEMENT -->
+
+            <div
+                v-if="canManage"
+                class="absolute z-auto bottom-3 right-3 z-30 flex gap-1.5"
+            >
+                <!-- Edit -->
+
+                <button
+                    type="button"
+                    :aria-label="t('actions.edit')"
+                    class="flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 bg-white/95 text-slate-600 shadow-sm backdrop-blur transition hover:border-slate-900 hover:bg-slate-900 hover:text-white active:scale-95"
+                    @click="handleEdit"
+                >
+                    <i class="bi bi-pencil text-xs"></i>
+                </button>
+
+                <!-- Delete -->
+
+                <button
+                    type="button"
+                    :aria-label="t('actions.delete')"
+                    class="flex h-8 w-8 items-center justify-center rounded-lg border border-red-200 bg-white/95 text-red-500 shadow-sm backdrop-blur transition hover:border-red-500 hover:bg-red-500 hover:text-white active:scale-95"
+                    @click="handleDelete"
+                >
+                    <i class="bi bi-trash3 text-xs"></i>
+                </button>
+            </div>
         </div>
 
-        <!-- ===================================================== -->
         <!-- CONTENT -->
-        <!-- ===================================================== -->
 
         <div class="flex flex-1 flex-col p-4">
             <!-- Article / Stock -->
@@ -171,16 +190,12 @@ vue
                 {{ productDescription }}
             </p>
 
-            <!-- ================================================= -->
             <!-- PARAMETERS -->
-            <!-- ================================================= -->
 
             <div
                 v-if="variant === 'default'"
                 class="mt-4 grid grid-cols-2 gap-1.5"
             >
-                <!-- Method -->
-
                 <div
                     class="min-w-0 rounded-lg bg-slate-50 px-2.5 py-2"
                 >
@@ -196,8 +211,6 @@ vue
                         {{ product.method || '-' }}
                     </div>
                 </div>
-
-                <!-- Application -->
 
                 <div
                     class="min-w-0 rounded-lg bg-slate-50 px-2.5 py-2"
@@ -216,19 +229,13 @@ vue
                 </div>
             </div>
 
-            <!-- ================================================= -->
             <!-- FOOTER -->
-            <!-- ================================================= -->
 
             <div class="mt-auto pt-4">
                 <div class="mb-3 h-px bg-slate-100"></div>
 
                 <div class="flex items-center justify-between gap-3">
-                    <!-- Actions -->
-
                     <div class="flex w-full shrink-0 gap-1.5">
-                        <!-- Cart -->
-
                         <button
                             type="button"
                             :aria-label="t('productCard.addToCart')"
@@ -274,8 +281,6 @@ vue
                             </svg>
                         </button>
 
-                        <!-- View Product -->
-
                         <RouterLink
                             :to="`/products/item/${product.id}`"
                             class="inline-flex h-9 min-w-0 flex-1 items-center justify-center gap-1.5 rounded-lg bg-slate-900 px-3 text-[11px] font-semibold text-white transition-all hover:bg-slate-800 hover:shadow-md active:scale-[0.98]"
@@ -314,6 +319,7 @@ import {
 import { useI18n } from 'vue-i18n';
 
 import { useCart } from '../../composables/useCart';
+import { useCurrentUser } from '../../../auth/composables/useCurrentUser.js';
 
 const props = defineProps({
     product: {
@@ -327,11 +333,42 @@ const props = defineProps({
     },
 });
 
+const emit = defineEmits([
+    'edit',
+    'delete',
+]);
+
 const { t, locale } = useI18n();
 
 const {
     add,
 } = useCart();
+
+const {
+    canManage,
+} = useCurrentUser();
+
+/*
+|--------------------------------------------------------------------------
+| Management
+|--------------------------------------------------------------------------
+*/
+
+const handleEdit = () => {
+    if (!canManage.value) {
+        return;
+    }
+
+    emit('edit', props.product);
+};
+
+const handleDelete = () => {
+    if (!canManage.value) {
+        return;
+    }
+
+    emit('delete', props.product);
+};
 
 /*
 |--------------------------------------------------------------------------
@@ -344,9 +381,6 @@ const added = ref(false);
 
 let addedTimer = null;
 
-/**
- * Add product to cart.
- */
 const handleAddToCart = async () => {
     if (
         adding.value ||
@@ -411,24 +445,12 @@ const localizedValue = (value) => {
     return String(value);
 };
 
-/*
-|--------------------------------------------------------------------------
-| Product name
-|--------------------------------------------------------------------------
-*/
-
 const productName = computed(() => {
     return (
         localizedValue(props.product.name) ||
         t('productCard.untitledProduct')
     );
 });
-
-/*
-|--------------------------------------------------------------------------
-| Description
-|--------------------------------------------------------------------------
-*/
 
 const productDescription = computed(() => {
     return (
@@ -448,12 +470,6 @@ const productDescription = computed(() => {
     );
 });
 
-/*
-|--------------------------------------------------------------------------
-| Category
-|--------------------------------------------------------------------------
-*/
-
 const categoryTitle = computed(() => {
     return (
         localizedValue(
@@ -469,12 +485,6 @@ const categoryTitle = computed(() => {
     );
 });
 
-/*
-|--------------------------------------------------------------------------
-| Group badge
-|--------------------------------------------------------------------------
-*/
-
 const badgeText = computed(() => {
     return (
         localizedValue(
@@ -489,19 +499,6 @@ const badgeText = computed(() => {
         t('productCard.badgeFallback')
     );
 });
-
-/*
-|--------------------------------------------------------------------------
-| Group dot color
-|--------------------------------------------------------------------------
-|
-| railway-sector    → red
-| aerospace-sector  → blue
-| industrial-sector → orange
-| everything else   → slate
-|
-|--------------------------------------------------------------------------
-*/
 
 const groupDotClass = computed(() => {
     const groupSlug = String(
@@ -524,12 +521,6 @@ const groupDotClass = computed(() => {
     );
 });
 
-/*
-|--------------------------------------------------------------------------
-| Stock
-|--------------------------------------------------------------------------
-*/
-
 const inStockLabel = computed(() => {
     return Number(
         props.product.quantity || 0,
@@ -537,24 +528,6 @@ const inStockLabel = computed(() => {
         ? t('productCard.inStock')
         : t('productCard.outOfStock');
 });
-
-/*
-|--------------------------------------------------------------------------
-| Price
-|--------------------------------------------------------------------------
-*/
-
-const priceLabel = computed(() => {
-    return props.product.price
-        ? `${props.product.price} ₽`
-        : t('common.byRequest');
-});
-
-/*
-|--------------------------------------------------------------------------
-| Product image
-|--------------------------------------------------------------------------
-*/
 
 const imageSrc = computed(() => {
     const image =
@@ -588,4 +561,3 @@ const imageSrc = computed(() => {
     return `/image/product/${categorySlug}/${imageName}`;
 });
 </script>
-

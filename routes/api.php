@@ -1,22 +1,17 @@
 <?php
 
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\ContactsController;
+use App\Http\Controllers\DealerController;
 use App\Http\Controllers\EmailController;
 use App\Http\Controllers\OperatingHourController;
 use App\Http\Controllers\PhoneController;
-use App\Http\Controllers\SocialMediaController;
-
 use App\Http\Controllers\ProductController;
-use App\Http\Controllers\GroupController;
-use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\BrandController;
-use App\Http\Controllers\MethodController;
-use App\Http\Controllers\SectorController;
 use App\Http\Controllers\ProductFeaturesController;
 use App\Http\Controllers\ProductSpecificationController;
-use App\Http\Controllers\CartController;
 use App\Http\Controllers\RequestController;
-use App\Http\Controllers\DealerController;
+use App\Http\Controllers\SocialMediaController;
+use App\Http\Controllers\UploadController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -76,10 +71,9 @@ Route::prefix('contacts')->group(function () {
 */
 
 Route::prefix('products')->group(function () {
-
     /*
     |--------------------------------------------------------------------------
-    | Catalog menu
+    | Public catalog
     |--------------------------------------------------------------------------
     */
 
@@ -88,78 +82,91 @@ Route::prefix('products')->group(function () {
         [ProductController::class, 'menu']
     );
 
-    /*
-    |--------------------------------------------------------------------------
-    | Categories
-    |--------------------------------------------------------------------------
-    */
-
     Route::get(
         'categories',
         [ProductController::class, 'categories']
     );
-
-    /*
-    |--------------------------------------------------------------------------
-    | Groups
-    |--------------------------------------------------------------------------
-    */
 
     Route::get(
         'groups',
         [ProductController::class, 'groups']
     );
 
-    /*
-    |--------------------------------------------------------------------------
-    | Products by category and group
-    |--------------------------------------------------------------------------
-    */
-
     Route::get(
         'category/{category:slug}/group/{group:slug}',
         [ProductController::class, 'productsByGroup']
     )->withoutScopedBindings();
-
-    /*
-    |--------------------------------------------------------------------------
-    | Products by category
-    |--------------------------------------------------------------------------
-    */
 
     Route::get(
         'category/{category:slug}',
         [ProductController::class, 'productsByCategory']
     );
 
-    /*
-    |--------------------------------------------------------------------------
-    | Product resource
-    |--------------------------------------------------------------------------
-    */
-
-    Route::apiResource('item', ProductController::class)
-        ->parameters([
-            'item' => 'product',
-        ])
-        ->only([
-            'index',
-            'show',
-            'store',
-            'update',
-            'destroy',
-        ]);
+    Route::get(
+        'item',
+        [ProductController::class, 'index']
+    );
 
     /*
     |--------------------------------------------------------------------------
-    | Product features
+    | Product management
+    |--------------------------------------------------------------------------
+    |
+    | Только admin / manager.
+    |
+    */
+
+    Route::middleware([
+        'auth:sanctum',
+        'manager',
+    ])->group(function () {
+        Route::get(
+            'item/create',
+            [ProductController::class, 'create']
+        );
+
+        Route::get(
+            'item/{product}/edit',
+            [ProductController::class, 'edit']
+        );
+
+        Route::post(
+            'item',
+            [ProductController::class, 'store']
+        );
+
+        Route::put(
+            'item/{product}',
+            [ProductController::class, 'update']
+        );
+
+        Route::patch(
+            'item/{product}',
+            [ProductController::class, 'update']
+        );
+
+        Route::delete(
+            'item/{product}',
+            [ProductController::class, 'destroy']
+        );
+    });
+
+    /*
+    |--------------------------------------------------------------------------
+    | Public product details
     |--------------------------------------------------------------------------
     */
+
+    Route::get(
+        'item/{product}',
+        [ProductController::class, 'show']
+    );
 
     Route::get(
         '{product}/features',
         [ProductFeaturesController::class, 'show']
     );
+
     Route::get(
         '{product}/specifications',
         [ProductSpecificationController::class, 'show']
@@ -199,3 +206,26 @@ Route::get(
     '/requests/{request}',
     [RequestController::class, 'show']
 );
+
+/*
+|--------------------------------------------------------------------------
+| Uploads
+|--------------------------------------------------------------------------
+*/
+
+Route::prefix('uploads')
+    ->middleware([
+        'auth:sanctum',
+        'manager',
+    ])
+    ->group(function () {
+        Route::post(
+            '/',
+            [UploadController::class, 'store']
+        );
+
+        Route::delete(
+            '/{token}',
+            [UploadController::class, 'destroy']
+        );
+    });

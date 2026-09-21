@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('sectors', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('product_id')->constrained('products')->nullOnDelete();
+            $table->foreignId('product_id')->constrained('products')->cascadeOnDelete();
             $table->boolean('railway');
             $table->boolean('aerospace');
             $table->boolean('oil');
