@@ -5,14 +5,14 @@ namespace App\Http\Requests\Product;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class FeaturesRequest extends FormRequest
+class StoreProductSpecificationRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return true;
+        return false;
     }
 
     /**
@@ -23,10 +23,7 @@ class FeaturesRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'product_id' => ['required', 'exists:products,id'],
-            'features' => ['required', 'array'],
-            'features.ru' => ['required', 'string'],
-            'features.en' => ['required', 'string'],
+            //
         ];
     }
 }

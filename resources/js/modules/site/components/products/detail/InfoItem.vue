@@ -1,17 +1,18 @@
 <template>
-    <button
-        type="button"
-        :disabled="disabled"
-        class="group w-full text-left"
-        :class="disabled ? 'cursor-not-allowed' : 'cursor-pointer'"
-        @click="!disabled && emit('select')"
+    <div
+        class="group relative w-full text-left"
+        :class="[
+            disabled && !canManage
+                ? 'cursor-not-allowed'
+                : 'cursor-pointer',
+        ]"
     >
         <div
             :class="[
                 'rounded-lg border p-2.5 transition-all duration-200',
 
                 /* DISABLED */
-                disabled
+                disabled && !canManage
                     ? 'cursor-not-allowed border-slate-200 bg-slate-100 opacity-60'
 
                     /* ACTIVE */
@@ -20,20 +21,53 @@
 
                         /* HAS VALUE */
                         : hasValue(value)
-                            ? 'border-slate-200 bg-white hover:-translate-y-0.5 hover:border-slate-300 hover:bg-slate-50 hover:shadow-sm active:translate-y-0 active:scale-[0.98]'
+                            ? 'border-slate-200 bg-white hover:-translate-y-0.5 hover:border-slate-300 hover:bg-slate-50 hover:shadow-sm'
 
                             /* NO VALUE */
-                            : 'border-amber-200 bg-amber-50/50 hover:-translate-y-0.5 hover:border-amber-300 hover:bg-amber-50 hover:shadow-sm active:translate-y-0 active:scale-[0.98]',
+                            : 'border-amber-200 bg-amber-50/50 hover:border-amber-300 hover:bg-amber-50 hover:shadow-sm',
             ]"
+            @click="handleSelect"
         >
+            <!-- MANAGE BUTTON -->
+            <button
+                v-if="canManage"
+                type="button"
+                class="absolute right-2 top-2 z-10 flex h-5 w-5 items-center justify-center rounded-md border transition-all duration-200"
+                :class="
+                    hasValue(value)
+                        ? 'border-slate-200 bg-white text-slate-400 hover:border-slate-900 hover:bg-slate-900 hover:text-white'
+                        : 'border-amber-200 bg-white text-amber-600 hover:border-emerald-500 hover:bg-emerald-500 hover:text-white'
+                "
+                :title="
+                    hasValue(value)
+                        ? editLabel
+                        : addLabel
+                "
+                :aria-label="
+                    hasValue(value)
+                        ? editLabel
+                        : addLabel
+                "
+                @click.stop="emit('manage')"
+            >
+                <i
+                    class="bi text-[10px]"
+                    :class="
+                        hasValue(value)
+                            ? 'bi-pencil'
+                            : 'bi-plus-lg'
+                    "
+                ></i>
+            </button>
+
             <!-- ICON + LABEL -->
-            <div class="flex items-center gap-2">
+            <div class="flex items-center gap-2 pr-6">
                 <!-- ICON -->
                 <div
                     :class="[
                         'flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-xs transition-all duration-200',
 
-                        disabled
+                        disabled && !canManage
                             ? 'bg-slate-200 text-slate-400'
 
                             : active
@@ -53,7 +87,7 @@
                     :class="[
                         'min-w-0 truncate text-[9px] font-semibold uppercase tracking-wide transition-colors duration-200',
 
-                        disabled
+                        disabled && !canManage
                             ? 'text-slate-400'
 
                             : active
@@ -71,7 +105,7 @@
                 :class="[
                     'mt-1.5 truncate text-[11px] font-semibold leading-4 transition-colors duration-200',
 
-                    disabled
+                    disabled && !canManage
                         ? 'text-slate-400'
 
                         : active
@@ -83,14 +117,18 @@
                                 : 'text-amber-700',
                 ]"
             >
-                {{ hasValue(value) ? value : 'Данные отсутствуют' }}
+                {{
+                    hasValue(value)
+                        ? value
+                        : noDataLabel
+                }}
             </div>
         </div>
-    </button>
+    </div>
 </template>
 
 <script setup>
-defineProps({
+const props = defineProps({
     label: {
         type: String,
         default: '',
@@ -115,10 +153,31 @@ defineProps({
         type: Boolean,
         default: false,
     },
+
+    canManage: {
+        type: Boolean,
+        default: false,
+    },
+
+    noDataLabel: {
+        type: String,
+        default: 'Данные отсутствуют',
+    },
+
+    addLabel: {
+        type: String,
+        default: 'Добавить',
+    },
+
+    editLabel: {
+        type: String,
+        default: 'Редактировать',
+    },
 });
 
 const emit = defineEmits([
     'select',
+    'manage',
 ]);
 
 const hasValue = (value) => {
@@ -139,4 +198,13 @@ const hasValue = (value) => {
 
     return true;
 };
+
+const handleSelect = () => {
+    if (props.disabled) {
+        return;
+    }
+
+    emit('select');
+};
 </script>
+

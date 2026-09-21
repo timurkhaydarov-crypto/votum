@@ -50,22 +50,16 @@
                             {{ product.groupTitle || 'NDT Equipment' }}
                         </span>
 
-                        <i
-                            class="bi bi-arrow-up-right text-[9px] opacity-50"
-                        ></i>
+                        <i class="bi bi-arrow-up-right text-[9px] opacity-50"></i>
                     </span>
                 </RouterLink>
 
                 <!-- CONTROL METHODS -->
 
-                <ProductControlMethods
-                    :methods="product.method"
-                />
+                <ProductControlMethods :methods="product.method" />
 
                 <!-- PRODUCT IMAGE / VIDEO -->
-                <div
-                    class="absolute inset-0 z-[1] flex items-center justify-center"
-                >
+                <div class="absolute inset-0 z-[1] flex items-center justify-center">
                     <Transition
                         mode="out-in"
                         enter-active-class="transition duration-300 ease-out"
@@ -130,15 +124,10 @@
                         <div
                             class="inline-flex max-w-[280px] items-center gap-1.5 rounded-lg border border-white/80 bg-white/85 px-3 py-2 text-[9px] font-semibold uppercase tracking-[0.1em] text-slate-500 shadow-md backdrop-blur-md transition hover:border-slate-300 hover:text-slate-900"
                         >
-                            <i
-                                class="bi bi-grid-3x3-gap text-[10px]"
-                            ></i>
+                            <i class="bi bi-grid-3x3-gap text-[10px]"></i>
 
                             <span class="truncate">
-                                {{
-                                    product.categoryTitle ||
-                                    'Non-Destructive Testing'
-                                }}
+                                {{ product.categoryTitle || 'Non-Destructive Testing' }}
                             </span>
 
                             <i
@@ -158,20 +147,11 @@
                             class="flex h-5 w-5 items-center justify-center rounded-full bg-white/15 transition group-hover/video:bg-white/25"
                         >
                             <i
-                                :class="[
-                                    'bi text-[11px]',
-                                    isPlaying
-                                        ? 'bi-image'
-                                        : 'bi-play-fill',
-                                ]"
+                                :class="['bi text-[11px]', isPlaying ? 'bi-image' : 'bi-play-fill']"
                             ></i>
                         </span>
 
-                        {{
-                            isPlaying
-                                ? $t('product.video.photo')
-                                : $t('product.video.video')
-                        }}
+                        {{ isPlaying ? $t('product.video.photo') : $t('product.video.video') }}
                     </button>
                 </div>
             </div>
@@ -183,7 +163,9 @@
                 <ProductQuickInfo
                     :product="product"
                     :is-in-stock="isInStock"
+                    :can-manage="canManage"
                     @change-info="openInfoModal"
+                    @manage-info="handleManageInfo"
                 />
 
                 <ProductPurchaseActions
@@ -235,7 +217,10 @@ const props = defineProps({
         type: Boolean,
         default: false,
     },
-
+    canManage: {
+        type: Boolean,
+        default: false,
+    },
     groupDotClass: {
         type: String,
         default: 'bg-slate-400',
@@ -277,17 +262,11 @@ const videoBasename = computed(() => {
         return '';
     }
 
-    return String(props.product.videoUrl).replace(
-        /\.(mp4|webm|mov)$/i,
-        '',
-    );
+    return String(props.product.videoUrl).replace(/\.(mp4|webm|mov)$/i, '');
 });
 
 const videoSrc = computed(() => {
-    if (
-        !videoBasename.value ||
-        !props.product.categorySlug
-    ) {
+    if (!videoBasename.value || !props.product.categorySlug) {
         return '';
     }
 
@@ -315,35 +294,24 @@ const openInfoModal = async (key) => {
     try {
         switch (key) {
             case 'details':
-                selectedInfoData.value =
-                    props.product.fullDescription;
+                selectedInfoData.value = props.product.fullDescription;
                 break;
 
             case 'features':
-                selectedInfoData.value =
-                    await fetchProductFeatures(
-                        props.product.id,
-                    );
+                selectedInfoData.value = await fetchProductFeatures(props.product.id);
                 break;
 
             case 'specifications':
-                selectedInfoData.value =
-                    await fetchProductSpecifications(
-                        props.product.id,
-                    );
+                selectedInfoData.value = await fetchProductSpecifications(props.product.id);
                 break;
 
             default:
                 selectedInfoData.value = null;
         }
     } catch (error) {
-        console.error(
-            'Failed to load product info:',
-            error,
-        );
+        console.error('Failed to load product info:', error);
 
-        infoError.value =
-            'Не удалось загрузить информацию';
+        infoError.value = 'Не удалось загрузить информацию';
     } finally {
         isInfoLoading.value = false;
     }
@@ -384,16 +352,14 @@ const handleVideoEnded = () => {
     videoFormat.value = 'webm';
 };
 
+
 const handleVideoError = (event) => {
     /*
      * Если WebM не воспроизводится,
      * переключаемся на MP4.
      */
     if (videoFormat.value === 'webm') {
-        console.warn(
-            'WebM video failed, switching to MP4:',
-            videoSrc.value,
-        );
+        console.warn('WebM video failed, switching to MP4:', videoSrc.value);
 
         videoFormat.value = 'mp4';
 
@@ -404,12 +370,23 @@ const handleVideoError = (event) => {
      * Если не работает даже MP4 —
      * прекращаем воспроизведение.
      */
-    console.error(
-        'Unable to load product video:',
-        videoSrc.value,
-        event.target?.error,
-    );
+    console.error('Unable to load product video:', videoSrc.value, event.target?.error);
 
     isPlaying.value = false;
 };
+
+const handleManageInfo = ({ key, product }) => {
+    if (!props.canManage) {
+        return;
+    }
+
+    emit('manageInfo', {
+        key,
+        product,
+    });
+};
+
+const emit = defineEmits([
+    'manageInfo',
+]);
 </script>

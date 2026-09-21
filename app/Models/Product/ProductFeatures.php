@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use App\Models\Product\FeaturesGallery;
 
 class ProductFeatures extends Model
 {
@@ -22,14 +21,6 @@ class ProductFeatures extends Model
         'product_id',
         'features',
     ];
-
-    public function setFeaturesAttribute($value): void
-    {
-        $this->attributes['features'] = json_encode(
-            $value,
-            JSON_UNESCAPED_UNICODE
-        );
-    }
 
     public function product(): BelongsTo
     {

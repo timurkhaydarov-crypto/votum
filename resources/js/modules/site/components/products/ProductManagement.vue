@@ -333,14 +333,20 @@ const openEdit = (product) => {
 |--------------------------------------------------------------------------
 */
 
-const closeDrawer = () => {
-    if (isSaving.value) {
+const closeDrawer = (force = false) => {
+    if (isSaving.value && !force) {
         return;
     }
 
     isDrawerOpen.value = false;
 
     formError.value = '';
+
+    formSettings.value = {
+        type: 'product',
+        action: ActionType.CREATE,
+        item: null,
+    };
 };
 
 /*
@@ -390,7 +396,7 @@ const createProduct = async (payload) => {
 
         emit('created', product);
 
-        isDrawerOpen.value = false;
+        closeDrawer(true);
     } catch (error) {
         handleFormError(error);
     } finally {
@@ -406,9 +412,7 @@ const createProduct = async (payload) => {
 
 const updateProduct = async (payload) => {
     const productId =
-        formSettings.value.item?.product?.id ??
-        formSettings.value.item?.id ??
-        null;
+        formSettings.value.item?.id ?? null;
 
     if (!productId) {
         formError.value =
@@ -430,7 +434,7 @@ const updateProduct = async (payload) => {
 
         emit('updated', product);
 
-        isDrawerOpen.value = false;
+        closeDrawer(true);
     } catch (error) {
         handleFormError(error);
     } finally {
@@ -532,21 +536,12 @@ const confirmDelete = async () => {
             productId,
         );
 
-        /*
-         * Сначала закрываем модальное окно
-         * напрямую, не через closeDelete(),
-         * потому что isDeleting ещё true.
-         */
         deleteModalSettings.value = {
             type: 'product',
             action: 'delete',
             item: null,
         };
 
-        /*
-         * Передаём ID родителю.
-         * Product page удалит товар из локального списка.
-         */
         emit(
             'deleted',
             productId,
@@ -571,6 +566,6 @@ defineExpose({
     openCreate,
     openEdit,
     openDelete,
+    canManage,
 });
 </script>
-

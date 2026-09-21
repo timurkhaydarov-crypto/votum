@@ -1,29 +1,54 @@
 <template>
     <ProductsLayout :title="pageTitle" :subtitle="$t('productDetail.subtitle')">
+        <!-- ========================================================= -->
         <!-- LOADING -->
+        <!-- ========================================================= -->
+
         <ProductDetailLoading v-if="isLoading" />
 
+        <!-- ========================================================= -->
         <!-- ERROR -->
+        <!-- ========================================================= -->
+
         <ProductDetailError v-else-if="errorMessage" :message="errorMessage" />
 
+        <!-- ========================================================= -->
         <!-- NOT FOUND -->
+        <!-- ========================================================= -->
+
         <ProductDetailNotFound v-else-if="isNotFound" />
 
+        <!-- ========================================================= -->
         <!-- PRODUCT -->
+        <!-- ========================================================= -->
+
         <div v-else-if="product" class="space-y-6">
+            <!-- ===================================================== -->
             <!-- BREADCRUMBS -->
+            <!-- ===================================================== -->
+
             <ProductBreadcrumbs :items="breadcrumbs" />
 
+            <!-- ===================================================== -->
             <!-- HERO -->
+            <!-- ===================================================== -->
+
             <ProductDetailHero
                 :product="product"
                 :image-src="imageSrc"
                 :is-in-stock="isInStock"
+                :can-manage="canManage"
                 :group-dot-class="groupDotClass"
                 :group-badge-classes="groupBadgeClasses"
                 :back-link="backLink"
                 :back-label="backLabel"
+                @manage-info="handleManageInfo"
             />
+
+            <!-- ===================================================== -->
+            <!-- COMPATIBLE PRODUCTS -->
+            <!-- ===================================================== -->
+
             <ProductCompatible
                 v-if="
                     Object.values(product.compatible_products || {}).some(
@@ -33,7 +58,10 @@
                 :compatible-products="product.compatible_products"
             />
 
+            <!-- ===================================================== -->
             <!-- CERTIFICATES -->
+            <!-- ===================================================== -->
+
             <ProductImageGallery
                 v-if="product.certificates?.length"
                 :images="product.certificates"
@@ -41,30 +69,60 @@
                 gallery-sub-title="certificates.title"
                 type="certificate"
             />
+
+            <!-- ===================================================== -->
             <!-- GALLERY -->
+            <!-- ===================================================== -->
+
             <ProductGallery
                 v-if="galleryImages.length"
                 :product="product"
                 :images="galleryImages"
             />
 
+            <!-- ===================================================== -->
             <!-- CTA -->
+            <!-- ===================================================== -->
+
             <ProductDetailCta />
         </div>
 
+        <!-- ========================================================= -->
         <!-- EMPTY -->
+        <!-- ========================================================= -->
+
         <div
             v-else
             class="rounded-2xl border border-slate-200 bg-slate-50 p-6 text-sm text-slate-600"
         >
             {{ $t('productDetail.noData') }}
         </div>
+
+        <!-- ========================================================= -->
+        <!-- FULL PRODUCT MANAGEMENT -->
+        <!-- ========================================================= -->
+
+        <ProductManagement ref="productManagementRef" @updated="handleProductUpdated" />
+
+        <!-- ========================================================= -->
+        <!-- SECTION EDIT MODAL -->
+        <!-- ========================================================= -->
+
+        <ProductSectionModal
+            :is-open="isSectionModalOpen"
+            :product="product"
+            :section="selectedSection"
+            @close="closeSectionModal"
+            @updated="handleProductUpdated"
+        />
     </ProductsLayout>
 </template>
 
 <script setup>
-import { computed, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
+
 import { useI18n } from 'vue-i18n';
+
 import { useRoute } from 'vue-router';
 
 import ProductsLayout from '../../components/products/ProductsLayout.vue';
@@ -73,18 +131,23 @@ import ProductBreadcrumbs from '../../components/products/ProductBreadcrumbs.vue
 import ProductDetailLoading from '../../components/products/detail/ProductDetailLoading.vue';
 import ProductDetailError from '../../components/products/detail/ProductDetailError.vue';
 import ProductDetailNotFound from '../../components/products/detail/ProductDetailNotFound.vue';
-
 import ProductDetailHero from '../../components/products/detail/ProductDetailHero.vue';
 import ProductCompatible from '../../components/products/detail/ProductCompatible.vue';
 import ProductGallery from '../../components/products/detail/ProductGallery.vue';
 import ProductImageGallery from '../../components/products/detail/ProductImageGallery.vue';
 import ProductDetailCta from '../../components/products/detail/ProductDetailCta.vue';
 
+import ProductManagement from '../../components/products/ProductManagement.vue';
+import ProductSectionModal from '../../components/products/detail/ProductSectionModal.vue';
+
 import { useProductsCatalog } from '../../composables/useProductsCatalog.js';
+
 import { useProductDetails } from '../../composables/useProductDetails.js';
+
 import { useProductBreadcrumbs } from '../../composables/useProductBreadcrumbs.js';
 
 const route = useRoute();
+
 const { t, locale } = useI18n();
 
 /*
@@ -97,16 +160,63 @@ const { product, isLoading, isNotFound, errorMessage, loadProductById } = usePro
 
 /*
 |--------------------------------------------------------------------------
+| Product management
+|--------------------------------------------------------------------------
+*/
+
+const productManagementRef = ref(null);
+
+const canManage = computed(() => {
+    return Boolean(productManagementRef.value?.canManage);
+});
+
+/*
+|--------------------------------------------------------------------------
+| Section modal
+|--------------------------------------------------------------------------
+*/
+
+const isSectionModalOpen = ref(false);
+
+const selectedSection = ref(null);
+
+const handleManageInfo = ({ key }) => {
+    if (!canManage.value || !key || !product.value) {
+        return;
+    }
+
+    selectedSection.value = key;
+
+    isSectionModalOpen.value = true;
+};
+
+const closeSectionModal = () => {
+    isSectionModalOpen.value = false;
+
+    selectedSection.value = null;
+};
+
+/*
+|--------------------------------------------------------------------------
+| Product update
+|--------------------------------------------------------------------------
+*/
+
+const handleProductUpdated = async () => {
+    if (!productId.value) {
+        return;
+    }
+
+    await loadProductById(productId.value);
+};
+
+/*
+|--------------------------------------------------------------------------
 | Standard transducers
 |--------------------------------------------------------------------------
 */
 
-const {
-    products: standardTransducers,
-    isLoading: isLoadingTransducers,
-    errorMessage: transducersErrorMessage,
-    loadProductsByGroup,
-} = useProductsCatalog();
+const { products: standardTransducers, loadProductsByGroup } = useProductsCatalog();
 
 /*
 |--------------------------------------------------------------------------

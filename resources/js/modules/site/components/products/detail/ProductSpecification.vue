@@ -10,9 +10,7 @@
                 <table class="w-full border-collapse text-left">
                     <!-- HEADER -->
                     <thead>
-                        <tr
-                            class="border-b border-slate-200 bg-slate-50/80"
-                        >
+                        <tr class="border-b border-slate-200 bg-slate-50/80">
                             <th
                                 class="w-[45%] px-5 py-4 text-[10px] font-bold uppercase tracking-[0.14em] text-slate-500 lg:w-[40%] lg:px-6"
                             >
@@ -20,17 +18,11 @@
                                     <span
                                         class="flex h-6 w-6 items-center justify-center rounded-md bg-slate-200/70 text-slate-500"
                                     >
-                                        <i
-                                            class="bi bi-list-ul text-xs"
-                                        ></i>
+                                        <i class="bi bi-list-ul text-xs"></i>
                                     </span>
 
                                     <span>
-                                        {{
-                                            $t(
-                                                'product.info.specifications.title',
-                                            )
-                                        }}
+                                        {{ $t('product.info.specifications.title') }}
                                     </span>
                                 </div>
                             </th>
@@ -42,17 +34,11 @@
                                     <span
                                         class="flex h-6 w-6 items-center justify-center rounded-md bg-slate-200/70 text-slate-500"
                                     >
-                                        <i
-                                            class="bi bi-info-lg text-xs"
-                                        ></i>
+                                        <i class="bi bi-info-lg text-xs"></i>
                                     </span>
 
                                     <span>
-                                        {{
-                                            $t(
-                                                'product.info.specifications.value',
-                                            )
-                                        }}
+                                        {{ $t('product.info.specifications.value') }}
                                     </span>
                                 </div>
                             </th>
@@ -74,24 +60,14 @@
                                     class="absolute inset-y-0 left-0 w-0.5 bg-slate-900 opacity-0 transition-opacity duration-150 group-hover:opacity-100"
                                 ></div>
 
-                                {{
-                                    item.name?.[locale] ||
-                                    item.name?.ru ||
-                                    item.name?.en ||
-                                    ''
-                                }}
+                                {{ item.name?.[locale] || item.name?.ru || item.name?.en || '' }}
                             </td>
 
                             <!-- VALUE -->
                             <td
                                 class="px-5 py-4 align-top text-sm font-semibold leading-6 text-slate-900 transition-colors group-hover:bg-slate-50/60 lg:px-6"
                             >
-                                {{
-                                    item.value?.[locale] ||
-                                    item.value?.ru ||
-                                    item.value?.en ||
-                                    ''
-                                }}
+                                {{ item.value?.[locale] || item.value?.ru || item.value?.en || '' }}
                             </td>
                         </tr>
                     </tbody>
@@ -109,47 +85,23 @@
                     <div
                         class="mb-1.5 text-[10px] font-bold uppercase tracking-[0.12em] text-slate-400"
                     >
-                        {{
-                            $t(
-                                'product.info.specifications.title',
-                            )
-                        }}
+                        {{ $t('product.info.specifications.title') }}
                     </div>
 
-                    <div
-                        class="text-sm font-medium leading-5 text-slate-600"
-                    >
-                        {{
-                            item.name?.[locale] ||
-                            item.name?.ru ||
-                            item.name?.en ||
-                            ''
-                        }}
+                    <div class="text-sm font-medium leading-5 text-slate-600">
+                        {{ item.name?.[locale] || item.name?.ru || item.name?.en || '' }}
                     </div>
 
                     <!-- VALUE -->
-                    <div
-                        class="mt-3 border-l-2 border-slate-200 pl-3"
-                    >
+                    <div class="mt-3 border-l-2 border-slate-200 pl-3">
                         <div
                             class="mb-1 text-[10px] font-bold uppercase tracking-[0.12em] text-slate-400"
                         >
-                            {{
-                                $t(
-                                    'product.info.specifications.value',
-                                )
-                            }}
+                            {{ $t('product.info.specifications.value') }}
                         </div>
 
-                        <div
-                            class="text-sm font-semibold leading-6 text-slate-900"
-                        >
-                            {{
-                                item.value?.[locale] ||
-                                item.value?.ru ||
-                                item.value?.en ||
-                                ''
-                            }}
+                        <div class="text-sm font-semibold leading-6 text-slate-900">
+                            {{ item.value?.[locale] || item.value?.ru || item.value?.en || '' }}
                         </div>
                     </div>
                 </div>
@@ -165,17 +117,11 @@
                 <div
                     class="mx-auto mb-3 flex h-11 w-11 items-center justify-center rounded-xl bg-white text-slate-400 shadow-sm ring-1 ring-slate-100"
                 >
-                    <i
-                        class="bi bi-list-columns-reverse text-lg"
-                    ></i>
+                    <i class="bi bi-list-columns-reverse text-lg"></i>
                 </div>
 
                 <p class="text-xs font-medium text-slate-500">
-                    {{
-                        $t(
-                            'product.info.specifications.empty',
-                        )
-                    }}
+                    {{ $t('product.info.specifications.empty') }}
                 </p>
             </div>
         </div>

@@ -4,6 +4,7 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\ContactsController;
 use App\Http\Controllers\DealerController;
 use App\Http\Controllers\EmailController;
+use App\Http\Controllers\FeaturesGalleryController;
 use App\Http\Controllers\OperatingHourController;
 use App\Http\Controllers\PhoneController;
 use App\Http\Controllers\ProductController;
@@ -149,6 +150,79 @@ Route::prefix('products')->group(function () {
             'item/{product}',
             [ProductController::class, 'destroy']
         );
+
+        /*
+        |--------------------------------------------------------------------------
+        | Product features management
+        |--------------------------------------------------------------------------
+        */
+
+        Route::post(
+            'item/{product}/features',
+            [ProductFeaturesController::class, 'store']
+        );
+
+        Route::put(
+            'item/{product}/features',
+            [ProductFeaturesController::class, 'update']
+        );
+
+        Route::delete(
+            'item/{product}/features',
+            [ProductFeaturesController::class, 'destroy']
+        );
+
+        /*
+        |--------------------------------------------------------------------------
+        | Product features gallery management
+        |--------------------------------------------------------------------------
+        */
+
+        Route::post(
+            'item/{product}/features/gallery',
+            [FeaturesGalleryController::class, 'store']
+        );
+
+        Route::put(
+            'item/{product}/features/gallery/{featuresGallery}',
+            [FeaturesGalleryController::class, 'update']
+        );
+
+        Route::delete(
+            'item/{product}/features/gallery/{featuresGallery}',
+            [FeaturesGalleryController::class, 'destroy']
+        );
+
+        /*
+        |--------------------------------------------------------------------------
+        | Product specifications management
+        |--------------------------------------------------------------------------
+        */
+
+        Route::get(
+            'item/{product}/specifications',
+            [ProductSpecificationController::class, 'index']
+        );
+
+        Route::post(
+            'item/{product}/specifications',
+            [ProductSpecificationController::class, 'store']
+        );
+
+        Route::get(
+            'item/{product}/specifications/{productSpecification}',
+            [ProductSpecificationController::class, 'show']
+        );
+
+        Route::put(
+            'item/{product}/specifications/{productSpecification}',
+            [ProductSpecificationController::class, 'update']
+        );
+
+        Route::delete(
+            'item/{product}/specifications/{productSpecification}',
+            [ProductSpecificationController::class, 'destroy']
+        );
     });
 
     /*
@@ -169,7 +243,7 @@ Route::prefix('products')->group(function () {
 
     Route::get(
         '{product}/specifications',
-        [ProductSpecificationController::class, 'show']
+        [ProductSpecificationController::class, 'index']
     );
 });
 
@@ -178,6 +252,7 @@ Route::prefix('products')->group(function () {
 | Cart
 |--------------------------------------------------------------------------
 */
+
 Route::prefix('cart')->group(function () {
     Route::get('/', [CartController::class, 'index']);
 
@@ -189,8 +264,17 @@ Route::prefix('cart')->group(function () {
 
     Route::delete('/', [CartController::class, 'clear']);
 });
-Route::get('/dealers', [DealerController::class, 'index']);
-Route::get('/dealers/{dealer}', [DealerController::class, 'show']);
+
+Route::get(
+    '/dealers',
+    [DealerController::class, 'index']
+);
+
+Route::get(
+    '/dealers/{dealer}',
+    [DealerController::class, 'show']
+);
+
 /*
 |--------------------------------------------------------------------------
 | Requests

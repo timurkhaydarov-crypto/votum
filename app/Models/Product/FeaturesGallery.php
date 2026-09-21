@@ -2,12 +2,10 @@
 
 namespace App\Models\Product;
 
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-
 use Database\Factories\Product\FeaturesGalleryFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Product\ProductFeatures;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class FeaturesGallery extends Model
 {
@@ -23,14 +21,6 @@ class FeaturesGallery extends Model
         'title',
         'image_url',
     ];
-
-    public function setTitleAttribute($value): void
-    {
-        $this->attributes['title'] = json_encode(
-            $value,
-            JSON_UNESCAPED_UNICODE
-        );
-    }
 
     public function features(): BelongsTo
     {

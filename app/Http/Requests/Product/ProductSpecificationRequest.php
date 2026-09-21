@@ -23,13 +23,35 @@ class ProductSpecificationRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'product_id' => ['required', 'exists:products,id'],
-            'name' => ['required', 'array'],
-            'name.ru' => ['required', 'string'],
-            'name.en' => ['required', 'string'],
-            'value' => ['required', 'array'],
-            'value.ru' => ['required', 'string'],
-            'value.en' => ['required', 'string'],
+            'name' => [
+                'required',
+                'array',
+            ],
+
+            'name.ru' => [
+                'required',
+                'string',
+            ],
+
+            'name.en' => [
+                'required',
+                'string',
+            ],
+
+            'value' => [
+                'required',
+                'array',
+            ],
+
+            'value.ru' => [
+                'required',
+                'string',
+            ],
+
+            'value.en' => [
+                'required',
+                'string',
+            ],
         ];
     }
 }

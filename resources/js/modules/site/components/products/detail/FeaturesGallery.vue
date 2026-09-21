@@ -95,7 +95,10 @@ defineProps({
 |--------------------------------------------------------------------------
 */
 
-const getImageTitle = (image, index = null) => {
+const getImageTitle = (
+    image,
+    index = null,
+) => {
     const title = image?.title;
 
     if (!title) {
@@ -122,12 +125,17 @@ const getImageTitle = (image, index = null) => {
 | Image URL
 |--------------------------------------------------------------------------
 |
-| vtm_5000_kp_1
-|        ↓
-| vtm_5000_kp
+| DB:
 |
-| /image/features/vtm_5000_kp/vtm_5000_kp_1.webp
+| 21446b65-beb7-48ac-b663-dd967d74055e_2.webp
 |
+| Result:
+|
+| /image/features/
+|   21446b65-beb7-48ac-b663-dd967d74055e/
+|   21446b65-beb7-48ac-b663-dd967d74055e_2.webp
+|
+|--------------------------------------------------------------------------
 */
 
 const getImageUrl = (imageUrl) => {
@@ -135,11 +143,50 @@ const getImageUrl = (imageUrl) => {
         return '';
     }
 
-    const folder = imageUrl.replace(
+    const filename = imageUrl
+        .split('/')
+        .pop()
+        .trim();
+
+    if (!filename) {
+        return '';
+    }
+
+    /*
+     * Убираем существующее расширение.
+     *
+     * 21446..._2.webp
+     * ↓
+     * 21446..._2
+     */
+    const baseName = filename.replace(
+        /\.(webp|jpg|jpeg|png)$/i,
+        '',
+    );
+
+    /*
+     * Имя папки — без номера изображения.
+     *
+     * 21446..._2
+     * ↓
+     * 21446...
+     */
+    const folder = baseName.replace(
         /_\d+$/,
         '',
     );
 
-    return `/image/features/${folder}/${imageUrl}.webp`;
+    if (!folder) {
+        return '';
+    }
+
+    /*
+     * Все feature images физически сохраняются как WebP.
+     */
+    return `/image/features/${encodeURIComponent(
+        folder,
+    )}/${encodeURIComponent(
+        baseName,
+    )}.webp`;
 };
 </script>
