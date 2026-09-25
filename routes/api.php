@@ -3,11 +3,14 @@
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\ContactsController;
 use App\Http\Controllers\DealerController;
+use App\Http\Controllers\DocumentationAccessController;
 use App\Http\Controllers\EmailController;
 use App\Http\Controllers\FeaturesGalleryController;
 use App\Http\Controllers\OperatingHourController;
 use App\Http\Controllers\PhoneController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProductDocumentController;
+use App\Http\Controllers\ProductDocumentFileController;
 use App\Http\Controllers\ProductFeaturesController;
 use App\Http\Controllers\ProductSpecificationController;
 use App\Http\Controllers\RequestController;
@@ -72,6 +75,7 @@ Route::prefix('contacts')->group(function () {
 */
 
 Route::prefix('products')->group(function () {
+
     /*
     |--------------------------------------------------------------------------
     | Public catalog
@@ -121,6 +125,7 @@ Route::prefix('products')->group(function () {
         'auth:sanctum',
         'manager',
     ])->group(function () {
+
         Route::get(
             'item/create',
             [ProductController::class, 'create']
@@ -249,21 +254,194 @@ Route::prefix('products')->group(function () {
 
 /*
 |--------------------------------------------------------------------------
+| Documentation management
+|--------------------------------------------------------------------------
+|
+| Только admin / manager.
+|
+*/
+Route::post(
+    'documentation/access',
+    [
+        DocumentationAccessController::class,
+        'access',
+    ]
+);
+Route::get(
+    'documentation/files/{productDocumentFile}/open',
+    [
+        ProductDocumentFileController::class,
+        'open',
+    ]
+);
+Route::prefix('documentation')
+    ->middleware([
+        'auth:sanctum',
+        'manager',
+    ])
+    ->group(function () {
+
+        /*
+        |--------------------------------------------------------------------------
+        | Documentation users
+        |--------------------------------------------------------------------------
+        */
+
+        Route::get(
+            'users',
+            [
+                DocumentationAccessController::class,
+                'users',
+            ]
+        );
+
+        Route::get(
+            'users/{user}/accesses',
+            [
+                DocumentationAccessController::class,
+                'showAccesses',
+            ]
+        );
+
+        Route::post(
+            'users/{user}/key',
+            [
+                DocumentationAccessController::class,
+                'rotateKey',
+            ]
+        );
+
+        Route::delete(
+            'users/{user}/key',
+            [
+                DocumentationAccessController::class,
+                'revokeKey',
+            ]
+        );
+
+        Route::post(
+            'users/{user}/products/{product}',
+            [
+                DocumentationAccessController::class,
+                'grantProduct',
+            ]
+        );
+
+        Route::delete(
+            'users/{user}/products/{product}',
+            [
+                DocumentationAccessController::class,
+                'revokeProduct',
+            ]
+        );
+
+        /*
+        |--------------------------------------------------------------------------
+        | Product documents
+        |--------------------------------------------------------------------------
+        */
+
+        Route::get(
+            'products/{product}/documents',
+            [
+                ProductDocumentController::class,
+                'index',
+            ]
+        );
+
+        Route::post(
+            'products/{product}/documents',
+            [
+                ProductDocumentController::class,
+                'store',
+            ]
+        );
+
+        Route::get(
+            'products/{product}/documents/{productDocument}',
+            [
+                ProductDocumentController::class,
+                'show',
+            ]
+        );
+
+        Route::put(
+            'products/{product}/documents/{productDocument}',
+            [
+                ProductDocumentController::class,
+                'update',
+            ]
+        );
+
+        Route::delete(
+            'products/{product}/documents/{productDocument}',
+            [
+                ProductDocumentController::class,
+                'destroy',
+            ]
+        );
+
+        /*
+        |--------------------------------------------------------------------------
+        | Product document files
+        |--------------------------------------------------------------------------
+        */
+
+        Route::post(
+            'documents/{productDocument}/files',
+            [
+                ProductDocumentFileController::class,
+                'store',
+            ]
+        );
+
+        Route::delete(
+            'documents/{productDocument}/files/{productDocumentFile}',
+            [
+                ProductDocumentFileController::class,
+                'destroy',
+            ]
+        );
+    });
+
+/*
+|--------------------------------------------------------------------------
 | Cart
 |--------------------------------------------------------------------------
 */
 
 Route::prefix('cart')->group(function () {
-    Route::get('/', [CartController::class, 'index']);
+    Route::get(
+        '/',
+        [CartController::class, 'index']
+    );
 
-    Route::post('/items', [CartController::class, 'store']);
+    Route::post(
+        '/items',
+        [CartController::class, 'store']
+    );
 
-    Route::patch('/items/{product}', [CartController::class, 'update']);
+    Route::patch(
+        '/items/{product}',
+        [CartController::class, 'update']
+    );
 
-    Route::delete('/items/{product}', [CartController::class, 'destroy']);
+    Route::delete(
+        '/items/{product}',
+        [CartController::class, 'destroy']
+    );
 
-    Route::delete('/', [CartController::class, 'clear']);
+    Route::delete(
+        '/',
+        [CartController::class, 'clear']
+    );
 });
+
+/*
+|--------------------------------------------------------------------------
+| Dealers
+|--------------------------------------------------------------------------
+*/
 
 Route::get(
     '/dealers',
@@ -303,6 +481,7 @@ Route::prefix('uploads')
         'manager',
     ])
     ->group(function () {
+
         Route::post(
             '/',
             [UploadController::class, 'store']

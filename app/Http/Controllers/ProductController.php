@@ -7,6 +7,7 @@ use App\Http\Requests\Product\UpdateProductRequest;
 use App\Models\Product\Category;
 use App\Models\Product\Group;
 use App\Models\Product\Product;
+use App\Services\Documentation\ProductDocumentFileService;
 use App\Services\ProductMediaService;
 use App\Services\ProductMenuService;
 use Illuminate\Http\JsonResponse;
@@ -92,12 +93,8 @@ class ProductController extends Controller
         Product $product,
         array $compatibleProductIds
     ): void {
-        $ids = collect(
-            $compatibleProductIds
-        )
-            ->map(
-                fn ($id) => (int) $id
-            )
+        $ids = collect($compatibleProductIds)
+            ->map(fn ($id) => (int) $id)
             ->filter(
                 fn ($id) => $id !== (int) $product->id
             )
@@ -115,9 +112,7 @@ class ProductController extends Controller
         if ($ids->isNotEmpty()) {
             $product
                 ->compatibleProducts()
-                ->attach(
-                    $ids->all()
-                );
+                ->attach($ids->all());
         }
     }
 
@@ -151,20 +146,14 @@ class ProductController extends Controller
             */
 
             'category' => $product->category
-                    ? [
-                        'id' => $product
-                            ->category
-                            ->id,
+                ? [
+                    'id' => $product->category->id,
 
-                        'slug' => $product
-                            ->category
-                            ->slug,
+                    'slug' => $product->category->slug,
 
-                        'title' => $product
-                            ->category
-                            ->category,
-                    ]
-                    : null,
+                    'title' => $product->category->category,
+                ]
+                : null,
 
             /*
             |--------------------------------------------------------------------------
@@ -173,20 +162,14 @@ class ProductController extends Controller
             */
 
             'group' => $product->group
-                    ? [
-                        'id' => $product
-                            ->group
-                            ->id,
+                ? [
+                    'id' => $product->group->id,
 
-                        'slug' => $product
-                            ->group
-                            ->slug,
+                    'slug' => $product->group->slug,
 
-                        'title' => $product
-                            ->group
-                            ->group,
-                    ]
-                    : null,
+                    'title' => $product->group->group,
+                ]
+                : null,
 
             /*
             |--------------------------------------------------------------------------
@@ -277,16 +260,12 @@ class ProductController extends Controller
             */
 
             'brand' => $product->brand
-                    ? [
-                        'id' => $product
-                            ->brand
-                            ->id,
+                ? [
+                    'id' => $product->brand->id,
 
-                        'title' => $product
-                            ->brand
-                            ->brand,
-                    ]
-                    : null,
+                    'title' => $product->brand->brand,
+                ]
+                : null,
 
             /*
             |--------------------------------------------------------------------------
@@ -409,44 +388,32 @@ class ProductController extends Controller
                                 fn (
                                     Product $compatibleProduct
                                 ) => [
-                                    'id' => $compatibleProduct
-                                        ->id,
+                                    'id' => $compatibleProduct->id,
 
-                                    'article' => $compatibleProduct
-                                        ->article,
+                                    'article' => $compatibleProduct->article,
 
-                                    'name' => $compatibleProduct
-                                        ->name,
+                                    'name' => $compatibleProduct->name,
 
-                                    'shortDescription' => $compatibleProduct
-                                        ->short_description,
+                                    'shortDescription' => $compatibleProduct->short_description,
 
-                                    'fullDescription' => $compatibleProduct
-                                        ->full_description,
+                                    'fullDescription' => $compatibleProduct->full_description,
 
-                                    'imageUrl' => $compatibleProduct
-                                        ->image_url,
+                                    'imageUrl' => $compatibleProduct->image_url,
 
-                                    'videoUrl' => $compatibleProduct
-                                        ->video_url,
+                                    'videoUrl' => $compatibleProduct->video_url,
 
-                                    'price' => $compatibleProduct
-                                        ->price,
+                                    'price' => $compatibleProduct->price,
 
-                                    'quantity' => $compatibleProduct
-                                        ->quantity,
+                                    'quantity' => $compatibleProduct->quantity,
 
-                                    'status' => $compatibleProduct
-                                        ->status,
+                                    'status' => $compatibleProduct->status,
 
                                     'method' => $this->formatMethod(
-                                        $compatibleProduct
-                                            ->method
+                                        $compatibleProduct->method
                                     ),
 
                                     'application' => $this->formatApplication(
-                                        $compatibleProduct
-                                            ->sector
+                                        $compatibleProduct->sector
                                     ),
 
                                     'categoryId' => $compatibleProduct
@@ -742,6 +709,20 @@ class ProductController extends Controller
 
                 /*
                 |--------------------------------------------------------------------------
+                | Product / Group
+                |--------------------------------------------------------------------------
+                |
+                | The main product group is also stored
+                | in the product_group pivot table.
+                |
+                */
+
+                $product->groups()->sync([
+                    $validated['group_id'],
+                ]);
+
+                /*
+                |--------------------------------------------------------------------------
                 | Method
                 |--------------------------------------------------------------------------
                 */
@@ -758,39 +739,33 @@ class ProductController extends Controller
                         ],
                         [
                             'ut_method' => (bool) (
-                                $method[
-                                    'ut_method'
-                                ] ?? false
+                                $method['ut_method']
+                                ?? false
                             ),
 
                             'et_method' => (bool) (
-                                $method[
-                                    'et_method'
-                                ] ?? false
+                                $method['et_method']
+                                ?? false
                             ),
 
                             'mia_method' => (bool) (
-                                $method[
-                                    'mia_method'
-                                ] ?? false
+                                $method['mia_method']
+                                ?? false
                             ),
 
                             'iet_method' => (bool) (
-                                $method[
-                                    'iet_method'
-                                ] ?? false
+                                $method['iet_method']
+                                ?? false
                             ),
 
                             'mt_method' => (bool) (
-                                $method[
-                                    'mt_method'
-                                ] ?? false
+                                $method['mt_method']
+                                ?? false
                             ),
 
                             'vt_method' => (bool) (
-                                $method[
-                                    'vt_method'
-                                ] ?? false
+                                $method['vt_method']
+                                ?? false
                             ),
                         ]
                     );
@@ -813,21 +788,18 @@ class ProductController extends Controller
                         ],
                         [
                             'railway' => (bool) (
-                                $sector[
-                                    'railway'
-                                ] ?? false
+                                $sector['railway']
+                                ?? false
                             ),
 
                             'aerospace' => (bool) (
-                                $sector[
-                                    'aerospace'
-                                ] ?? false
+                                $sector['aerospace']
+                                ?? false
                             ),
 
                             'oil' => (bool) (
-                                $sector[
-                                    'oil'
-                                ] ?? false
+                                $sector['oil']
+                                ?? false
                             ),
                         ]
                     );
@@ -894,7 +866,7 @@ class ProductController extends Controller
     }
 
     /**
-     * Return data required by the primary product form.
+     * Return data required for the primary product form.
      */
     protected function productFormOptions(): array
     {
@@ -953,67 +925,49 @@ class ProductController extends Controller
 
                 'method' => [
                     'ut_method' => (bool) (
-                        $product
-                            ->method
-                            ?->ut_method
+                        $product->method?->ut_method
                         ?? false
                     ),
 
                     'et_method' => (bool) (
-                        $product
-                            ->method
-                            ?->et_method
+                        $product->method?->et_method
                         ?? false
                     ),
 
                     'mia_method' => (bool) (
-                        $product
-                            ->method
-                            ?->mia_method
+                        $product->method?->mia_method
                         ?? false
                     ),
 
                     'iet_method' => (bool) (
-                        $product
-                            ->method
-                            ?->iet_method
+                        $product->method?->iet_method
                         ?? false
                     ),
 
                     'mt_method' => (bool) (
-                        $product
-                            ->method
-                            ?->mt_method
+                        $product->method?->mt_method
                         ?? false
                     ),
 
                     'vt_method' => (bool) (
-                        $product
-                            ->method
-                            ?->vt_method
+                        $product->method?->vt_method
                         ?? false
                     ),
                 ],
 
                 'sector' => [
                     'railway' => (bool) (
-                        $product
-                            ->sector
-                            ?->railway
+                        $product->sector?->railway
                         ?? false
                     ),
 
                     'aerospace' => (bool) (
-                        $product
-                            ->sector
-                            ?->aerospace
+                        $product->sector?->aerospace
                         ?? false
                     ),
 
                     'oil' => (bool) (
-                        $product
-                            ->sector
-                            ?->oil
+                        $product->sector?->oil
                         ?? false
                     ),
                 ],
@@ -1021,280 +975,261 @@ class ProductController extends Controller
         ]);
     }
 
-/**
- * Update the specified resource in storage.
- */
-public function update(
-    UpdateProductRequest $request,
-    Product $product,
-    ProductMediaService $mediaService
-): JsonResponse {
-    $validated =
-        $request->validated();
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(
+        UpdateProductRequest $request,
+        Product $product,
+        ProductMediaService $mediaService
+    ): JsonResponse {
+        $validated =
+            $request->validated();
 
-    /*
-    |--------------------------------------------------------------------------
-    | Category / Group
-    |--------------------------------------------------------------------------
-    */
+        /*
+        |--------------------------------------------------------------------------
+        | Category / Group
+        |--------------------------------------------------------------------------
+        */
 
-    $category = Category::findOrFail(
-        $validated['category_id']
-    );
+        $category = Category::findOrFail(
+            $validated['category_id']
+        );
 
-    $group = Group::findOrFail(
-        $validated['group_id']
-    );
+        $group = Group::findOrFail(
+            $validated['group_id']
+        );
 
-    /*
-    |--------------------------------------------------------------------------
-    | Product image
-    |--------------------------------------------------------------------------
-    */
+        /*
+        |--------------------------------------------------------------------------
+        | Product image
+        |--------------------------------------------------------------------------
+        */
 
-    $imageUrl =
-        array_key_exists(
-            'image_url',
-            $validated
-        )
-            ? $validated['image_url']
-            : $product->image_url;
-
-    if (
-        ! empty(
-            $validated[
-                'image_upload_token'
-            ] ?? null
-        )
-    ) {
         $imageUrl =
-            $mediaService->promoteProductImage(
+            array_key_exists(
+                'image_url',
+                $validated
+            )
+                ? $validated['image_url']
+                : $product->image_url;
+
+        if (
+            ! empty(
                 $validated[
                     'image_upload_token'
-                ],
-                $category->slug
-            );
-    }
-
-    /*
-    |--------------------------------------------------------------------------
-    | Product video
-    |--------------------------------------------------------------------------
-    */
-
-    $videoUrl =
-        array_key_exists(
-            'video_url',
-            $validated
-        )
-            ? $validated['video_url']
-            : $product->video_url;
-
-    if (
-        ! empty(
-            $validated[
-                'video_upload_token'
-            ] ?? null
-        )
-    ) {
-        $videoUrl =
-            $mediaService->promoteVideo(
-                $validated[
-                    'video_upload_token'
-                ],
-                $category->slug
-            );
-    }
-
-    /*
-    |--------------------------------------------------------------------------
-    | Update product
-    |--------------------------------------------------------------------------
-    */
-
-    DB::transaction(
-        function () use (
-            $validated,
-            $product,
-            $imageUrl,
-            $videoUrl
+                ] ?? null
+            )
         ) {
-            $product->update([
-                'article' =>
-                    $validated['article'],
-
-                'name' =>
-                    $validated['name'],
-
-                'short_description' =>
-                    $validated['short_description'],
-
-                'full_description' =>
-                    $validated['full_description'],
-
-                'category_id' =>
-                    $validated['category_id'],
-
-                'group_id' =>
-                    $validated['group_id'],
-
-                'brand_id' =>
-                    $validated['brand_id'],
-
-                'unit' =>
-                    $validated['unit'],
-
-                'price' =>
-                    $validated['price'],
-
-                'quantity' =>
-                    $validated['quantity'],
-
-                'status' =>
-                    $validated['status'],
-
-                'image_url' =>
-                    $imageUrl,
-
-                'video_url' =>
-                    $videoUrl,
-            ]);
-
-            /*
-            |--------------------------------------------------------------------------
-            | Method
-            |--------------------------------------------------------------------------
-            */
-
-            $method =
-                $validated['method']
-                ?? [];
-
-            $product
-                ->method()
-                ->updateOrCreate(
-                    [
-                        'product_id' =>
-                            $product->id,
+            $imageUrl =
+                $mediaService->promoteProductImage(
+                    $validated[
+                        'image_upload_token'
                     ],
-                    [
-                        'ut_method' =>
-                            (bool) (
-                                $method[
-                                    'ut_method'
-                                ] ?? false
-                            ),
-
-                        'et_method' =>
-                            (bool) (
-                                $method[
-                                    'et_method'
-                                ] ?? false
-                            ),
-
-                        'mia_method' =>
-                            (bool) (
-                                $method[
-                                    'mia_method'
-                                ] ?? false
-                            ),
-
-                        'iet_method' =>
-                            (bool) (
-                                $method[
-                                    'iet_method'
-                                ] ?? false
-                            ),
-
-                        'mt_method' =>
-                            (bool) (
-                                $method[
-                                    'mt_method'
-                                ] ?? false
-                            ),
-
-                        'vt_method' =>
-                            (bool) (
-                                $method[
-                                    'vt_method'
-                                ] ?? false
-                            ),
-                    ]
-                );
-
-            /*
-            |--------------------------------------------------------------------------
-            | Application sectors
-            |--------------------------------------------------------------------------
-            */
-
-            $sector =
-                $validated['sector']
-                ?? [];
-
-            $product
-                ->sector()
-                ->updateOrCreate(
-                    [
-                        'product_id' =>
-                            $product->id,
-                    ],
-                    [
-                        'railway' =>
-                            (bool) (
-                                $sector[
-                                    'railway'
-                                ] ?? false
-                            ),
-
-                        'aerospace' =>
-                            (bool) (
-                                $sector[
-                                    'aerospace'
-                                ] ?? false
-                            ),
-
-                        'oil' =>
-                            (bool) (
-                                $sector[
-                                    'oil'
-                                ] ?? false
-                            ),
-                    ]
+                    $category->slug
                 );
         }
-    );
 
-    /*
-    |--------------------------------------------------------------------------
-    | Load product relations
-    |--------------------------------------------------------------------------
-    */
+        /*
+        |--------------------------------------------------------------------------
+        | Product video
+        |--------------------------------------------------------------------------
+        */
 
-    $product->load([
-        'brand',
-        'category',
-        'group',
-        'groups',
-        'certificates',
-        'gallery',
-        'method',
-        'sector',
-        'features',
-        'compatibleProducts.category',
-        'compatibleWithProducts.category',
-    ]);
+        $videoUrl =
+            array_key_exists(
+                'video_url',
+                $validated
+            )
+                ? $validated['video_url']
+                : $product->video_url;
 
-    return response()->json(
-        $this->serializeProduct(
-            $product,
-            true
-        )
-    );
-}
+        if (
+            ! empty(
+                $validated[
+                    'video_upload_token'
+                ] ?? null
+            )
+        ) {
+            $videoUrl =
+                $mediaService->promoteVideo(
+                    $validated[
+                        'video_upload_token'
+                    ],
+                    $category->slug
+                );
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Update product
+        |--------------------------------------------------------------------------
+        */
+
+        DB::transaction(
+            function () use (
+                $validated,
+                $product,
+                $imageUrl,
+                $videoUrl
+            ) {
+                $product->update([
+                    'article' => $validated['article'],
+
+                    'name' => $validated['name'],
+
+                    'short_description' => $validated['short_description'],
+
+                    'full_description' => $validated['full_description'],
+
+                    'category_id' => $validated['category_id'],
+
+                    'group_id' => $validated['group_id'],
+
+                    'brand_id' => $validated['brand_id'],
+
+                    'unit' => $validated['unit'],
+
+                    'price' => $validated['price'],
+
+                    'quantity' => $validated['quantity'],
+
+                    'status' => $validated['status'],
+
+                    'image_url' => $imageUrl,
+
+                    'video_url' => $videoUrl,
+                ]);
+
+                /*
+                |--------------------------------------------------------------------------
+                | Product / Group
+                |--------------------------------------------------------------------------
+                |
+                | Keep the pivot table synchronized with
+                | the main product group.
+                |
+                */
+
+                $product->groups()->sync([
+                    $validated['group_id'],
+                ]);
+
+                /*
+                |--------------------------------------------------------------------------
+                | Method
+                |--------------------------------------------------------------------------
+                */
+
+                $method =
+                    $validated['method']
+                    ?? [];
+
+                $product
+                    ->method()
+                    ->updateOrCreate(
+                        [
+                            'product_id' => $product->id,
+                        ],
+                        [
+                            'ut_method' => (bool) (
+                                $method['ut_method']
+                                ?? false
+                            ),
+
+                            'et_method' => (bool) (
+                                $method['et_method']
+                                ?? false
+                            ),
+
+                            'mia_method' => (bool) (
+                                $method['mia_method']
+                                ?? false
+                            ),
+
+                            'iet_method' => (bool) (
+                                $method['iet_method']
+                                ?? false
+                            ),
+
+                            'mt_method' => (bool) (
+                                $method['mt_method']
+                                ?? false
+                            ),
+
+                            'vt_method' => (bool) (
+                                $method['vt_method']
+                                ?? false
+                            ),
+                        ]
+                    );
+
+                /*
+                |--------------------------------------------------------------------------
+                | Application sectors
+                |--------------------------------------------------------------------------
+                */
+
+                $sector =
+                    $validated['sector']
+                    ?? [];
+
+                $product
+                    ->sector()
+                    ->updateOrCreate(
+                        [
+                            'product_id' => $product->id,
+                        ],
+                        [
+                            'railway' => (bool) (
+                                $sector['railway']
+                                ?? false
+                            ),
+
+                            'aerospace' => (bool) (
+                                $sector['aerospace']
+                                ?? false
+                            ),
+
+                            'oil' => (bool) (
+                                $sector['oil']
+                                ?? false
+                            ),
+                        ]
+                    );
+            }
+        );
+
+        /*
+        |--------------------------------------------------------------------------
+        | Load product relations
+        |--------------------------------------------------------------------------
+        */
+
+        $product->load([
+            'brand',
+            'category',
+            'group',
+            'groups',
+            'certificates',
+            'gallery',
+            'method',
+            'sector',
+            'features',
+            'compatibleProducts.category',
+            'compatibleWithProducts.category',
+        ]);
+
+        return response()->json(
+            $this->serializeProduct(
+                $product,
+                true
+            )
+        );
+    }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified resource in storage.
      */
     public function destroy(
         Product $product
@@ -1309,6 +1244,12 @@ public function update(
                     ->compatibleWithProducts()
                     ->detach();
 
+                $product
+                    ->groups()
+                    ->detach();
+
+                app(ProductDocumentFileService::class)
+                    ->deleteProduct($product);
                 $product->delete();
             }
         );

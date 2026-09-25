@@ -3,7 +3,9 @@
 namespace App\Models\Product;
 
 use App\Models\Cart\CartItem;
+use App\Models\Documentation\DocumentationAccess;
 use App\Models\Request\RequestItem;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -147,5 +149,34 @@ class Product extends Model
             ->merge($this->compatibleWithProducts)
             ->unique('id')
             ->values();
+    }
+
+    public function documentationAccesses(): HasMany
+    {
+        return $this->hasMany(
+            DocumentationAccess::class
+        );
+    }
+
+    public function documentationUsers(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            User::class,
+            'documentation_accesses'
+        )
+            ->withPivot([
+                'starts_at',
+                'expires_at',
+                'is_active',
+                'last_accessed_at',
+            ])
+            ->withTimestamps();
+    }
+
+    public function documents(): HasMany
+    {
+        return $this->hasMany(
+            ProductDocument::class
+        );
     }
 }

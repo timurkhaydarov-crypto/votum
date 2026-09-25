@@ -241,19 +241,21 @@ const infoItems = [
 
         icon: 'bi-file-earmark-text',
 
+        /*
+         * Документация теперь открывается через
+         * ключ доступа.
+         *
+         * Поэтому наличие старых URL:
+         * documentationUrl
+         * characteristicsUrl
+         * technicalSpecificationsUrl
+         *
+         * больше не определяет активность пункта.
+         */
         value: () =>
-            props.product.documentationUrl ||
-            props.product.characteristicsUrl ||
-            props.product.technicalSpecificationsUrl
-                ? t('common.available')
-                : '',
+            t('common.available'),
 
-        disabled: () =>
-            !(
-                props.product.documentationUrl ||
-                props.product.characteristicsUrl ||
-                props.product.technicalSpecificationsUrl
-            ),
+        disabled: () => false,
     },
 ];
 </script>

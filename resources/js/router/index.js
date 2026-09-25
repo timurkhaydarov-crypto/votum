@@ -26,6 +26,7 @@ import VerificationPage from '../modules/site/pages/services/metrology/Verificat
 import EquipmentPage from '../modules/site/pages/services/diagnostics/Equipment.vue'
 import DiagnosticExpertisePage from '../modules/site/pages/services/diagnostics/Expertise.vue'
 import TechnicalPage from '../modules/site/pages/services/diagnostics/Technical.vue'
+import DocumentationPage from '../modules/manager/pages/DocumentationPage.vue'
 
 
 
@@ -92,6 +93,15 @@ const router = createRouter({
                     props: true,
                 },
             ],
+        },
+        {
+            path: '/manager/documentation',
+            name: 'manager-documentation',
+            component:DocumentationPage,
+            meta: {
+                requiresAuth: true,
+                roles: ['admin', 'manager'],
+            },
         },
         {
             path: '/cart',

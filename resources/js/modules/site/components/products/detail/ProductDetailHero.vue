@@ -4,10 +4,12 @@
     >
         <div class="grid lg:grid-cols-[1.05fr_0.95fr]">
             <!-- IMAGE / VIDEO -->
+
             <div
                 class="group/media relative min-h-[340px] overflow-hidden bg-slate-50 sm:min-h-[400px] lg:min-h-[450px]"
             >
                 <!-- TECHNICAL BACKGROUND -->
+
                 <div
                     class="pointer-events-none absolute inset-0 opacity-[0.035]"
                     style="
@@ -19,21 +21,25 @@
                 ></div>
 
                 <!-- CENTER GLOW -->
+
                 <div
                     class="pointer-events-none absolute left-1/2 top-1/2 h-[70%] w-[70%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-white blur-3xl"
                 ></div>
 
                 <!-- TOP GRADIENT -->
+
                 <div
                     class="pointer-events-none absolute inset-x-0 top-0 z-[2] h-24 bg-gradient-to-b from-white/60 to-transparent"
                 ></div>
 
                 <!-- BOTTOM GRADIENT -->
+
                 <div
                     class="pointer-events-none absolute inset-x-0 bottom-0 z-[2] h-28 bg-gradient-to-t from-slate-100/70 to-transparent"
                 ></div>
 
                 <!-- GROUP -->
+
                 <RouterLink
                     :to="`/products/${product.categorySlug}/${product.groupSlug}`"
                     class="absolute left-4 top-4 z-20"
@@ -59,6 +65,7 @@
                 <ProductControlMethods :methods="product.method" />
 
                 <!-- PRODUCT IMAGE / VIDEO -->
+
                 <div class="absolute inset-0 z-[1] flex items-center justify-center">
                     <Transition
                         mode="out-in"
@@ -70,6 +77,7 @@
                         leave-to-class="opacity-0 scale-[0.98]"
                     >
                         <!-- IMAGE -->
+
                         <img
                             v-if="!isPlaying"
                             key="image"
@@ -79,6 +87,7 @@
                         />
 
                         <!-- VIDEO -->
+
                         <video
                             v-else
                             :key="videoKey"
@@ -95,6 +104,7 @@
                 </div>
 
                 <!-- PLAYING INDICATOR -->
+
                 <div
                     v-if="isPlaying"
                     class="absolute left-4 top-16 z-20 inline-flex items-center gap-2 rounded-md border border-white/20 bg-slate-900/90 px-2.5 py-1.5 text-[9px] font-semibold uppercase tracking-[0.1em] text-white shadow-lg backdrop-blur-md"
@@ -113,10 +123,12 @@
                 </div>
 
                 <!-- META -->
+
                 <div
                     class="absolute bottom-4 left-4 right-4 z-20 flex items-end justify-between gap-3"
                 >
                     <!-- CATEGORY -->
+
                     <RouterLink
                         :to="`/products/${product.categorySlug}`"
                         class="group/category min-w-0"
@@ -137,6 +149,7 @@
                     </RouterLink>
 
                     <!-- VIDEO BUTTON -->
+
                     <button
                         v-if="product.videoUrl"
                         type="button"
@@ -157,6 +170,7 @@
             </div>
 
             <!-- INFO -->
+
             <div
                 class="flex flex-col justify-between border-t border-slate-200 p-6 sm:p-7 lg:border-l lg:border-t-0 lg:p-8"
             >
@@ -178,6 +192,7 @@
         </div>
 
         <!-- INFO MODAL -->
+
         <ProductInfoModal
             :product="product"
             :info-key="selectedInfo"
@@ -185,6 +200,20 @@
             :is-loading="isInfoLoading"
             :error="infoError"
             @close="closeInfoModal"
+        />
+
+        <!-- DOCUMENTATION MODAL -->
+
+        <ProductDocumentationModal
+            :product="product"
+            :documents="documentationDocuments"
+            :is-open="isDocumentationOpen"
+            :is-loading="isDocumentationLoading"
+            :error="documentationError"
+            :authorized="documentationAuthorized"
+            @close="closeDocumentation"
+            @submit-key="authorizeDocumentation"
+            @open-pdf="openDocumentationPdf"
         />
     </section>
 </template>
@@ -197,10 +226,13 @@ import {
     fetchProductSpecifications,
 } from '@/modules/site/services/productInfoService';
 
+import { documentationApi } from '../../../../manager/services/documentationApi';
+
 import ProductControlMethods from './ProductControlMethods.vue';
 import ProductQuickInfo from './ProductQuickInfo.vue';
 import ProductPurchaseActions from './ProductPurchaseActions.vue';
 import ProductInfoModal from './ProductInfoModal.vue';
+import ProductDocumentationModal from './ProductDocumentationModal.vue';
 
 const props = defineProps({
     product: {
@@ -217,10 +249,12 @@ const props = defineProps({
         type: Boolean,
         default: false,
     },
+
     canManage: {
         type: Boolean,
         default: false,
     },
+
     groupDotClass: {
         type: String,
         default: 'bg-slate-400',
@@ -242,12 +276,26 @@ const props = defineProps({
     },
 });
 
+const emit = defineEmits(['manageInfo']);
+
 const isPlaying = ref(false);
 
 const selectedInfo = ref(null);
 const selectedInfoData = ref(null);
 const isInfoLoading = ref(false);
 const infoError = ref(null);
+
+/*
+|--------------------------------------------------------------------------
+| DOCUMENTATION
+|--------------------------------------------------------------------------
+*/
+
+const isDocumentationOpen = ref(false);
+const isDocumentationLoading = ref(false);
+const documentationAuthorized = ref(false);
+const documentationDocuments = ref([]);
+const documentationError = ref(null);
 
 /*
 |--------------------------------------------------------------------------
@@ -258,7 +306,7 @@ const infoError = ref(null);
 const videoFormat = ref('webm');
 
 const videoBasename = computed(() => {
-    if (!props.product.videoUrl) {
+    if (!props.product?.videoUrl) {
         return '';
     }
 
@@ -266,7 +314,7 @@ const videoBasename = computed(() => {
 });
 
 const videoSrc = computed(() => {
-    if (!videoBasename.value || !props.product.categorySlug) {
+    if (!videoBasename.value || !props.product?.categorySlug) {
         return '';
     }
 
@@ -284,6 +332,20 @@ const videoKey = computed(() => {
 */
 
 const openInfoModal = async (key) => {
+    /*
+     * Documentation имеет собственный modal-flow.
+     */
+    if (key === 'documentation') {
+        openDocumentation();
+        return;
+    }
+
+    if (!props.product?.id) {
+        console.warn('Cannot open product information: product is not available.');
+
+        return;
+    }
+
     selectedInfo.value = key;
     selectedInfoData.value = null;
     infoError.value = null;
@@ -323,7 +385,158 @@ const closeInfoModal = () => {
     infoError.value = null;
     isInfoLoading.value = false;
 
-    document.body.classList.remove('overflow-hidden');
+    /*
+     * Не снимаем overflow-hidden, если documentation
+     * modal всё ещё открыт.
+     */
+    if (!isDocumentationOpen.value) {
+        document.body.classList.remove('overflow-hidden');
+    }
+};
+
+/*
+|--------------------------------------------------------------------------
+| DOCUMENTATION MODAL
+|--------------------------------------------------------------------------
+*/
+
+const openDocumentation = () => {
+    if (!props.product?.id) {
+        console.warn('Cannot open documentation: product is not available.');
+
+        return;
+    }
+
+    documentationError.value = null;
+    documentationDocuments.value = [];
+    documentationAuthorized.value = false;
+    isDocumentationLoading.value = false;
+    isDocumentationOpen.value = true;
+
+    document.body.classList.add('overflow-hidden');
+};
+
+const authorizeDocumentation = async (key) => {
+    if (!props.product?.id) {
+        documentationError.value = 'Не удалось определить продукт.';
+
+        return;
+    }
+
+    if (!key) {
+        documentationError.value = 'Введите ключ доступа.';
+
+        return;
+    }
+
+    documentationError.value = null;
+    isDocumentationLoading.value = true;
+
+    try {
+        const response = await documentationApi.access(props.product.id, key);
+
+        documentationDocuments.value = response?.documents || [];
+
+        documentationAuthorized.value = response?.authorized === true;
+    } catch (error) {
+        console.error('Failed to authorize documentation:', error);
+
+        documentationAuthorized.value = false;
+        documentationDocuments.value = [];
+
+        if (error?.status === 401) {
+            documentationError.value = 'Неверный ключ доступа.';
+        } else if (error?.status === 403) {
+            documentationError.value =
+                'Ключ не предоставляет доступ к документации этого продукта.';
+        } else {
+            documentationError.value = error?.message || 'Не удалось получить документацию.';
+        }
+    } finally {
+        isDocumentationLoading.value = false;
+    }
+};
+
+const closeDocumentation = () => {
+    isDocumentationOpen.value = false;
+    documentationAuthorized.value = false;
+    documentationDocuments.value = [];
+    documentationError.value = null;
+    isDocumentationLoading.value = false;
+
+    /*
+     * Если обычное информационное окно также открыто,
+     * оставляем блокировку страницы.
+     */
+    if (!selectedInfo.value) {
+        document.body.classList.remove('overflow-hidden');
+    }
+};
+
+const openDocumentationPdf = async ({
+    file,
+    key,
+}) => {
+    if (!file?.id || !key) {
+        return;
+    }
+
+    try {
+        const blob = await documentationApi.openFile(
+            file.id,
+            key,
+        );
+
+        const blobUrl = URL.createObjectURL(
+            blob,
+        );
+
+        const pdfWindow = window.open(
+            blobUrl,
+            '_blank',
+        );
+
+        /*
+         * Если браузер заблокировал новую вкладку,
+         * освобождаем URL немного позже.
+         */
+        if (!pdfWindow) {
+            URL.revokeObjectURL(blobUrl);
+
+            documentationError.value =
+                'Браузер заблокировал открытие PDF. Разрешите всплывающие окна для сайта.';
+
+            return;
+        }
+
+        /*
+         * Освобождаем Blob URL после загрузки
+         * документа в новой вкладке.
+         */
+        setTimeout(() => {
+            URL.revokeObjectURL(blobUrl);
+        }, 60_000);
+    } catch (error) {
+        console.error(
+            'Failed to open documentation PDF:',
+            error,
+        );
+
+        if (error?.status === 401) {
+            documentationError.value =
+                'Ключ доступа недействителен.';
+        } else if (error?.status === 403) {
+            documentationError.value =
+                'Доступ к этому документу запрещён.';
+        } else if (error?.status === 404) {
+            documentationError.value =
+                'Файл документации не найден.';
+        } else {
+            documentationError.value =
+                error?.message ||
+                'Не удалось открыть PDF.';
+        }
+    }
 };
 
 /*
@@ -333,7 +546,7 @@ const closeInfoModal = () => {
 */
 
 const toggleVideo = () => {
-    if (!props.product.videoUrl) {
+    if (!props.product?.videoUrl) {
         return;
     }
 
@@ -351,7 +564,6 @@ const handleVideoEnded = () => {
     isPlaying.value = false;
     videoFormat.value = 'webm';
 };
-
 
 const handleVideoError = (event) => {
     /*
@@ -375,6 +587,12 @@ const handleVideoError = (event) => {
     isPlaying.value = false;
 };
 
+/*
+|--------------------------------------------------------------------------
+| MANAGER
+|--------------------------------------------------------------------------
+*/
+
 const handleManageInfo = ({ key, product }) => {
     if (!props.canManage) {
         return;
@@ -385,8 +603,4 @@ const handleManageInfo = ({ key, product }) => {
         product,
     });
 };
-
-const emit = defineEmits([
-    'manageInfo',
-]);
 </script>
