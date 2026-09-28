@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Product\StoreProductRequest;
+use App\Http\Requests\Product\UpdateProductCompatibleRequest;
+use App\Http\Requests\Product\UpdateProductDetailsRequest;
 use App\Http\Requests\Product\UpdateProductRequest;
 use App\Models\Product\Category;
+use App\Models\Product\Certificate;
 use App\Models\Product\Group;
 use App\Models\Product\Product;
 use App\Services\Documentation\ProductDocumentFileService;
@@ -101,6 +104,12 @@ class ProductController extends Controller
             ->unique()
             ->values();
 
+        /*
+        |--------------------------------------------------------------------------
+        | Remove existing relations in both directions.
+        |--------------------------------------------------------------------------
+        */
+
         $product
             ->compatibleProducts()
             ->detach();
@@ -108,6 +117,12 @@ class ProductController extends Controller
         $product
             ->compatibleWithProducts()
             ->detach();
+
+        /*
+        |--------------------------------------------------------------------------
+        | Create the selected relations.
+        |--------------------------------------------------------------------------
+        */
 
         if ($ids->isNotEmpty()) {
             $product
@@ -341,6 +356,12 @@ class ProductController extends Controller
                 $product->sector
             ),
         ];
+
+        /*
+        |--------------------------------------------------------------------------
+        | Compatible products
+        |--------------------------------------------------------------------------
+        */
 
         if ($withCompatibleProducts) {
             $compatibleProducts =
@@ -892,8 +913,8 @@ class ProductController extends Controller
     /**
      * Show the form for editing the specified product.
      *
-     * Returns only the data required by the primary ProductForm.
-     * Secondary product data is loaded by separate forms/endpoints.
+     * Returns primary product data together with
+     * certificates and compatible product options.
      */
     public function edit(
         Product $product
@@ -901,7 +922,159 @@ class ProductController extends Controller
         $product->load([
             'method',
             'sector',
+            'certificates',
+            'compatibleProducts',
+            'compatibleWithProducts',
         ]);
+
+        /*
+        |--------------------------------------------------------------------------
+        | Current certificate IDs
+        |--------------------------------------------------------------------------
+        |
+        | Only relation IDs are returned.
+        |
+        | Removing a certificate from this list must only remove
+        | the corresponding row from product_certificates.
+        |
+        | The Certificate model and its physical file are shared
+        | resources and must never be deleted here.
+        |
+        */
+
+        $certificateIds = $product
+            ->certificates
+            ->pluck('id')
+            ->map(fn ($id) => (int) $id)
+            ->values()
+            ->all();
+
+        /*
+        |--------------------------------------------------------------------------
+        | Current compatible product IDs
+        |--------------------------------------------------------------------------
+        |
+        | Compatibility can exist in either direction:
+        |
+        | product_id -> compatible_product_id
+        |
+        | or
+        |
+        | compatible_product_id -> product_id
+        |
+        | Merge both directions for the editor.
+        |
+        */
+
+        $compatibleProductIds = $product
+            ->compatibleProducts
+            ->pluck('id')
+            ->merge(
+                $product
+                    ->compatibleWithProducts
+                    ->pluck('id')
+            )
+            ->map(fn ($id) => (int) $id)
+            ->filter(
+                fn ($id) => $id !== (int) $product->id
+            )
+            ->unique()
+            ->values()
+            ->all();
+
+        /*
+        |--------------------------------------------------------------------------
+        | Certificate options
+        |--------------------------------------------------------------------------
+        */
+
+        $certificates = Certificate::query()
+            ->orderBy('id')
+            ->get([
+                'id',
+                'title',
+                'description',
+                'image_url',
+            ])
+            ->map(
+                fn ($certificate) => [
+                    'id' => $certificate->id,
+
+                    'title' => $certificate->title,
+
+                    'description' => $certificate->description,
+
+                    'image_url' => $certificate->image_url,
+                ]
+            )
+            ->values()
+            ->all();
+
+        /*
+        |--------------------------------------------------------------------------
+        | Compatible product options
+        |--------------------------------------------------------------------------
+        |
+        | The current product itself is excluded.
+        |
+        */
+
+        $products = Product::query()
+            ->where(
+                'id',
+                '!=',
+                $product->id
+            )
+            ->with([
+                'category',
+                'group',
+            ])
+            ->orderBy('id')
+            ->get([
+                'id',
+                'article',
+                'name',
+                'category_id',
+                'group_id',
+                'image_url',
+            ])
+            ->map(
+                fn (Product $compatibleProduct) => [
+                    'id' => $compatibleProduct->id,
+
+                    'article' => $compatibleProduct->article,
+
+                    'name' => $compatibleProduct->name,
+
+                    'category_id' => $compatibleProduct->category_id,
+
+                    'category' => $compatibleProduct->category
+                        ? [
+                            'id' => $compatibleProduct->category->id,
+
+                            'slug' => $compatibleProduct->category->slug,
+
+                            'title' => $compatibleProduct->category->category,
+                        ]
+                        : null,
+
+                    'group_id' => $compatibleProduct->group_id,
+
+                    'group' => $compatibleProduct->group
+                        ? [
+                            'id' => $compatibleProduct->group->id,
+
+                            'slug' => $compatibleProduct->group->slug,
+
+                            'title' => $compatibleProduct->group->group,
+                        ]
+                        : null,
+
+                    'image_url' => $compatibleProduct->image_url,
+                ]
+            )
+            ->values()
+            ->all();
 
         return response()->json([
             'product' => [
@@ -922,6 +1095,28 @@ class ProductController extends Controller
                 'image_url' => $product->image_url,
 
                 'video_url' => $product->video_url,
+
+                /*
+                |--------------------------------------------------------------------------
+                | Certificates
+                |--------------------------------------------------------------------------
+                */
+
+                'certificate_ids' => $certificateIds,
+
+                /*
+                |--------------------------------------------------------------------------
+                | Compatible products
+                |--------------------------------------------------------------------------
+                */
+
+                'compatible_product_ids' => $compatibleProductIds,
+
+                /*
+                |--------------------------------------------------------------------------
+                | Method
+                |--------------------------------------------------------------------------
+                */
 
                 'method' => [
                     'ut_method' => (bool) (
@@ -955,6 +1150,12 @@ class ProductController extends Controller
                     ),
                 ],
 
+                /*
+                |--------------------------------------------------------------------------
+                | Application sectors
+                |--------------------------------------------------------------------------
+                */
+
                 'sector' => [
                     'railway' => (bool) (
                         $product->sector?->railway
@@ -971,6 +1172,34 @@ class ProductController extends Controller
                         ?? false
                     ),
                 ],
+            ],
+
+            /*
+            |--------------------------------------------------------------------------
+            | Options
+            |--------------------------------------------------------------------------
+            */
+
+            'options' => [
+                'categories' => Category::query()
+                    ->orderBy('id')
+                    ->get([
+                        'id',
+                        'category',
+                        'slug',
+                    ]),
+
+                'groups' => Group::query()
+                    ->orderBy('id')
+                    ->get([
+                        'id',
+                        'group',
+                        'slug',
+                    ]),
+
+                'certificates' => $certificates,
+
+                'products' => $products,
             ],
         ]);
     }
@@ -1105,15 +1334,61 @@ class ProductController extends Controller
                 |--------------------------------------------------------------------------
                 | Product / Group
                 |--------------------------------------------------------------------------
-                |
-                | Keep the pivot table synchronized with
-                | the main product group.
-                |
                 */
 
                 $product->groups()->sync([
                     $validated['group_id'],
                 ]);
+
+                /*
+                |--------------------------------------------------------------------------
+                | Certificates
+                |--------------------------------------------------------------------------
+                |
+                | IMPORTANT:
+                |
+                | This changes only the product_certificates pivot.
+                |
+                | It does NOT delete:
+                | - Certificate records
+                | - Certificate files
+                | - Certificates linked to other products
+                |
+                */
+
+                if (
+                    array_key_exists(
+                        'certificate_ids',
+                        $validated
+                    )
+                ) {
+                    $product
+                        ->certificates()
+                        ->sync(
+                            $validated['certificate_ids']
+                            ?? []
+                        );
+                }
+
+                /*
+                |--------------------------------------------------------------------------
+                | Compatible products
+                |--------------------------------------------------------------------------
+                */
+
+                if (
+                    array_key_exists(
+                        'compatible_product_ids',
+                        $validated
+                    )
+                ) {
+                    $this->syncCompatibleProducts(
+                        $product,
+                        $validated[
+                            'compatible_product_ids'
+                        ] ?? []
+                    );
+                }
 
                 /*
                 |--------------------------------------------------------------------------
@@ -1250,6 +1525,7 @@ class ProductController extends Controller
 
                 app(ProductDocumentFileService::class)
                     ->deleteProduct($product);
+
                 $product->delete();
             }
         );
@@ -1293,5 +1569,45 @@ class ProductController extends Controller
                     'description',
                 ])
         );
+    }
+
+    public function updateDetails(
+        UpdateProductDetailsRequest $request,
+        Product $product
+    ): JsonResponse {
+        $validated = $request->validated();
+
+        $product->update([
+            'full_description' => $validated['full_description'],
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'full_description' => $product->full_description,
+        ]);
+    }
+
+    public function updateCompatible(
+        UpdateProductCompatibleRequest $request,
+        Product $product
+    ): JsonResponse {
+        $validated = $request->validated();
+
+        $compatibleProductIds = collect(
+            $validated['compatible_product_ids'] ?? []
+        )
+            ->map(fn ($id) => (int) $id)
+            ->reject(fn ($id) => $id === (int) $product->id)
+            ->unique()
+            ->values();
+
+        $product->compatibleProducts()->sync(
+            $compatibleProductIds->all()
+        );
+
+        return response()->json([
+            'success' => true,
+            'compatible_product_ids' => $compatibleProductIds->all(),
+        ]);
     }
 }

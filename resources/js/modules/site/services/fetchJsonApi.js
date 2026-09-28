@@ -8,50 +8,109 @@ function getXsrfToken() {
         : null;
 }
 
+let csrfInitialized = false;
+
 async function ensureCsrfCookie() {
+    if (csrfInitialized) {
+        return;
+    }
+
     const response = await fetch('/sanctum/csrf-cookie', {
         method: 'GET',
         credentials: 'same-origin',
         headers: {
             Accept: 'application/json',
+            'X-Requested-With': 'XMLHttpRequest',
         },
     });
 
     if (!response.ok) {
-        throw new Error('Failed to initialize CSRF protection.');
+        throw new Error(
+            'Failed to initialize CSRF protection.'
+        );
     }
+
+    csrfInitialized = true;
 }
 
 export async function fetchJsonApi(url, options = {}) {
-    const method = (options.method || 'GET').toUpperCase();
+    const method = (
+        options.method || 'GET'
+    ).toUpperCase();
 
-    if (['POST', 'PUT', 'PATCH', 'DELETE'].includes(method)) {
-        await ensureCsrfCookie();
-    }
+    /*
+    |--------------------------------------------------------------------------
+    | Initialize Sanctum session / CSRF cookie
+    |--------------------------------------------------------------------------
+    */
+
+    await ensureCsrfCookie();
+
+    /*
+    |--------------------------------------------------------------------------
+    | Headers
+    |--------------------------------------------------------------------------
+    */
 
     const headers = {
         Accept: 'application/json',
+
         'X-Requested-With': 'XMLHttpRequest',
+
         ...options.headers,
     };
 
-    if (!(options.body instanceof FormData)) {
+    /*
+    |--------------------------------------------------------------------------
+    | JSON body
+    |--------------------------------------------------------------------------
+    */
+
+    if (
+        options.body
+        && !(options.body instanceof FormData)
+        && !(options.body instanceof Blob)
+    ) {
         headers['Content-Type'] = 'application/json';
     }
-    
+
+    /*
+    |--------------------------------------------------------------------------
+    | XSRF token
+    |--------------------------------------------------------------------------
+    */
+
     const xsrfToken = getXsrfToken();
 
     if (xsrfToken) {
         headers['X-XSRF-TOKEN'] = xsrfToken;
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | Request
+    |--------------------------------------------------------------------------
+    */
+
     const response = await fetch(url, {
-        credentials: 'same-origin',
         ...options,
+
+        method,
+
+        credentials: 'same-origin',
+
         headers,
     });
 
-    const data = await response.json().catch(() => ({}));
+    /*
+    |--------------------------------------------------------------------------
+    | Response
+    |--------------------------------------------------------------------------
+    */
+
+    const data = await response
+        .json()
+        .catch(() => ({}));
 
     if (!response.ok) {
         const error = new Error(
@@ -59,6 +118,7 @@ export async function fetchJsonApi(url, options = {}) {
         );
 
         error.status = response.status;
+
         error.errors = data?.errors || {};
 
         throw error;

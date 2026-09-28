@@ -4,9 +4,7 @@ const PRODUCT_API_URL = '/api/products';
 
 export const productsApi = {
     getAll() {
-        return fetchJsonApi(
-            `${PRODUCT_API_URL}/item`
-        );
+        return fetchJsonApi(`${PRODUCT_API_URL}/item`);
     },
 
     getByCategorySlug(categorySlug) {
@@ -28,9 +26,7 @@ export const productsApi = {
     },
 
     getCreate() {
-        return fetchJsonApi(
-            `${PRODUCT_API_URL}/item/create`
-        );
+        return fetchJsonApi(`${PRODUCT_API_URL}/item/create`);
     },
 
     getEdit(productId) {
@@ -40,13 +36,10 @@ export const productsApi = {
     },
 
     create(payload) {
-        return fetchJsonApi(
-            `${PRODUCT_API_URL}/item`,
-            {
-                method: 'POST',
-                body: JSON.stringify(payload),
-            }
-        );
+        return fetchJsonApi(`${PRODUCT_API_URL}/item`, {
+            method: 'POST',
+            body: JSON.stringify(payload),
+        });
     },
 
     update(productId, payload) {
@@ -59,9 +52,140 @@ export const productsApi = {
         );
     },
 
+    /*
+    |--------------------------------------------------------------------------
+    | Product details
+    |--------------------------------------------------------------------------
+    */
+
+    updateDetails(productId, payload) {
+        return fetchJsonApi(
+            `${PRODUCT_API_URL}/item/${encodeURIComponent(productId)}/details`,
+            {
+                method: 'PUT',
+                body: JSON.stringify(payload),
+            }
+        );
+    },
+
+    /*
+    |--------------------------------------------------------------------------
+    | Compatible products
+    |--------------------------------------------------------------------------
+    */
+
+    updateCompatible(productId, payload) {
+        return fetchJsonApi(
+            `${PRODUCT_API_URL}/item/${encodeURIComponent(productId)}/compatible`,
+            {
+                method: 'PUT',
+                body: JSON.stringify(payload),
+            }
+        );
+    },
+
     remove(productId) {
         return fetchJsonApi(
             `${PRODUCT_API_URL}/item/${encodeURIComponent(productId)}`,
+            {
+                method: 'DELETE',
+            }
+        );
+    },
+
+    /*
+    |--------------------------------------------------------------------------
+    | Product gallery
+    |--------------------------------------------------------------------------
+    */
+
+    getGallery(productId) {
+        return fetchJsonApi(
+            `${PRODUCT_API_URL}/${encodeURIComponent(productId)}/gallery`
+        );
+    },
+
+    createGallery(productId, file, title = {}, description = {}) {
+        const formData = new FormData();
+
+        formData.append('image', file);
+
+        formData.append('title[ru]', title?.ru ?? '');
+        formData.append('title[en]', title?.en ?? '');
+
+        formData.append('description[ru]', description?.ru ?? '');
+        formData.append('description[en]', description?.en ?? '');
+
+        return fetchJsonApi(
+            `${PRODUCT_API_URL}/item/${encodeURIComponent(productId)}/gallery`,
+            {
+                method: 'POST',
+                body: formData,
+            }
+        );
+    },
+
+    updateGallery(productId, galleryId, payload) {
+        return fetchJsonApi(
+            `${PRODUCT_API_URL}/item/${encodeURIComponent(productId)}/gallery/${encodeURIComponent(galleryId)}`,
+            {
+                method: 'PUT',
+                body: JSON.stringify(payload),
+            }
+        );
+    },
+
+    deleteGallery(productId, galleryId) {
+        return fetchJsonApi(
+            `${PRODUCT_API_URL}/item/${encodeURIComponent(productId)}/gallery/${encodeURIComponent(galleryId)}`,
+            {
+                method: 'DELETE',
+            }
+        );
+    },
+
+    /*
+    |--------------------------------------------------------------------------
+    | Product certificates
+    |--------------------------------------------------------------------------
+    */
+
+    getCertificates(productId) {
+        return fetchJsonApi(
+            `${PRODUCT_API_URL}/${encodeURIComponent(productId)}/certificates`
+        );
+    },
+
+    createCertificate(productId, file, payload = {}) {
+        const formData = new FormData();
+
+        formData.append('image', file);
+
+        formData.append('name[ru]', payload?.name?.ru ?? '');
+        formData.append('name[en]', payload?.name?.en ?? '');
+
+        return fetchJsonApi(
+            `${PRODUCT_API_URL}/item/${encodeURIComponent(productId)}/certificates`,
+            {
+                method: 'POST',
+                body: formData,
+            }
+        );
+    },
+
+    updateCertificate(productId, certificateId, payload) {
+        return fetchJsonApi(
+            `${PRODUCT_API_URL}/item/${encodeURIComponent(productId)}/certificates/${encodeURIComponent(certificateId)}`,
+            {
+                method: 'PUT',
+                body: JSON.stringify(payload),
+            }
+        );
+    },
+
+    deleteCertificate(productId, certificateId) {
+        return fetchJsonApi(
+            `${PRODUCT_API_URL}/item/${encodeURIComponent(productId)}/certificates/${encodeURIComponent(certificateId)}`,
             {
                 method: 'DELETE',
             }
@@ -96,28 +220,13 @@ export const productsApi = {
     |--------------------------------------------------------------------------
     */
 
-    createFeaturesGallery(
-        productId,
-        file,
-        title
-    ) {
-        const formData =
-            new FormData();
+    createFeaturesGallery(productId, file, title) {
+        const formData = new FormData();
 
-        formData.append(
-            'image',
-            file
-        );
+        formData.append('image', file);
 
-        formData.append(
-            'title[ru]',
-            title?.ru ?? ''
-        );
-
-        formData.append(
-            'title[en]',
-            title?.en ?? ''
-        );
+        formData.append('title[ru]', title?.ru ?? '');
+        formData.append('title[en]', title?.en ?? '');
 
         return fetchJsonApi(
             `${PRODUCT_API_URL}/item/${encodeURIComponent(productId)}/features/gallery`,
@@ -128,26 +237,17 @@ export const productsApi = {
         );
     },
 
-    updateFeaturesGallery(
-        productId,
-        galleryId,
-        payload
-    ) {
+    updateFeaturesGallery(productId, galleryId, payload) {
         return fetchJsonApi(
             `${PRODUCT_API_URL}/item/${encodeURIComponent(productId)}/features/gallery/${encodeURIComponent(galleryId)}`,
             {
                 method: 'PUT',
-                body: JSON.stringify(
-                    payload
-                ),
+                body: JSON.stringify(payload),
             }
         );
     },
 
-    deleteFeaturesGallery(
-        productId,
-        galleryId
-    ) {
+    deleteFeaturesGallery(productId, galleryId) {
         return fetchJsonApi(
             `${PRODUCT_API_URL}/item/${encodeURIComponent(productId)}/features/gallery/${encodeURIComponent(galleryId)}`,
             {
@@ -168,41 +268,27 @@ export const productsApi = {
         );
     },
 
-    createSpecification(
-        productId,
-        payload
-    ) {
+    createSpecification(productId, payload) {
         return fetchJsonApi(
             `${PRODUCT_API_URL}/item/${encodeURIComponent(productId)}/specifications`,
             {
                 method: 'POST',
-                body: JSON.stringify(
-                    payload
-                ),
+                body: JSON.stringify(payload),
             }
         );
     },
 
-    updateSpecification(
-        productId,
-        specificationId,
-        payload
-    ) {
+    updateSpecification(productId, specificationId, payload) {
         return fetchJsonApi(
             `${PRODUCT_API_URL}/item/${encodeURIComponent(productId)}/specifications/${encodeURIComponent(specificationId)}`,
             {
                 method: 'PUT',
-                body: JSON.stringify(
-                    payload
-                ),
+                body: JSON.stringify(payload),
             }
         );
     },
 
-    deleteSpecification(
-        productId,
-        specificationId
-    ) {
+    deleteSpecification(productId, specificationId) {
         return fetchJsonApi(
             `${PRODUCT_API_URL}/item/${encodeURIComponent(productId)}/specifications/${encodeURIComponent(specificationId)}`,
             {
@@ -211,3 +297,4 @@ export const productsApi = {
         );
     },
 };
+

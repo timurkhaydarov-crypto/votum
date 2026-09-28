@@ -209,8 +209,6 @@ const loadUsers = async () => {
     try {
         const response = await documentationApi.getUsers();
 
-        console.log('Documentation users response:', response);
-
         if (Array.isArray(response)) {
             users.value = response;
         } else if (Array.isArray(response?.users)) {
@@ -222,8 +220,6 @@ const loadUsers = async () => {
         } else {
             users.value = [];
         }
-
-        console.log('Documentation users:', users.value);
     } catch (error) {
         console.error('Failed to load documentation users:', error);
 

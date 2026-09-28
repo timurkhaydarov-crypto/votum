@@ -38,7 +38,7 @@ class UpdateProductRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * Primary product data only.
+     * Primary product data + product relations.
      */
     public function rules(): array
     {
@@ -254,6 +254,46 @@ class UpdateProductRequest extends FormRequest
             'sector.oil' => [
                 'nullable',
                 'boolean',
+            ],
+
+            /*
+            |--------------------------------------------------------------------------
+            | Product certificates
+            |--------------------------------------------------------------------------
+            |
+            | These fields are optional because certificates can also be
+            | managed separately through the certificates section.
+            |
+            */
+
+            'certificate_ids' => [
+                'nullable',
+                'array',
+            ],
+
+            'certificate_ids.*' => [
+                'integer',
+                'exists:certificates,id',
+            ],
+
+            /*
+            |--------------------------------------------------------------------------
+            | Compatible products
+            |--------------------------------------------------------------------------
+            |
+            | These fields are optional. When present, ProductController
+            | synchronizes the compatibility relations.
+            |
+            */
+
+            'compatible_product_ids' => [
+                'nullable',
+                'array',
+            ],
+
+            'compatible_product_ids.*' => [
+                'integer',
+                'exists:products,id',
             ],
         ];
     }

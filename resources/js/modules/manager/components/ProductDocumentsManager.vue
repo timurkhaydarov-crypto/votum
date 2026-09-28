@@ -60,9 +60,7 @@
                         <div>
                             <h3 class="font-semibold text-slate-900">
                                 {{
-                                    editingDocument
-                                        ? 'Редактирование документа'
-                                        : 'Новый документ'
+                                    editingDocument ? 'Редактирование документа' : 'Новый документ'
                                 }}
                             </h3>
 
@@ -222,9 +220,7 @@
                 <section class="mt-6">
                     <div class="flex items-end justify-between gap-4">
                         <div>
-                            <h3 class="font-semibold text-slate-900">
-                                Документы
-                            </h3>
+                            <h3 class="font-semibold text-slate-900">Документы</h3>
 
                             <p class="mt-1 text-sm text-slate-500">
                                 Загруженные документы и PDF-файлы.
@@ -274,9 +270,7 @@
                             Документы отсутствуют
                         </div>
 
-                        <div class="mt-1 text-xs text-slate-500">
-                            Создай первый документ выше.
-                        </div>
+                        <div class="mt-1 text-xs text-slate-500">Создай первый документ выше.</div>
                     </div>
 
                     <!-- LIST -->
@@ -310,11 +304,7 @@
                                                     : 'bg-slate-100 text-slate-500',
                                             ]"
                                         >
-                                            {{
-                                                document.is_active
-                                                    ? 'Активен'
-                                                    : 'Выключен'
-                                            }}
+                                            {{ document.is_active ? 'Активен' : 'Выключен' }}
                                         </span>
                                     </div>
 
@@ -360,9 +350,7 @@
                             <!-- FILES -->
                             <div class="mt-5 grid gap-3 md:grid-cols-2">
                                 <!-- RU -->
-                                <div
-                                    class="rounded-xl border border-slate-200 bg-slate-50 p-4"
-                                >
+                                <div class="rounded-xl border border-slate-200 bg-slate-50 p-4">
                                     <div class="flex items-center justify-between gap-3">
                                         <div class="flex items-center gap-2">
                                             <span
@@ -397,13 +385,7 @@
                                                 type="file"
                                                 accept="application/pdf,.pdf"
                                                 class="hidden"
-                                                @change="
-                                                    uploadFile(
-                                                        document,
-                                                        'ru',
-                                                        $event
-                                                    )
-                                                "
+                                                @change="uploadFile(document, 'ru', $event)"
                                             />
                                         </label>
                                     </div>
@@ -413,44 +395,30 @@
                                         class="mt-3 flex items-center justify-between gap-3 text-xs text-slate-500"
                                     >
                                         <span>
-                                            {{
-                                                formatFileSize(
-                                                    getFile(document, 'ru')?.file_size
-                                                )
-                                            }}
+                                            {{ formatFileSize(getFile(document, 'ru')?.file_size) }}
                                         </span>
 
                                         <button
                                             type="button"
                                             class="font-semibold text-rose-600 hover:text-rose-700 disabled:opacity-50"
-                                            :disabled="
-                                                isDeletingFile(document.id, 'ru')
-                                            "
+                                            :disabled="isDeletingFile(document.id, 'ru')"
                                             @click="deleteFile(document, 'ru')"
                                         >
                                             {{
-                                                isDeletingFile(
-                                                    document.id,
-                                                    'ru'
-                                                )
+                                                isDeletingFile(document.id, 'ru')
                                                     ? 'Удаление...'
                                                     : 'Удалить PDF'
                                             }}
                                         </button>
                                     </div>
 
-                                    <div
-                                        v-else
-                                        class="mt-3 text-xs text-amber-600"
-                                    >
+                                    <div v-else class="mt-3 text-xs text-amber-600">
                                         PDF ещё не загружен.
                                     </div>
                                 </div>
 
                                 <!-- EN -->
-                                <div
-                                    class="rounded-xl border border-slate-200 bg-slate-50 p-4"
-                                >
+                                <div class="rounded-xl border border-slate-200 bg-slate-50 p-4">
                                     <div class="flex items-center justify-between gap-3">
                                         <div class="flex items-center gap-2">
                                             <span
@@ -485,13 +453,7 @@
                                                 type="file"
                                                 accept="application/pdf,.pdf"
                                                 class="hidden"
-                                                @change="
-                                                    uploadFile(
-                                                        document,
-                                                        'en',
-                                                        $event
-                                                    )
-                                                "
+                                                @change="uploadFile(document, 'en', $event)"
                                             />
                                         </label>
                                     </div>
@@ -501,36 +463,24 @@
                                         class="mt-3 flex items-center justify-between gap-3 text-xs text-slate-500"
                                     >
                                         <span>
-                                            {{
-                                                formatFileSize(
-                                                    getFile(document, 'en')?.file_size
-                                                )
-                                            }}
+                                            {{ formatFileSize(getFile(document, 'en')?.file_size) }}
                                         </span>
 
                                         <button
                                             type="button"
                                             class="font-semibold text-rose-600 hover:text-rose-700 disabled:opacity-50"
-                                            :disabled="
-                                                isDeletingFile(document.id, 'en')
-                                            "
+                                            :disabled="isDeletingFile(document.id, 'en')"
                                             @click="deleteFile(document, 'en')"
                                         >
                                             {{
-                                                isDeletingFile(
-                                                    document.id,
-                                                    'en'
-                                                )
+                                                isDeletingFile(document.id, 'en')
                                                     ? 'Удаление...'
                                                     : 'Удалить PDF'
                                             }}
                                         </button>
                                     </div>
 
-                                    <div
-                                        v-else
-                                        class="mt-3 text-xs text-amber-600"
-                                    >
+                                    <div v-else class="mt-3 text-xs text-amber-600">
                                         PDF ещё не загружен.
                                     </div>
                                 </div>
@@ -649,10 +599,7 @@ const form = ref(createDefaultForm());
 
 const loadDocuments = async () => {
     if (!props.product?.id) {
-        console.error(
-            'ProductDocumentsManager: product.id is missing',
-            props.product,
-        );
+        console.error('ProductDocumentsManager: product.id is missing', props.product);
 
         documents.value = [];
 
@@ -663,43 +610,21 @@ const loadDocuments = async () => {
     errorMessage.value = '';
 
     try {
-        console.log(
-            'Loading product documents:',
-            props.product.id,
-        );
-
-        const response = await documentationApi.getProductDocuments(
-            props.product.id,
-        );
-
-        console.log(
-            'Product documents response:',
-            response,
-        );
+        const response = await documentationApi.getProductDocuments(props.product.id);
 
         documents.value = Array.isArray(response)
             ? response
-            : (
-                response?.documents ??
-                response?.data?.documents ??
-                response?.data ??
-                []
-            );
+            : (response?.documents ?? response?.data?.documents ?? response?.data ?? []);
 
         if (!Array.isArray(documents.value)) {
             documents.value = [];
         }
     } catch (error) {
-        console.error(
-            'Failed to load product documents:',
-            error,
-        );
+        console.error('Failed to load product documents:', error);
 
         documents.value = [];
 
-        errorMessage.value =
-            error?.message ||
-            'Не удалось загрузить документацию продукта.';
+        errorMessage.value = error?.message || 'Не удалось загрузить документацию продукта.';
     } finally {
         isLoading.value = false;
     }
@@ -733,13 +658,9 @@ const startEdit = (document) => {
             en: document.description?.en || '',
         },
 
-        sort_order: Number(
-            document.sort_order || 0,
-        ),
+        sort_order: Number(document.sort_order || 0),
 
-        is_active: Boolean(
-            document.is_active,
-        ),
+        is_active: Boolean(document.is_active),
     };
 
     window.scrollTo({
@@ -755,20 +676,14 @@ const startEdit = (document) => {
 */
 
 const saveDocument = async () => {
-    if (
-        !form.value.type ||
-        !form.value.title.ru ||
-        !form.value.title.en
-    ) {
-        errorMessage.value =
-            'Заполни тип и название документа на RU и EN.';
+    if (!form.value.type || !form.value.title.ru || !form.value.title.en) {
+        errorMessage.value = 'Заполни тип и название документа на RU и EN.';
 
         return;
     }
 
     if (!props.product?.id) {
-        errorMessage.value =
-            'Не удалось определить продукт.';
+        errorMessage.value = 'Не удалось определить продукт.';
 
         return;
     }
@@ -789,13 +704,9 @@ const saveDocument = async () => {
             en: form.value.description.en || null,
         },
 
-        sort_order: Number(
-            form.value.sort_order || 0,
-        ),
+        sort_order: Number(form.value.sort_order || 0),
 
-        is_active: Boolean(
-            form.value.is_active,
-        ),
+        is_active: Boolean(form.value.is_active),
     };
 
     try {
@@ -803,13 +714,10 @@ const saveDocument = async () => {
             await documentationApi.updateProductDocument(
                 props.product.id,
                 editingDocument.value.id,
-                payload,
+                payload
             );
         } else {
-            await documentationApi.createProductDocument(
-                props.product.id,
-                payload,
-            );
+            await documentationApi.createProductDocument(props.product.id, payload);
         }
 
         resetForm();
@@ -818,14 +726,9 @@ const saveDocument = async () => {
 
         emit('changed');
     } catch (error) {
-        console.error(
-            'Failed to save product document:',
-            error,
-        );
+        console.error('Failed to save product document:', error);
 
-        errorMessage.value =
-            error?.message ||
-            'Не удалось сохранить документ.';
+        errorMessage.value = error?.message || 'Не удалось сохранить документ.';
     } finally {
         isSavingDocument.value = false;
     }
@@ -838,11 +741,7 @@ const saveDocument = async () => {
 */
 
 const deleteDocument = async (document) => {
-    if (
-        !window.confirm(
-            `Удалить документ "${getTitle(document)}"?`,
-        )
-    ) {
+    if (!window.confirm(`Удалить документ "${getTitle(document)}"?`)) {
         return;
     }
 
@@ -851,15 +750,9 @@ const deleteDocument = async (document) => {
     errorMessage.value = '';
 
     try {
-        await documentationApi.deleteProductDocument(
-            props.product.id,
-            document.id,
-        );
+        await documentationApi.deleteProductDocument(props.product.id, document.id);
 
-        if (
-            editingDocument.value?.id ===
-            document.id
-        ) {
+        if (editingDocument.value?.id === document.id) {
             resetForm();
         }
 
@@ -867,14 +760,9 @@ const deleteDocument = async (document) => {
 
         emit('changed');
     } catch (error) {
-        console.error(
-            'Failed to delete product document:',
-            error,
-        );
+        console.error('Failed to delete product document:', error);
 
-        errorMessage.value =
-            error?.message ||
-            'Не удалось удалить документ.';
+        errorMessage.value = error?.message || 'Не удалось удалить документ.';
     } finally {
         deletingDocumentId.value = null;
     }
@@ -891,33 +779,17 @@ const getFile = (document, locale) => {
         return null;
     }
 
-    return (
-        document.files.find(
-            (file) =>
-                file.locale === locale,
-        ) || null
-    );
+    return document.files.find((file) => file.locale === locale) || null;
 };
 
 const getFileName = (document, locale) => {
-    const file = getFile(
-        document,
-        locale,
-    );
+    const file = getFile(document, locale);
 
-    return (
-        file?.original_name ||
-        'PDF не загружен'
-    );
+    return file?.original_name || 'PDF не загружен';
 };
 
-const uploadFile = async (
-    document,
-    locale,
-    event,
-) => {
-    const file =
-        event.target?.files?.[0];
+const uploadFile = async (document, locale, event) => {
+    const file = event.target?.files?.[0];
 
     if (event.target) {
         event.target.value = '';
@@ -927,29 +799,20 @@ const uploadFile = async (
         return;
     }
 
-    if (
-        file.type !==
-        'application/pdf'
-    ) {
-        errorMessage.value =
-            'Разрешены только PDF-файлы.';
+    if (file.type !== 'application/pdf') {
+        errorMessage.value = 'Разрешены только PDF-файлы.';
 
         return;
     }
 
-    if (
-        file.size >
-        50 * 1024 * 1024
-    ) {
-        errorMessage.value =
-            'Максимальный размер PDF — 50 МБ.';
+    if (file.size > 50 * 1024 * 1024) {
+        errorMessage.value = 'Максимальный размер PDF — 50 МБ.';
 
         return;
     }
 
     if (!document?.id) {
-        errorMessage.value =
-            'Не удалось определить документ.';
+        errorMessage.value = 'Не удалось определить документ.';
 
         return;
     }
@@ -963,24 +826,15 @@ const uploadFile = async (
     };
 
     try {
-        await documentationApi.uploadDocumentFile(
-            document.id,
-            locale,
-            file,
-        );
+        await documentationApi.uploadDocumentFile(document.id, locale, file);
 
         await loadDocuments();
 
         emit('changed');
     } catch (error) {
-        console.error(
-            'Failed to upload document file:',
-            error,
-        );
+        console.error('Failed to upload document file:', error);
 
-        errorMessage.value =
-            error?.message ||
-            'Не удалось загрузить PDF.';
+        errorMessage.value = error?.message || 'Не удалось загрузить PDF.';
     } finally {
         deletingFileState.value = {
             documentId: null,
@@ -996,24 +850,14 @@ const uploadFile = async (
 |--------------------------------------------------------------------------
 */
 
-const deleteFile = async (
-    document,
-    locale,
-) => {
-    const file = getFile(
-        document,
-        locale,
-    );
+const deleteFile = async (document, locale) => {
+    const file = getFile(document, locale);
 
     if (!file) {
         return;
     }
 
-    if (
-        !window.confirm(
-            `Удалить PDF "${file.original_name}"?`,
-        )
-    ) {
+    if (!window.confirm(`Удалить PDF "${file.original_name}"?`)) {
         return;
     }
 
@@ -1026,23 +870,15 @@ const deleteFile = async (
     errorMessage.value = '';
 
     try {
-        await documentationApi.deleteDocumentFile(
-            document.id,
-            file.id,
-        );
+        await documentationApi.deleteDocumentFile(document.id, file.id);
 
         await loadDocuments();
 
         emit('changed');
     } catch (error) {
-        console.error(
-            'Failed to delete document file:',
-            error,
-        );
+        console.error('Failed to delete document file:', error);
 
-        errorMessage.value =
-            error?.message ||
-            'Не удалось удалить PDF.';
+        errorMessage.value = error?.message || 'Не удалось удалить PDF.';
     } finally {
         deletingFileState.value = {
             documentId: null,
@@ -1052,15 +888,10 @@ const deleteFile = async (
     }
 };
 
-const isDeletingFile = (
-    documentId,
-    locale,
-) => {
+const isDeletingFile = (documentId, locale) => {
     return (
-        deletingFileState.value
-            .documentId === documentId &&
-        deletingFileState.value
-            .locale === locale
+        deletingFileState.value.documentId === documentId &&
+        deletingFileState.value.locale === locale
     );
 };
 
@@ -1071,26 +902,14 @@ const isDeletingFile = (
 */
 
 const getTitle = (document) => {
-    return (
-        document?.title?.ru ||
-        document?.title?.en ||
-        'Без названия'
-    );
+    return document?.title?.ru || document?.title?.en || 'Без названия';
 };
 
-const getDescription = (
-    document,
-) => {
-    return (
-        document?.description?.ru ||
-        document?.description?.en ||
-        ''
-    );
+const getDescription = (document) => {
+    return document?.description?.ru || document?.description?.en || '';
 };
 
-const formatFileSize = (
-    size,
-) => {
+const formatFileSize = (size) => {
     if (!size) {
         return '';
     }
@@ -1100,16 +919,10 @@ const formatFileSize = (
     }
 
     if (size < 1024 * 1024) {
-        return `${(
-            size / 1024
-        ).toFixed(1)} KB`;
+        return `${(size / 1024).toFixed(1)} KB`;
     }
 
-    return `${(
-        size /
-        1024 /
-        1024
-    ).toFixed(1)} MB`;
+    return `${(size / 1024 / 1024).toFixed(1)} MB`;
 };
 
 /*
@@ -1119,9 +932,7 @@ const formatFileSize = (
 */
 
 const close = () => {
-    document.body.classList.remove(
-        'overflow-hidden',
-    );
+    document.body.classList.remove('overflow-hidden');
 
     emit('close');
 };

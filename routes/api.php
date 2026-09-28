@@ -12,6 +12,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductDocumentController;
 use App\Http\Controllers\ProductDocumentFileController;
 use App\Http\Controllers\ProductFeaturesController;
+use App\Http\Controllers\ProductGalleryController;
 use App\Http\Controllers\ProductSpecificationController;
 use App\Http\Controllers\RequestController;
 use App\Http\Controllers\SocialMediaController;
@@ -154,6 +155,37 @@ Route::prefix('products')->group(function () {
         Route::delete(
             'item/{product}',
             [ProductController::class, 'destroy']
+        );
+
+        Route::put(
+            'item/{product}/details',
+            [ProductController::class, 'updateDetails']
+        );
+
+        Route::put(
+            'item/{product}/compatible',
+            [ProductController::class, 'updateCompatible']
+        );
+
+        /*
+        |--------------------------------------------------------------------------
+        | Product gallery management
+        |--------------------------------------------------------------------------
+        */
+
+        Route::post(
+            'item/{product}/gallery',
+            [ProductGalleryController::class, 'store']
+        );
+
+        Route::put(
+            'item/{product}/gallery/{productGallery}',
+            [ProductGalleryController::class, 'update']
+        );
+
+        Route::delete(
+            'item/{product}/gallery/{productGallery}',
+            [ProductGalleryController::class, 'destroy']
         );
 
         /*

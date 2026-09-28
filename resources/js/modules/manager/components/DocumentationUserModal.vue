@@ -55,9 +55,7 @@
                             <div class="flex items-center gap-2">
                                 <i class="bi bi-key text-slate-500"></i>
 
-                                <h3 class="font-semibold text-slate-900">
-                                    Ключ документации
-                                </h3>
+                                <h3 class="font-semibold text-slate-900">Ключ документации</h3>
                             </div>
 
                             <p class="mt-1 text-sm leading-6 text-slate-500">
@@ -82,11 +80,7 @@
                                     ]"
                                 ></i>
 
-                                {{
-                                    user.has_documentation_key
-                                        ? 'Перевыпустить'
-                                        : 'Создать ключ'
-                                }}
+                                {{ user.has_documentation_key ? 'Перевыпустить' : 'Создать ключ' }}
                             </button>
 
                             <button
@@ -108,9 +102,7 @@
                         v-if="generatedKey"
                         class="mt-5 rounded-2xl border border-amber-200 bg-amber-50 p-4"
                     >
-                        <div class="font-semibold text-amber-900">
-                            Новый ключ создан
-                        </div>
+                        <div class="font-semibold text-amber-900">Новый ключ создан</div>
 
                         <p class="mt-1 text-xs leading-5 text-amber-800">
                             Он показывается только сейчас.
@@ -143,9 +135,7 @@
                 <section class="mt-6">
                     <div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
                         <div>
-                            <h3 class="font-semibold text-slate-900">
-                                Доступ к продукции
-                            </h3>
+                            <h3 class="font-semibold text-slate-900">Доступ к продукции</h3>
 
                             <p class="mt-1 text-sm text-slate-500">
                                 Продукты, к которым пользователь имеет доступ к закрытой
@@ -274,9 +264,7 @@
                 <!-- ================================================= -->
 
                 <section class="mt-6 rounded-2xl border border-slate-200 bg-white p-5">
-                    <h3 class="font-semibold text-slate-900">
-                        Добавить продукт
-                    </h3>
+                    <h3 class="font-semibold text-slate-900">Добавить продукт</h3>
 
                     <p class="mt-1 text-sm text-slate-500">
                         Найди продукт по названию, артикулу или категории.
@@ -303,10 +291,7 @@
                                 </div>
 
                                 <div class="mt-1 text-xs text-slate-500">
-                                    {{
-                                        selectedProduct.article ||
-                                        `ID #${selectedProduct.id}`
-                                    }}
+                                    {{ selectedProduct.article || `ID #${selectedProduct.id}` }}
                                 </div>
                             </div>
 
@@ -423,37 +408,21 @@ const loadAccesses = async () => {
     errorMessage.value = '';
 
     try {
-        const response = await documentationApi.getUserAccesses(
-            props.user.id,
-        );
-
-        console.log(
-            'Documentation user accesses response:',
-            response,
-        );
+        const response = await documentationApi.getUserAccesses(props.user.id);
 
         accesses.value = Array.isArray(response)
             ? response
-            : (
-                response?.accesses ??
-                response?.data?.accesses ??
-                response?.data ??
-                []
-            );
+            : (response?.accesses ?? response?.data?.accesses ?? response?.data ?? []);
 
         if (!Array.isArray(accesses.value)) {
             accesses.value = [];
         }
     } catch (error) {
-        console.error(
-            'Failed to load documentation accesses:',
-            error,
-        );
+        console.error('Failed to load documentation accesses:', error);
 
         accesses.value = [];
 
-        errorMessage.value =
-            error?.message || 'Не удалось загрузить доступы.';
+        errorMessage.value = error?.message || 'Не удалось загрузить доступы.';
     } finally {
         isLoadingAccesses.value = false;
     }
@@ -473,24 +442,15 @@ const rotateKey = async () => {
     isCopied.value = false;
 
     try {
-        const response = await documentationApi.rotateUserKey(
-            props.user.id,
-        );
+        const response = await documentationApi.rotateUserKey(props.user.id);
 
-        generatedKey.value =
-            response?.key ??
-            response?.data?.key ??
-            '';
+        generatedKey.value = response?.key ?? response?.data?.key ?? '';
 
         emit('changed');
     } catch (error) {
-        console.error(
-            'Failed to rotate documentation key:',
-            error,
-        );
+        console.error('Failed to rotate documentation key:', error);
 
-        errorMessage.value =
-            error?.message || 'Не удалось создать ключ.';
+        errorMessage.value = error?.message || 'Не удалось создать ключ.';
     } finally {
         isRotating.value = false;
         isSaving.value = false;
@@ -506,21 +466,15 @@ const revokeKey = async () => {
     errorMessage.value = '';
 
     try {
-        await documentationApi.revokeUserKey(
-            props.user.id,
-        );
+        await documentationApi.revokeUserKey(props.user.id);
 
         generatedKey.value = '';
 
         emit('changed');
     } catch (error) {
-        console.error(
-            'Failed to revoke documentation key:',
-            error,
-        );
+        console.error('Failed to revoke documentation key:', error);
 
-        errorMessage.value =
-            error?.message || 'Не удалось отозвать ключ.';
+        errorMessage.value = error?.message || 'Не удалось отозвать ключ.';
     } finally {
         isSaving.value = false;
     }
@@ -547,13 +501,9 @@ const grantProduct = async () => {
     errorMessage.value = '';
 
     try {
-        await documentationApi.grantProduct(
-            props.user.id,
-            currentProductId,
-            {
-                is_active: true,
-            },
-        );
+        await documentationApi.grantProduct(props.user.id, currentProductId, {
+            is_active: true,
+        });
 
         selectedProduct.value = null;
 
@@ -561,14 +511,9 @@ const grantProduct = async () => {
 
         emit('changed');
     } catch (error) {
-        console.error(
-            'Failed to grant documentation access:',
-            error,
-        );
+        console.error('Failed to grant documentation access:', error);
 
-        errorMessage.value =
-            error?.message ||
-            'Не удалось предоставить доступ.';
+        errorMessage.value = error?.message || 'Не удалось предоставить доступ.';
     } finally {
         isSavingProduct.value = null;
     }
@@ -579,11 +524,7 @@ const revokeProduct = async (productId) => {
         return;
     }
 
-    if (
-        !window.confirm(
-            'Удалить доступ пользователя к этому продукту?',
-        )
-    ) {
+    if (!window.confirm('Удалить доступ пользователя к этому продукту?')) {
         return;
     }
 
@@ -591,23 +532,15 @@ const revokeProduct = async (productId) => {
     errorMessage.value = '';
 
     try {
-        await documentationApi.revokeProduct(
-            props.user.id,
-            productId,
-        );
+        await documentationApi.revokeProduct(props.user.id, productId);
 
         await loadAccesses();
 
         emit('changed');
     } catch (error) {
-        console.error(
-            'Failed to revoke documentation access:',
-            error,
-        );
+        console.error('Failed to revoke documentation access:', error);
 
-        errorMessage.value =
-            error?.message ||
-            'Не удалось удалить доступ.';
+        errorMessage.value = error?.message || 'Не удалось удалить доступ.';
     } finally {
         isSavingProduct.value = null;
     }
@@ -620,36 +553,23 @@ const revokeProduct = async (productId) => {
 */
 
 const openDocuments = (product) => {
-    console.log(
-        'Opening product documents:',
-        product,
-    );
-
     if (!product?.id) {
-        console.error(
-            'Cannot open documents: product.id is missing',
-            product,
-        );
+        console.error('Cannot open documents: product.id is missing', product);
 
-        errorMessage.value =
-            'Не удалось определить продукт для документации.';
+        errorMessage.value = 'Не удалось определить продукт для документации.';
 
         return;
     }
 
     documentsProduct.value = product;
 
-    document.body.classList.add(
-        'overflow-hidden',
-    );
+    document.body.classList.add('overflow-hidden');
 };
 
 const closeDocuments = () => {
     documentsProduct.value = null;
 
-    document.body.classList.remove(
-        'overflow-hidden',
-    );
+    document.body.classList.remove('overflow-hidden');
 };
 
 const handleDocumentsChanged = async () => {
@@ -673,15 +593,8 @@ const getProductName = (product) => {
         return product.name;
     }
 
-    if (
-        product.name &&
-        typeof product.name === 'object'
-    ) {
-        return (
-            product.name.ru ||
-            product.name.en ||
-            ''
-        );
+    if (product.name && typeof product.name === 'object') {
+        return product.name.ru || product.name.en || '';
     }
 
     return '';
@@ -699,9 +612,7 @@ const copyKey = async () => {
     }
 
     try {
-        await navigator.clipboard.writeText(
-            generatedKey.value,
-        );
+        await navigator.clipboard.writeText(generatedKey.value);
 
         isCopied.value = true;
 
@@ -709,10 +620,7 @@ const copyKey = async () => {
             isCopied.value = false;
         }, 2000);
     } catch (error) {
-        console.error(
-            'Failed to copy documentation key:',
-            error,
-        );
+        console.error('Failed to copy documentation key:', error);
     }
 };
 
@@ -732,4 +640,3 @@ onMounted(() => {
     loadAccesses();
 });
 </script>
-

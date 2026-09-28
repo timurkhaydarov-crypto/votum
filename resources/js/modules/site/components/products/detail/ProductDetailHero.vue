@@ -411,6 +411,7 @@ const openDocumentation = () => {
     documentationDocuments.value = [];
     documentationAuthorized.value = false;
     isDocumentationLoading.value = false;
+
     isDocumentationOpen.value = true;
 
     document.body.classList.add('overflow-hidden');
@@ -459,47 +460,29 @@ const authorizeDocumentation = async (key) => {
 
 const closeDocumentation = () => {
     isDocumentationOpen.value = false;
+
     documentationAuthorized.value = false;
     documentationDocuments.value = [];
     documentationError.value = null;
     isDocumentationLoading.value = false;
 
-    /*
-     * Если обычное информационное окно также открыто,
-     * оставляем блокировку страницы.
-     */
     if (!selectedInfo.value) {
         document.body.classList.remove('overflow-hidden');
     }
 };
 
-const openDocumentationPdf = async ({
-    file,
-    key,
-}) => {
+const openDocumentationPdf = async ({ file, key }) => {
     if (!file?.id || !key) {
         return;
     }
 
     try {
-        const blob = await documentationApi.openFile(
-            file.id,
-            key,
-        );
+        const blob = await documentationApi.openFile(file.id, key);
 
-        const blobUrl = URL.createObjectURL(
-            blob,
-        );
+        const blobUrl = URL.createObjectURL(blob);
 
-        const pdfWindow = window.open(
-            blobUrl,
-            '_blank',
-        );
+        const pdfWindow = window.open(blobUrl, '_blank');
 
-        /*
-         * Если браузер заблокировал новую вкладку,
-         * освобождаем URL немного позже.
-         */
         if (!pdfWindow) {
             URL.revokeObjectURL(blobUrl);
 
@@ -509,32 +492,20 @@ const openDocumentationPdf = async ({
             return;
         }
 
-        /*
-         * Освобождаем Blob URL после загрузки
-         * документа в новой вкладке.
-         */
         setTimeout(() => {
             URL.revokeObjectURL(blobUrl);
         }, 60_000);
     } catch (error) {
-        console.error(
-            'Failed to open documentation PDF:',
-            error,
-        );
+        console.error('Failed to open documentation PDF:', error);
 
         if (error?.status === 401) {
-            documentationError.value =
-                'Ключ доступа недействителен.';
+            documentationError.value = 'Ключ доступа недействителен.';
         } else if (error?.status === 403) {
-            documentationError.value =
-                'Доступ к этому документу запрещён.';
+            documentationError.value = 'Доступ к этому документу запрещён.';
         } else if (error?.status === 404) {
-            documentationError.value =
-                'Файл документации не найден.';
+            documentationError.value = 'Файл документации не найден.';
         } else {
-            documentationError.value =
-                error?.message ||
-                'Не удалось открыть PDF.';
+            documentationError.value = error?.message || 'Не удалось открыть PDF.';
         }
     }
 };

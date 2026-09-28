@@ -3,36 +3,33 @@
         <!-- ========================================================= -->
         <!-- LOADING -->
         <!-- ========================================================= -->
-
         <ProductDetailLoading v-if="isLoading" />
 
         <!-- ========================================================= -->
         <!-- ERROR -->
         <!-- ========================================================= -->
-
-        <ProductDetailError v-else-if="errorMessage" :message="errorMessage" />
+        <ProductDetailError
+            v-else-if="errorMessage"
+            :message="errorMessage"
+        />
 
         <!-- ========================================================= -->
         <!-- NOT FOUND -->
         <!-- ========================================================= -->
-
         <ProductDetailNotFound v-else-if="isNotFound" />
 
         <!-- ========================================================= -->
         <!-- PRODUCT -->
         <!-- ========================================================= -->
-
         <div v-else-if="product" class="space-y-6">
             <!-- ===================================================== -->
             <!-- BREADCRUMBS -->
             <!-- ===================================================== -->
-
             <ProductBreadcrumbs :items="breadcrumbs" />
 
             <!-- ===================================================== -->
             <!-- HERO -->
             <!-- ===================================================== -->
-
             <ProductDetailHero
                 :product="product"
                 :image-src="imageSrc"
@@ -48,49 +45,67 @@
             <!-- ===================================================== -->
             <!-- COMPATIBLE PRODUCTS -->
             <!-- ===================================================== -->
+            <template v-if="hasCompatibleProducts">
+                <ProductCompatible
+                    :compatible-products="product.compatible_products"
+                />
+            </template>
 
-            <ProductCompatible
-                v-if="
-                    Object.values(product.compatible_products || {}).some(
-                        (products) => products?.length
-                    )
-                "
-                :compatible-products="product.compatible_products"
+            <ProductSectionPlaceholder
+                v-else-if="canManage"
+                icon="bi-link-45deg"
+                :title="t('compatibleProducts.title')"
+                :description="t('compatibleProducts.description')"
+                @click="openSectionManager('compatible')"
             />
 
             <!-- ===================================================== -->
             <!-- CERTIFICATES -->
             <!-- ===================================================== -->
+            <template v-if="hasCertificates">
+                <ProductImageGallery
+                    :images="product.certificates"
+                    gallery-title="certificates.eyebrow"
+                    gallery-sub-title="certificates.title"
+                    type="certificate"
+                />
+            </template>
 
-            <ProductImageGallery
-                v-if="product.certificates?.length"
-                :images="product.certificates"
-                gallery-title="certificates.eyebrow"
-                gallery-sub-title="certificates.title"
-                type="certificate"
+            <ProductSectionPlaceholder
+                v-else-if="canManage"
+                icon="bi-award"
+                :title="t('certificates.title')"
+                :description="t('certificates.description')"
+                @click="openSectionManager('certificates')"
             />
 
             <!-- ===================================================== -->
             <!-- GALLERY -->
             <!-- ===================================================== -->
+            <template v-if="hasGallery">
+                <ProductGallery
+                    :product="product"
+                    :images="galleryImages"
+                />
+            </template>
 
-            <ProductGallery
-                v-if="galleryImages.length"
-                :product="product"
-                :images="galleryImages"
+            <ProductSectionPlaceholder
+                v-else-if="canManage"
+                icon="bi-images"
+                :title="t('gallery.title')"
+                :description="t('gallery.description')"
+                @click="openSectionManager('gallery')"
             />
 
             <!-- ===================================================== -->
             <!-- CTA -->
             <!-- ===================================================== -->
-
             <ProductDetailCta />
         </div>
 
         <!-- ========================================================= -->
         <!-- EMPTY -->
         <!-- ========================================================= -->
-
         <div
             v-else
             class="rounded-2xl border border-slate-200 bg-slate-50 p-6 text-sm text-slate-600"
@@ -101,13 +116,14 @@
         <!-- ========================================================= -->
         <!-- FULL PRODUCT MANAGEMENT -->
         <!-- ========================================================= -->
-
-        <ProductManagement ref="productManagementRef" @updated="handleProductUpdated" />
+        <ProductManagement
+            ref="productManagementRef"
+            @updated="handleProductUpdated"
+        />
 
         <!-- ========================================================= -->
         <!-- SECTION EDIT MODAL -->
         <!-- ========================================================= -->
-
         <ProductSectionModal
             :is-open="isSectionModalOpen"
             :product="product"
@@ -120,9 +136,7 @@
 
 <script setup>
 import { computed, ref, watch } from 'vue';
-
 import { useI18n } from 'vue-i18n';
-
 import { useRoute } from 'vue-router';
 
 import ProductsLayout from '../../components/products/ProductsLayout.vue';
@@ -136,33 +150,32 @@ import ProductCompatible from '../../components/products/detail/ProductCompatibl
 import ProductGallery from '../../components/products/detail/ProductGallery.vue';
 import ProductImageGallery from '../../components/products/detail/ProductImageGallery.vue';
 import ProductDetailCta from '../../components/products/detail/ProductDetailCta.vue';
-
+import ProductSectionPlaceholder from '../../components/products/detail/ProductSectionPlaceholder.vue';
 import ProductManagement from '../../components/products/ProductManagement.vue';
 import ProductSectionModal from '../../components/products/detail/ProductSectionModal.vue';
 
 import { useProductsCatalog } from '../../composables/useProductsCatalog.js';
-
 import { useProductDetails } from '../../composables/useProductDetails.js';
-
 import { useProductBreadcrumbs } from '../../composables/useProductBreadcrumbs.js';
 
 const route = useRoute();
-
 const { t, locale } = useI18n();
 
-/*
-|--------------------------------------------------------------------------
-| Product
-|--------------------------------------------------------------------------
-*/
+/* |--------------------------------------------------------------------------
+ | Product
+ *-------------------------------------------------------------------------- */
 
-const { product, isLoading, isNotFound, errorMessage, loadProductById } = useProductDetails();
+const {
+    product,
+    isLoading,
+    isNotFound,
+    errorMessage,
+    loadProductById,
+} = useProductDetails();
 
-/*
-|--------------------------------------------------------------------------
-| Product management
-|--------------------------------------------------------------------------
-*/
+/* |--------------------------------------------------------------------------
+ | Product management
+ *-------------------------------------------------------------------------- */
 
 const productManagementRef = ref(null);
 
@@ -170,14 +183,11 @@ const canManage = computed(() => {
     return Boolean(productManagementRef.value?.canManage);
 });
 
-/*
-|--------------------------------------------------------------------------
-| Section modal
-|--------------------------------------------------------------------------
-*/
+/* |--------------------------------------------------------------------------
+ | Section modal
+ *-------------------------------------------------------------------------- */
 
 const isSectionModalOpen = ref(false);
-
 const selectedSection = ref(null);
 
 const handleManageInfo = ({ key }) => {
@@ -186,21 +196,26 @@ const handleManageInfo = ({ key }) => {
     }
 
     selectedSection.value = key;
+    isSectionModalOpen.value = true;
+};
 
+const openSectionManager = (section) => {
+    if (!canManage.value || !product.value) {
+        return;
+    }
+
+    selectedSection.value = section;
     isSectionModalOpen.value = true;
 };
 
 const closeSectionModal = () => {
     isSectionModalOpen.value = false;
-
     selectedSection.value = null;
 };
 
-/*
-|--------------------------------------------------------------------------
-| Product update
-|--------------------------------------------------------------------------
-*/
+/* |--------------------------------------------------------------------------
+ | Product update
+ *-------------------------------------------------------------------------- */
 
 const handleProductUpdated = async () => {
     if (!productId.value) {
@@ -210,29 +225,26 @@ const handleProductUpdated = async () => {
     await loadProductById(productId.value);
 };
 
-/*
-|--------------------------------------------------------------------------
-| Standard transducers
-|--------------------------------------------------------------------------
-*/
+/* |--------------------------------------------------------------------------
+ | Standard transducers
+ *-------------------------------------------------------------------------- */
 
-const { products: standardTransducers, loadProductsByGroup } = useProductsCatalog();
+const {
+    products: standardTransducers,
+    loadProductsByGroup,
+} = useProductsCatalog();
 
-/*
-|--------------------------------------------------------------------------
-| Route
-|--------------------------------------------------------------------------
-*/
+/* |--------------------------------------------------------------------------
+ | Route
+ *-------------------------------------------------------------------------- */
 
 const productId = computed(() => {
     return route.params.productId || '';
 });
 
-/*
-|--------------------------------------------------------------------------
-| Product meta
-|--------------------------------------------------------------------------
-*/
+/* |--------------------------------------------------------------------------
+ | Product meta
+ *-------------------------------------------------------------------------- */
 
 const pageTitle = computed(() => {
     return (
@@ -263,13 +275,15 @@ const productTitle = computed(() => {
     return product.value?.name || '';
 });
 
-/*
-|--------------------------------------------------------------------------
-| Breadcrumbs
-|--------------------------------------------------------------------------
-*/
+/* |--------------------------------------------------------------------------
+ | Breadcrumbs
+ *-------------------------------------------------------------------------- */
 
-const { breadcrumbs, backLink, backLabel } = useProductBreadcrumbs({
+const {
+    breadcrumbs,
+    backLink,
+    backLabel,
+} = useProductBreadcrumbs({
     categorySlug,
     categoryTitle,
     groupSlug,
@@ -278,11 +292,9 @@ const { breadcrumbs, backLink, backLabel } = useProductBreadcrumbs({
     productId,
 });
 
-/*
-|--------------------------------------------------------------------------
-| Helpers
-|--------------------------------------------------------------------------
-*/
+/* |--------------------------------------------------------------------------
+ | Helpers
+ *-------------------------------------------------------------------------- */
 
 const normalizeArray = (value) => {
     if (!value) {
@@ -303,14 +315,54 @@ const normalizeArray = (value) => {
     return [];
 };
 
-/*
-|--------------------------------------------------------------------------
-| Product loading
-|--------------------------------------------------------------------------
-*/
+/* |--------------------------------------------------------------------------
+ | Compatible products
+ *-------------------------------------------------------------------------- */
+
+const hasCompatibleProducts = computed(() => {
+    const compatible = product.value?.compatible_products || {};
+
+    return Object.values(compatible).some(
+        (products) => Array.isArray(products) && products.length > 0
+    );
+});
+
+/* |--------------------------------------------------------------------------
+ | Certificates
+ *-------------------------------------------------------------------------- */
+
+const hasCertificates = computed(() => {
+    return (
+        Array.isArray(product.value?.certificates) &&
+        product.value.certificates.length > 0
+    );
+});
+
+/* |--------------------------------------------------------------------------
+ | Gallery
+ *-------------------------------------------------------------------------- */
+
+const galleryImages = computed(() => {
+    return normalizeArray(
+        product.value?.photogallery ||
+            product.value?.gallery ||
+            product.value?.galleryImages
+    );
+});
+
+const hasGallery = computed(() => {
+    return galleryImages.value.length > 0;
+});
+
+/* |--------------------------------------------------------------------------
+ | Product loading
+ *-------------------------------------------------------------------------- */
 
 const hasProductTransducers = computed(() => {
-    const value = product.value?.transducers ?? product.value?.probes ?? product.value?.converters;
+    const value =
+        product.value?.transducers ??
+        product.value?.probes ??
+        product.value?.converters;
 
     return Array.isArray(value) && value.length > 0;
 });
@@ -361,11 +413,9 @@ watch(locale, () => {
     loadDetails();
 });
 
-/*
-|--------------------------------------------------------------------------
-| Image
-|--------------------------------------------------------------------------
-*/
+/* |--------------------------------------------------------------------------
+ | Image
+ *-------------------------------------------------------------------------- */
 
 const imageSrc = computed(() => {
     const image = product.value?.imageUrl;
@@ -374,7 +424,11 @@ const imageSrc = computed(() => {
         return '/image/logo.svg';
     }
 
-    if (image.startsWith('http://') || image.startsWith('https://') || image.startsWith('/')) {
+    if (
+        image.startsWith('http://') ||
+        image.startsWith('https://') ||
+        image.startsWith('/')
+    ) {
         return image;
     }
 
@@ -382,26 +436,24 @@ const imageSrc = computed(() => {
         return `/image/product/${image}`;
     }
 
-    const imageName = image.includes('.') ? image : `${image}.webp`;
+    const imageName = image.includes('.')
+        ? image
+        : `${image}.webp`;
 
     return `/image/product/${product.value.categorySlug}/${imageName}`;
 });
 
-/*
-|--------------------------------------------------------------------------
-| Stock
-|--------------------------------------------------------------------------
-*/
+/* |--------------------------------------------------------------------------
+ | Stock
+ *-------------------------------------------------------------------------- */
 
 const isInStock = computed(() => {
     return Number(product.value?.quantity || 0) > 0;
 });
 
-/*
-|--------------------------------------------------------------------------
-| Group colors
-|--------------------------------------------------------------------------
-*/
+/* |--------------------------------------------------------------------------
+ | Group colors
+ *-------------------------------------------------------------------------- */
 
 const groupDotClass = computed(() => {
     switch (product.value?.groupSlug) {
@@ -435,14 +487,15 @@ const groupBadgeClasses = computed(() => {
     }
 });
 
-/*
-|--------------------------------------------------------------------------
-| Transducers
-|--------------------------------------------------------------------------
-*/
+/* |--------------------------------------------------------------------------
+ | Transducers
+ *-------------------------------------------------------------------------- */
 
 const productTransducers = computed(() => {
-    const value = product.value?.transducers ?? product.value?.probes ?? product.value?.converters;
+    const value =
+        product.value?.transducers ??
+        product.value?.probes ??
+        product.value?.converters;
 
     if (!Array.isArray(value)) {
         return [];
@@ -457,17 +510,5 @@ const transducers = computed(() => {
     }
 
     return standardTransducers.value || [];
-});
-
-/*
-|--------------------------------------------------------------------------
-| Gallery
-|--------------------------------------------------------------------------
-*/
-
-const galleryImages = computed(() => {
-    return normalizeArray(
-        product.value?.photogallery || product.value?.gallery || product.value?.galleryImages
-    );
 });
 </script>
