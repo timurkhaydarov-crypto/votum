@@ -8,10 +8,7 @@
         <!-- ========================================================= -->
         <!-- ERROR -->
         <!-- ========================================================= -->
-        <ProductDetailError
-            v-else-if="errorMessage"
-            :message="errorMessage"
-        />
+        <ProductDetailError v-else-if="errorMessage" :message="errorMessage" />
 
         <!-- ========================================================= -->
         <!-- NOT FOUND -->
@@ -46,9 +43,7 @@
             <!-- COMPATIBLE PRODUCTS -->
             <!-- ===================================================== -->
             <template v-if="hasCompatibleProducts">
-                <ProductCompatible
-                    :compatible-products="product.compatible_products"
-                />
+                <ProductCompatible :compatible-products="product.compatible_products" />
             </template>
 
             <ProductSectionPlaceholder
@@ -65,9 +60,11 @@
             <template v-if="hasCertificates">
                 <ProductImageGallery
                     :images="product.certificates"
-                    gallery-title="certificates.eyebrow"
-                    gallery-sub-title="certificates.title"
+                    :gallery-title="$t('certificates.eyebrow')"
+                    :gallery-sub-title="$t('certificates.title')"
                     type="certificate"
+                    :can-manage="canManage"
+                    @manage="openSectionManager('certificates')"
                 />
             </template>
 
@@ -83,10 +80,7 @@
             <!-- GALLERY -->
             <!-- ===================================================== -->
             <template v-if="hasGallery">
-                <ProductGallery
-                    :product="product"
-                    :images="galleryImages"
-                />
+                <ProductGallery :product="product" :images="galleryImages" />
             </template>
 
             <ProductSectionPlaceholder
@@ -116,10 +110,7 @@
         <!-- ========================================================= -->
         <!-- FULL PRODUCT MANAGEMENT -->
         <!-- ========================================================= -->
-        <ProductManagement
-            ref="productManagementRef"
-            @updated="handleProductUpdated"
-        />
+        <ProductManagement ref="productManagementRef" @updated="handleProductUpdated" />
 
         <!-- ========================================================= -->
         <!-- SECTION EDIT MODAL -->
@@ -165,13 +156,7 @@ const { t, locale } = useI18n();
  | Product
  *-------------------------------------------------------------------------- */
 
-const {
-    product,
-    isLoading,
-    isNotFound,
-    errorMessage,
-    loadProductById,
-} = useProductDetails();
+const { product, isLoading, isNotFound, errorMessage, loadProductById } = useProductDetails();
 
 /* |--------------------------------------------------------------------------
  | Product management
@@ -229,10 +214,7 @@ const handleProductUpdated = async () => {
  | Standard transducers
  *-------------------------------------------------------------------------- */
 
-const {
-    products: standardTransducers,
-    loadProductsByGroup,
-} = useProductsCatalog();
+const { products: standardTransducers, loadProductsByGroup } = useProductsCatalog();
 
 /* |--------------------------------------------------------------------------
  | Route
@@ -279,11 +261,7 @@ const productTitle = computed(() => {
  | Breadcrumbs
  *-------------------------------------------------------------------------- */
 
-const {
-    breadcrumbs,
-    backLink,
-    backLabel,
-} = useProductBreadcrumbs({
+const { breadcrumbs, backLink, backLabel } = useProductBreadcrumbs({
     categorySlug,
     categoryTitle,
     groupSlug,
@@ -332,10 +310,7 @@ const hasCompatibleProducts = computed(() => {
  *-------------------------------------------------------------------------- */
 
 const hasCertificates = computed(() => {
-    return (
-        Array.isArray(product.value?.certificates) &&
-        product.value.certificates.length > 0
-    );
+    return Array.isArray(product.value?.certificates) && product.value.certificates.length > 0;
 });
 
 /* |--------------------------------------------------------------------------
@@ -344,9 +319,7 @@ const hasCertificates = computed(() => {
 
 const galleryImages = computed(() => {
     return normalizeArray(
-        product.value?.photogallery ||
-            product.value?.gallery ||
-            product.value?.galleryImages
+        product.value?.photogallery || product.value?.gallery || product.value?.galleryImages
     );
 });
 
@@ -359,10 +332,7 @@ const hasGallery = computed(() => {
  *-------------------------------------------------------------------------- */
 
 const hasProductTransducers = computed(() => {
-    const value =
-        product.value?.transducers ??
-        product.value?.probes ??
-        product.value?.converters;
+    const value = product.value?.transducers ?? product.value?.probes ?? product.value?.converters;
 
     return Array.isArray(value) && value.length > 0;
 });
@@ -424,11 +394,7 @@ const imageSrc = computed(() => {
         return '/image/logo.svg';
     }
 
-    if (
-        image.startsWith('http://') ||
-        image.startsWith('https://') ||
-        image.startsWith('/')
-    ) {
+    if (image.startsWith('http://') || image.startsWith('https://') || image.startsWith('/')) {
         return image;
     }
 
@@ -436,9 +402,7 @@ const imageSrc = computed(() => {
         return `/image/product/${image}`;
     }
 
-    const imageName = image.includes('.')
-        ? image
-        : `${image}.webp`;
+    const imageName = image.includes('.') ? image : `${image}.webp`;
 
     return `/image/product/${product.value.categorySlug}/${imageName}`;
 });
@@ -492,10 +456,7 @@ const groupBadgeClasses = computed(() => {
  *-------------------------------------------------------------------------- */
 
 const productTransducers = computed(() => {
-    const value =
-        product.value?.transducers ??
-        product.value?.probes ??
-        product.value?.converters;
+    const value = product.value?.transducers ?? product.value?.probes ?? product.value?.converters;
 
     if (!Array.isArray(value)) {
         return [];

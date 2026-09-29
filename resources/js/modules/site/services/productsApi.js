@@ -1,3 +1,4 @@
+
 import { fetchJsonApi } from './fetchJsonApi';
 
 const PRODUCT_API_URL = '/api/products';
@@ -146,54 +147,6 @@ export const productsApi = {
 
     /*
     |--------------------------------------------------------------------------
-    | Product certificates
-    |--------------------------------------------------------------------------
-    */
-
-    getCertificates(productId) {
-        return fetchJsonApi(
-            `${PRODUCT_API_URL}/${encodeURIComponent(productId)}/certificates`
-        );
-    },
-
-    createCertificate(productId, file, payload = {}) {
-        const formData = new FormData();
-
-        formData.append('image', file);
-
-        formData.append('name[ru]', payload?.name?.ru ?? '');
-        formData.append('name[en]', payload?.name?.en ?? '');
-
-        return fetchJsonApi(
-            `${PRODUCT_API_URL}/item/${encodeURIComponent(productId)}/certificates`,
-            {
-                method: 'POST',
-                body: formData,
-            }
-        );
-    },
-
-    updateCertificate(productId, certificateId, payload) {
-        return fetchJsonApi(
-            `${PRODUCT_API_URL}/item/${encodeURIComponent(productId)}/certificates/${encodeURIComponent(certificateId)}`,
-            {
-                method: 'PUT',
-                body: JSON.stringify(payload),
-            }
-        );
-    },
-
-    deleteCertificate(productId, certificateId) {
-        return fetchJsonApi(
-            `${PRODUCT_API_URL}/item/${encodeURIComponent(productId)}/certificates/${encodeURIComponent(certificateId)}`,
-            {
-                method: 'DELETE',
-            }
-        );
-    },
-
-    /*
-    |--------------------------------------------------------------------------
     | Product features
     |--------------------------------------------------------------------------
     */
@@ -297,4 +250,3 @@ export const productsApi = {
         );
     },
 };
-

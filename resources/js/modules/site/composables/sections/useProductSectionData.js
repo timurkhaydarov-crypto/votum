@@ -1,4 +1,5 @@
 import { productsApi } from '../../services/productsApi.js';
+
 import { fetchJsonApi } from '../../services/fetchJsonApi.js';
 
 export function useProductSectionData({
@@ -10,7 +11,6 @@ export function useProductSectionData({
     formError,
     form,
     compatibleOptions,
-    originalCertificateIds,
     originalGalleryIds,
     originalFeaturesGalleryIds,
     originalSpecificationIds,
@@ -102,15 +102,10 @@ export function useProductSectionData({
 
             return {
                 id: item.id ?? null,
-
                 title: normalizeLocalizedObject(item.title),
-
                 image_url: imageUrl,
-
                 image_name: getFeaturesImageUrl(imageUrl),
-
                 preview_url: item.preview_url ?? getFeaturesImageUrl(imageUrl),
-
                 is_new: false,
                 file: null,
             };
@@ -124,38 +119,12 @@ export function useProductSectionData({
 
         return items.map((item) => ({
             id: item.id ?? null,
-
             title: normalizeLocalizedObject(item.title),
-
             description: normalizeLocalizedObject(item.description),
-
             image_url: item.image_url ?? item.image ?? '',
-
             preview_url: item.preview_url ?? item.image_url ?? item.image ?? '',
-
             is_new: false,
             file: null,
-        }));
-    }
-
-    function normalizeCertificates(items) {
-        if (!Array.isArray(items)) {
-            return [];
-        }
-
-        return items.map((item) => ({
-            id: item.id ?? null,
-
-            name: normalizeLocalizedObject(item.name ?? item.title),
-
-            image_url: item.image_url ?? item.image ?? '',
-
-            file_url: item.file_url ?? item.url ?? item.image_url ?? item.image ?? '',
-
-            preview_url: item.preview_url ?? item.image_url ?? item.image ?? '',
-
-            file: null,
-            is_new: false,
         }));
     }
 
@@ -166,9 +135,7 @@ export function useProductSectionData({
 
         return items.map((item) => ({
             id: item.id ?? null,
-
             name: normalizeLocalizedObject(item.name),
-
             value: normalizeLocalizedObject(item.value),
         }));
     }
@@ -208,7 +175,6 @@ export function useProductSectionData({
 
                 form.value.features = {
                     ru: features.description_ru ?? features.ru ?? features.description?.ru ?? '',
-
                     en: features.description_en ?? features.en ?? features.description?.en ?? '',
                 };
 
@@ -245,26 +211,6 @@ export function useProductSectionData({
 
             /*
             |--------------------------------------------------------------------------
-            | CERTIFICATES
-            |--------------------------------------------------------------------------
-            */
-
-            if (props.section === 'certificates') {
-                const response = await productsApi.getCertificates(productId);
-
-                const certificates = response?.certificates ?? response?.data ?? response ?? [];
-
-                form.value.certificates = normalizeCertificates(certificates);
-
-                originalCertificateIds.value = form.value.certificates
-                    .filter((item) => item.id)
-                    .map((item) => item.id);
-
-                return;
-            }
-
-            /*
-            |--------------------------------------------------------------------------
             | GALLERY
             |--------------------------------------------------------------------------
             */
@@ -280,6 +226,20 @@ export function useProductSectionData({
                     .filter((item) => item.id)
                     .map((item) => item.id);
 
+                return;
+            }
+
+            /*
+            |--------------------------------------------------------------------------
+            | CERTIFICATES
+            |--------------------------------------------------------------------------
+            |
+            | Certificates are handled independently by
+            | ProductCertificatesSection.
+            |
+            */
+
+            if (props.section === 'certificates') {
                 return;
             }
 
@@ -303,7 +263,6 @@ export function useProductSectionData({
 
             form.value.details = {
                 ru: product.full_description?.ru ?? product.full_description_ru ?? '',
-
                 en: product.full_description?.en ?? product.full_description_en ?? '',
             };
 
@@ -315,7 +274,6 @@ export function useProductSectionData({
 
             form.value.features = {
                 ru: product.features?.ru ?? product.features?.description_ru ?? '',
-
                 en: product.features?.en ?? product.features?.description_en ?? '',
             };
 
@@ -342,18 +300,6 @@ export function useProductSectionData({
             form.value.specifications = normalizeSpecifications(product.specifications ?? []);
 
             originalSpecificationIds.value = form.value.specifications
-                .filter((item) => item.id)
-                .map((item) => item.id);
-
-            /*
-            |--------------------------------------------------------------------------
-            | CERTIFICATES
-            |--------------------------------------------------------------------------
-            */
-
-            form.value.certificates = normalizeCertificates(product.certificates ?? []);
-
-            originalCertificateIds.value = form.value.certificates
                 .filter((item) => item.id)
                 .map((item) => item.id);
 
@@ -403,7 +349,6 @@ export function useProductSectionData({
         getFeaturesImageUrl,
         normalizeFeaturesGallery,
         normalizeGallery,
-        normalizeCertificates,
         normalizeSpecifications,
         loadCurrentUser,
         loadSectionData,

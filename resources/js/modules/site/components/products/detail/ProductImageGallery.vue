@@ -1,70 +1,79 @@
 <template>
-    <section ref="gallerySection">
-        <!-- HEADER -->
+    <section class="space-y-4">
         <SectionHeader
-            :title="$t(galleryTitle)"
-            :description="$t(gallerySubTitle)"
+            :eyebrow="galleryTitle"
+            :title="gallerySubTitle"
         >
-            <!-- IMAGE COUNT -->
             <template #meta>
-                {{ images.length }} {{ $t('common.pcs') }}
+                <span
+                    class="inline-flex items-center rounded-full border border-slate-200 bg-slate-50 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.08em] text-slate-500"
+                >
+                    {{ images.length }}
+                    {{ $t('common.pcs', 'шт.') }}
+                </span>
             </template>
 
-            <!-- COLLAPSE BUTTON -->
             <template #actions>
-                <button
-                    type="button"
-                    class="flex h-7 w-7 items-center justify-center rounded-lg text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
-                    :aria-label="
-                        isOpen
-                            ? $t('common.collapse')
-                            : $t('common.showAll')
-                    "
-                    @click="toggleSection"
-                >
-                    <i
-                        class="bi text-xs transition-transform duration-300"
-                        :class="
+                <div class="flex items-center gap-1">
+                    <button
+                        v-if="props.canManage"
+                        type="button"
+                        class="flex h-7 items-center gap-1.5 rounded-lg px-2 text-xs font-medium text-slate-500 transition hover:bg-slate-100 hover:text-slate-800"
+                        :title="$t('actions.edit', 'Управление')"
+                        @click="emit('manage')"
+                    >
+                        <i class="bi bi-pencil-square"></i>
+
+                        <span class="hidden sm:inline">
+                            {{ $t('actions.edit', 'Управление') }}
+                        </span>
+                    </button>
+
+                    <button
+                        type="button"
+                        class="flex h-7 w-7 items-center justify-center rounded-lg text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
+                        :aria-label="
                             isOpen
-                                ? 'bi-chevron-up'
-                                : 'bi-chevron-down'
+                                ? $t('common.collapse', 'Свернуть')
+                                : $t('common.showAll', 'Показать все')
                         "
-                    ></i>
-                </button>
+                        @click="toggleSection"
+                    >
+                        <i
+                            class="bi text-xs transition-transform duration-300"
+                            :class="
+                                isOpen
+                                    ? 'bi-chevron-up'
+                                    : 'bi-chevron-down'
+                            "
+                        ></i>
+                    </button>
+                </div>
             </template>
         </SectionHeader>
 
-        <!-- CONTENT -->
         <Transition
-            enter-active-class="overflow-hidden transition-all duration-300 ease-out"
-            enter-from-class="max-h-0 opacity-0 -translate-y-2"
-            enter-to-class="max-h-[3000px] opacity-100 translate-y-0"
-            leave-active-class="overflow-hidden transition-all duration-300 ease-in"
-            leave-from-class="max-h-[3000px] opacity-100 translate-y-0"
-            leave-to-class="max-h-0 opacity-0 -translate-y-2"
+            enter-active-class="transition-all duration-300 ease-out"
+            enter-from-class="max-h-0 overflow-hidden opacity-0"
+            enter-to-class="max-h-[3000px] opacity-100"
+            leave-active-class="transition-all duration-200 ease-in"
+            leave-from-class="max-h-[3000px] opacity-100"
+            leave-to-class="max-h-0 overflow-hidden opacity-0"
         >
-            <div
-                v-if="isOpen"
-                class="mt-4"
-            >
-                <!-- GALLERY -->
+            <div v-show="isOpen">
                 <div
-                    v-if="images.length"
-                    class="grid grid-cols-2 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+                    v-if="visibleImages.length"
+                    class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3"
                 >
                     <ProductImageCard
                         v-for="(image, index) in visibleImages"
-                        :key="
-                            image.id ||
-                            image.src ||
-                            index
-                        "
+                        :key="image.id || image.src || index"
                         :image-src="image.src"
                         :thumbnail="image.thumbnail"
                         :alt="
                             image.alt ||
                             localizedTitle(image) ||
-                            `${$t('gallery.image')} ${index + 1}`
+                            `${$t('gallery.image', 'Изображение')} ${index + 1}`
                         "
                         :type="type"
                         :title="localizedTitle(image)"
@@ -72,46 +81,56 @@
                     />
                 </div>
 
-                <!-- EMPTY -->
                 <div
                     v-else
-                    class="flex min-h-[180px] items-center justify-center rounded-2xl border border-dashed border-slate-200 bg-slate-50"
+                    class="flex min-h-[180px] items-center justify-center rounded-2xl border border-dashed border-slate-200 bg-slate-50 px-6 py-10 text-center"
                 >
-                    <div class="text-center">
+                    <div>
                         <div
-                            class="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-white text-slate-400 shadow-sm"
+                            class="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-white text-slate-400 shadow-sm ring-1 ring-slate-200"
                         >
-                            <i class="bi bi-images text-lg"></i>
+                            <i
+                                :class="
+                                    type === 'certificate'
+                                        ? 'bi bi-award'
+                                        : 'bi bi-images'
+                                "
+                                class="text-xl"
+                            ></i>
                         </div>
 
                         <p
-                            class="text-xs font-medium text-slate-500"
+                            class="mt-3 text-sm font-medium text-slate-700"
                         >
-                            {{ $t('gallery.empty') }}
+                            {{
+                                $t(
+                                    'gallery.empty',
+                                    'Изображения отсутствуют',
+                                )
+                            }}
                         </p>
                     </div>
                 </div>
 
-                <!-- SHOW MORE / COLLAPSE -->
                 <div
-                    v-if="images.length > 4"
-                    class="mt-4 flex justify-center"
+                    v-if="images.length > initialVisibleCount"
+                    class="mt-5 flex justify-center"
                 >
                     <button
                         type="button"
-                        class="group inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-xs font-semibold text-slate-600 shadow-sm transition hover:border-slate-300 hover:text-slate-900"
+                        class="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-xs font-medium text-slate-600 shadow-sm transition hover:border-slate-300 hover:bg-slate-50 hover:text-slate-900"
                         @click="toggleImages"
                     >
                         <span>
                             {{
                                 isAllImagesVisible
-                                    ? $t('common.collapse')
-                                    : $t('common.showMore')
+                                    ? $t('common.hide', 'Скрыть')
+                                    : $t('common.showAll', 'Показать все')
                             }}
                         </span>
 
                         <i
-                            class="bi transition-transform duration-300"
+                            class="bi text-xs"
                             :class="
                                 isAllImagesVisible
                                     ? 'bi-chevron-up'
@@ -154,146 +173,73 @@ const props = defineProps({
         type: String,
         default: '',
     },
+
+    canManage: {
+        type: Boolean,
+        default: false,
+    },
 });
 
-/*
-|--------------------------------------------------------------------------
-| Locale
-|--------------------------------------------------------------------------
-*/
+const emit = defineEmits(['manage']);
 
-const currentLocale = computed(() => {
-    return locale.value === 'en' ? 'en' : 'ru';
-});
-
-/*
-|--------------------------------------------------------------------------
-| Localized title
-|--------------------------------------------------------------------------
-*/
-
-const localizedTitle = (image) => {
-    if (!image?.title) {
-        return '';
-    }
-
-    if (typeof image.title === 'string') {
-        return image.title;
-    }
-
-    return (
-        image.title[currentLocale.value] ??
-        image.title.ru ??
-        image.title.en ??
-        ''
-    );
-};
-
-/*
-|--------------------------------------------------------------------------
-| Localized description
-|--------------------------------------------------------------------------
-*/
-
-const localizedDescription = (image) => {
-    if (!image?.description) {
-        return '';
-    }
-
-    if (typeof image.description === 'string') {
-        return image.description;
-    }
-
-    return (
-        image.description[currentLocale.value] ??
-        image.description.ru ??
-        image.description.en ??
-        ''
-    );
-};
-
-/*
-|--------------------------------------------------------------------------
-| Section
-|--------------------------------------------------------------------------
-*/
+const initialVisibleCount = 4;
 
 const isOpen = ref(true);
+const visibleCount = ref(initialVisibleCount);
 
-const gallerySection = ref(null);
+const localizedValue = (value) => {
+    if (!value) {
+        return '';
+    }
 
-/*
-|--------------------------------------------------------------------------
-| Visible count
-|--------------------------------------------------------------------------
-*/
+    if (typeof value === 'string') {
+        return value;
+    }
 
-const visibleCount = ref(4);
+    if (typeof value === 'object') {
+        return (
+            value[locale.value] ||
+            value.ru ||
+            value.en ||
+            Object.values(value)[0] ||
+            ''
+        );
+    }
 
-/*
-|--------------------------------------------------------------------------
-| Visible images
-|--------------------------------------------------------------------------
-*/
+    return '';
+};
+
+const localizedTitle = (image) => {
+    return localizedValue(image?.title);
+};
+
+const localizedDescription = (image) => {
+    return localizedValue(image?.description);
+};
 
 const visibleImages = computed(() => {
-    return props.images.slice(
-        0,
-        visibleCount.value
-    );
-});
+    if (visibleCount.value >= props.images.length) {
+        return props.images;
+    }
 
-/*
-|--------------------------------------------------------------------------
-| All images visible
-|--------------------------------------------------------------------------
-*/
+    return props.images.slice(0, visibleCount.value);
+});
 
 const isAllImagesVisible = computed(() => {
-    return (
-        visibleCount.value >=
-        props.images.length
-    );
+    return visibleCount.value >= props.images.length;
 });
-
-/*
-|--------------------------------------------------------------------------
-| Toggle section
-|--------------------------------------------------------------------------
-*/
 
 const toggleSection = () => {
     isOpen.value = !isOpen.value;
-
-    if (!isOpen.value) {
-        visibleCount.value = 4;
-    }
 };
-
-/*
-|--------------------------------------------------------------------------
-| Toggle images
-|--------------------------------------------------------------------------
-*/
 
 const toggleImages = () => {
     if (isAllImagesVisible.value) {
-        visibleCount.value = 4;
-
-        requestAnimationFrame(() => {
-            gallerySection.value?.scrollIntoView({
-                behavior: 'smooth',
-                block: 'start',
-            });
-        });
-
+        visibleCount.value = initialVisibleCount;
         return;
     }
 
-    visibleCount.value = Math.min(
-        visibleCount.value + 4,
-        props.images.length
-    );
+    visibleCount.value = props.images.length;
 };
 </script>
 

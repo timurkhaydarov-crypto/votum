@@ -2,34 +2,59 @@
 
 namespace App\Http\Requests\Product;
 
-use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class CertificateRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
     public function authorize(): bool
     {
         return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, ValidationRule|array<mixed>|string>
-     */
     public function rules(): array
     {
-return [
-            'title' => ['required', 'array'],
-            'title.ru' => ['required', 'string'],
-            'title.en' => ['required', 'string'],
-            'description' => ['required', 'array'],
-            'description.ru' => ['required', 'string'],
-            'description.en' => ['required', 'string'],
-            'image_url' => ['nullable', 'string'],
+        return [
+            'title' => [
+                'required',
+                'array',
+            ],
+
+            'title.ru' => [
+                'required',
+                'string',
+                'max:255',
+            ],
+
+            'title.en' => [
+                'required',
+                'string',
+                'max:255',
+            ],
+
+            'description' => [
+                'nullable',
+                'array',
+            ],
+
+            'description.ru' => [
+                'nullable',
+                'string',
+            ],
+
+            'description.en' => [
+                'nullable',
+                'string',
+            ],
+
+            'image' => [
+                $this->isMethod('post')
+                    ? 'required'
+                    : 'nullable',
+
+                'file',
+                'mimes:jpg,jpeg,png,webp',
+                'max:10240',
+            ],
         ];
     }
 }

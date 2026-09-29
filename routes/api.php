@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\CertificateController;
 use App\Http\Controllers\ContactsController;
 use App\Http\Controllers\DealerController;
 use App\Http\Controllers\DocumentationAccessController;
@@ -127,6 +128,12 @@ Route::prefix('products')->group(function () {
         'manager',
     ])->group(function () {
 
+        /*
+        |--------------------------------------------------------------------------
+        | Product CRUD
+        |--------------------------------------------------------------------------
+        */
+
         Route::get(
             'item/create',
             [ProductController::class, 'create']
@@ -166,6 +173,40 @@ Route::prefix('products')->group(function () {
             'item/{product}/compatible',
             [ProductController::class, 'updateCompatible']
         );
+
+        /*
+        |--------------------------------------------------------------------------
+        | Product certificates management
+        |--------------------------------------------------------------------------
+        */
+
+        Route::get(
+            'certificates',
+            [CertificateController::class, 'index']
+        );
+
+        Route::get(
+            'item/{product}/certificates',
+            [CertificateController::class, 'productCertificates']
+        );
+
+        Route::post(
+            'item/{product}/certificates/{certificate}',
+            [CertificateController::class, 'attach']
+        );
+
+        Route::delete(
+            'item/{product}/certificates/{certificate}',
+            [CertificateController::class, 'detach']
+        );
+
+        Route::post(
+            'item/{product}/certificates',
+            [CertificateController::class, 'store']
+        );
+
+        Route::put('certificates/{certificate}', [CertificateController::class, 'update']);
+        Route::delete('certificates/{certificate}', [CertificateController::class, 'destroy']);
 
         /*
         |--------------------------------------------------------------------------
@@ -292,6 +333,7 @@ Route::prefix('products')->group(function () {
 | Только admin / manager.
 |
 */
+
 Route::post(
     'documentation/access',
     [
@@ -299,6 +341,7 @@ Route::post(
         'access',
     ]
 );
+
 Route::get(
     'documentation/files/{productDocumentFile}/open',
     [
@@ -306,6 +349,7 @@ Route::get(
         'open',
     ]
 );
+
 Route::prefix('documentation')
     ->middleware([
         'auth:sanctum',

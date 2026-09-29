@@ -21,6 +21,7 @@
             <div
                 class="pointer-events-none absolute left-1/2 top-1/2 h-[70%] w-[70%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-white blur-3xl"
             ></div>
+
             <!-- THUMBNAIL -->
             <img
                 :src="thumbnail"
@@ -37,7 +38,12 @@
                 <!-- ZOOM BUTTON -->
                 <button
                     type="button"
-                    aria-label="Открыть изображение"
+                    :aria-label="
+                        $t(
+                            'actions.open',
+                            'Открыть изображение',
+                        )
+                    "
                     class="flex h-12 w-12 translate-y-2 cursor-pointer items-center justify-center rounded-full border border-white/60 bg-white/90 text-slate-800 opacity-0 shadow-xl shadow-slate-900/20 backdrop-blur-md transition-all duration-300 hover:scale-110 hover:bg-white group-hover:translate-y-0 group-hover:opacity-100"
                     @click="openModal"
                 >
@@ -49,7 +55,7 @@
             <div
                 class="absolute left-3 top-3 z-20 rounded-lg border border-white/80 bg-white/80 px-2 py-1 text-[8px] font-semibold uppercase tracking-[0.1em] text-slate-500 shadow-sm backdrop-blur-md"
             >
-                {{$t('gallery.' + type)}}
+                {{ $t('gallery.' + type) }}
             </div>
         </div>
 
@@ -95,7 +101,12 @@
                     <!-- CLOSE -->
                     <button
                         type="button"
-                        aria-label="Закрыть"
+                        :aria-label="
+                            $t(
+                                'common.close',
+                                'Закрыть',
+                            )
+                        "
                         class="absolute right-2 top-2 z-20 flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border border-white/15 bg-white/10 text-white backdrop-blur-md transition hover:bg-white/20 sm:right-4 sm:top-4"
                         @click="closeModal"
                     >
@@ -104,7 +115,6 @@
 
                     <!-- FULL IMAGE -->
                     <img
-                        v-if="isModalOpen"
                         :src="imageSrc"
                         :alt="alt"
                         class="max-h-[90vh] max-w-[95vw] object-contain drop-shadow-2xl sm:max-h-[88vh] sm:max-w-[90vw]"
@@ -124,17 +134,23 @@
 </template>
 
 <script setup>
-import { onBeforeUnmount, ref } from 'vue';
+import {
+    onBeforeUnmount,
+    ref,
+} from 'vue';
 
-const props = defineProps({
+defineProps({
     /**
      * Full-size image.
-     * Loaded only when the modal is opened.
      */
     imageSrc: {
         type: String,
         required: true,
     },
+
+    /**
+     * Gallery type.
+     */
     type: {
         type: String,
         default: 'Product',
@@ -142,7 +158,6 @@ const props = defineProps({
 
     /**
      * Optimized thumbnail.
-     * Used on the product page.
      */
     thumbnail: {
         type: String,
@@ -169,24 +184,65 @@ const isModalOpen = ref(false);
 
 const openModal = () => {
     isModalOpen.value = true;
-    document.body.classList.add('overflow-hidden');
+
+    document.body.classList.add(
+        'overflow-hidden',
+    );
 };
 
 const closeModal = () => {
     isModalOpen.value = false;
-    document.body.classList.remove('overflow-hidden');
+
+    document.body.classList.remove(
+        'overflow-hidden',
+    );
 };
 
 const handleKeydown = (event) => {
-    if (event.key === 'Escape' && isModalOpen.value) {
+    if (
+        event.key === 'Escape' &&
+        isModalOpen.value
+    ) {
         closeModal();
     }
 };
 
-window.addEventListener('keydown', handleKeydown);
+window.addEventListener(
+    'keydown',
+    handleKeydown,
+);
 
 onBeforeUnmount(() => {
-    window.removeEventListener('keydown', handleKeydown);
-    document.body.classList.remove('overflow-hidden');
+    window.removeEventListener(
+        'keydown',
+        handleKeydown,
+    );
+
+    document.body.classList.remove(
+        'overflow-hidden',
+    );
 });
 </script>
+```
+
+И **`ProductImageGallery.vue` тоже нужно очистить от `toggle-attachment` и `attached`**, оставив только открытие менеджера:
+
+```vue
+<ProductImageCard
+    v-for="(image, index) in visibleImages"
+    :key="
+        image.id ||
+        image.src ||
+        index
+    "
+    :image-src="image.src"
+    :thumbnail="image.thumbnail"
+    :alt="
+        image.alt ||
+        localizedTitle(image) ||
+        `${$t('gallery.image')} ${index + 1}`
+    "
+    :type="type"
+    :title="localizedTitle(image)"
+    :description="localizedDescription(image)"
+/>

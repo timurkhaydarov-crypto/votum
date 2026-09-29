@@ -19,7 +19,6 @@ export function useProductSectionSave({
             features_ru: '',
             features_en: '',
             specifications: {},
-            certificates: {},
             gallery: {},
         };
 
@@ -157,51 +156,6 @@ export function useProductSectionSave({
         return valid;
     }
 
-    function validateCertificates() {
-        const certificateErrors = {};
-        let valid = true;
-
-        form.value.certificates.forEach(
-            (certificate, index) => {
-                const name =
-                    normalizeLocalizedValue(
-                        certificate.name,
-                    );
-
-                const itemErrors = {};
-
-                if (!name.ru.trim()) {
-                    itemErrors.name_ru = true;
-                }
-
-                if (!name.en.trim()) {
-                    itemErrors.name_en = true;
-                }
-
-                if (
-                    certificate.is_new &&
-                    !certificate.file
-                ) {
-                    itemErrors.file = true;
-                }
-
-                if (
-                    Object.keys(itemErrors).length
-                ) {
-                    certificateErrors[index] =
-                        itemErrors;
-
-                    valid = false;
-                }
-            },
-        );
-
-        errors.value.certificates =
-            certificateErrors;
-
-        return valid;
-    }
-
     function validateGallery() {
         const galleryErrors = {};
         let valid = true;
@@ -293,12 +247,12 @@ export function useProductSectionSave({
 
         const currentIds =
             form.value.features_gallery
-                .filter(item => item.id)
-                .map(item => item.id);
+                .filter((item) => item.id)
+                .map((item) => item.id);
 
         const removedIds =
             originalFeaturesGalleryIds.value.filter(
-                id => !currentIds.includes(id),
+                (id) => !currentIds.includes(id),
             );
 
         for (const galleryId of removedIds) {
@@ -353,12 +307,12 @@ export function useProductSectionSave({
 
         const currentIds =
             form.value.specifications
-                .filter(item => item.id)
-                .map(item => item.id);
+                .filter((item) => item.id)
+                .map((item) => item.id);
 
         const removedIds =
             originalSpecificationIds.value.filter(
-                id => !currentIds.includes(id),
+                (id) => !currentIds.includes(id),
             );
 
         for (const specificationId of removedIds) {
@@ -368,7 +322,10 @@ export function useProductSectionSave({
             );
         }
 
-        for (const specification of form.value.specifications) {
+        for (
+            const specification of
+            form.value.specifications
+        ) {
             const payload = {
                 name:
                     normalizeLocalizedValue(
@@ -391,54 +348,6 @@ export function useProductSectionSave({
                 await productsApi.createSpecification(
                     productId,
                     payload,
-                );
-            }
-        }
-
-        return true;
-    }
-
-    async function saveCertificates() {
-        if (!isManager.value) {
-            return false;
-        }
-
-        if (!validateCertificates()) {
-            return false;
-        }
-
-        const productId =
-            props.product.id;
-
-        for (const certificate of form.value.certificates) {
-            if (
-                certificate.is_new &&
-                certificate.file
-            ) {
-                await productsApi.createCertificate(
-                    productId,
-                    certificate.file,
-                    {
-                        name:
-                            normalizeLocalizedValue(
-                                certificate.name,
-                            ),
-                    },
-                );
-
-                continue;
-            }
-
-            if (certificate.id) {
-                await productsApi.updateCertificate(
-                    productId,
-                    certificate.id,
-                    {
-                        name:
-                            normalizeLocalizedValue(
-                                certificate.name,
-                            ),
-                    },
                 );
             }
         }
@@ -546,11 +455,6 @@ export function useProductSectionSave({
                         await saveSpecifications();
                     break;
 
-                case 'certificates':
-                    saved =
-                        await saveCertificates();
-                    break;
-
                 case 'gallery':
                     saved =
                         await saveGallery();
@@ -600,13 +504,11 @@ export function useProductSectionSave({
         validateDetails,
         validateFeatures,
         validateSpecifications,
-        validateCertificates,
         validateGallery,
 
         saveDetails,
         saveFeatures,
         saveSpecifications,
-        saveCertificates,
         saveGallery,
         saveCompatible,
 

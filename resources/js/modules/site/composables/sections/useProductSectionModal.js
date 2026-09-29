@@ -11,7 +11,6 @@ export function useProductSectionModal({ props, emit }) {
     const isSaving = ref(false);
     const formError = ref('');
 
-    const originalCertificateIds = ref([]);
     const originalGalleryIds = ref([]);
     const originalFeaturesGalleryIds = ref([]);
     const originalSpecificationIds = ref([]);
@@ -22,7 +21,6 @@ export function useProductSectionModal({ props, emit }) {
         features_ru: '',
         features_en: '',
         specifications: {},
-        certificates: {},
         gallery: {},
     });
 
@@ -40,8 +38,6 @@ export function useProductSectionModal({ props, emit }) {
         features_gallery: [],
 
         specifications: [],
-
-        certificates: [],
 
         gallery: [],
 
@@ -67,6 +63,10 @@ export function useProductSectionModal({ props, emit }) {
 
     const isManager = computed(() => {
         return ['admin', 'manager'].includes(currentUser.value?.role);
+    });
+
+    const isAdmin = computed(() => {
+        return ['admin'].includes(currentUser.value?.role);
     });
 
     const canSaveSection = computed(() => {
@@ -129,7 +129,6 @@ export function useProductSectionModal({ props, emit }) {
             features_ru: '',
             features_en: '',
             specifications: {},
-            certificates: {},
             gallery: {},
         };
     }
@@ -150,8 +149,6 @@ export function useProductSectionModal({ props, emit }) {
 
             specifications: [],
 
-            certificates: [],
-
             gallery: [],
 
             compatible_product_ids: [],
@@ -160,7 +157,6 @@ export function useProductSectionModal({ props, emit }) {
         editProduct.value = null;
         compatibleOptions.value = [];
 
-        originalCertificateIds.value = [];
         originalGalleryIds.value = [];
         originalFeaturesGalleryIds.value = [];
         originalSpecificationIds.value = [];
@@ -195,7 +191,6 @@ export function useProductSectionModal({ props, emit }) {
         isSaving,
         formError,
 
-        originalCertificateIds,
         originalGalleryIds,
         originalFeaturesGalleryIds,
         originalSpecificationIds,
@@ -207,6 +202,7 @@ export function useProductSectionModal({ props, emit }) {
         supportedSections,
 
         isManager,
+        isAdmin,
         canSaveSection,
         isReadonly,
 
