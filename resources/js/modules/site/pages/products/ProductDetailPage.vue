@@ -80,7 +80,13 @@
             <!-- GALLERY -->
             <!-- ===================================================== -->
             <template v-if="hasGallery">
-                <ProductGallery :product="product" :images="galleryImages" />
+                <ProductGallery
+                    :product="product"
+                    :images="galleryImages"
+                    :can-manage="canManage"
+                    @manage="openSectionManager('gallery')"
+                    @updated="handleProductUpdated"
+                />
             </template>
 
             <ProductSectionPlaceholder

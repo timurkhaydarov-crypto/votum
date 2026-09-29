@@ -2,33 +2,46 @@
 
 namespace App\Http\Requests\Product;
 
+use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateProductGalleryRequest extends FormRequest
 {
+    /**
+     * Determine if the user is authorized to make this request.
+     */
     public function authorize(): bool
     {
-        return auth()->check()
-            && in_array(auth()->user()->role, ['admin', 'manager'], true);
+        return in_array(
+            $this->user()?->role,
+            ['admin', 'manager'],
+            true
+        );
     }
 
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array<string, ValidationRule|array<mixed>|string>
+     */
     public function rules(): array
     {
         return [
             'title' => [
                 'sometimes',
-                'nullable',
                 'array',
             ],
 
             'title.ru' => [
-                'nullable',
+                'required_with:title',
                 'string',
+                'max:255',
             ],
 
             'title.en' => [
-                'nullable',
+                'required_with:title',
                 'string',
+                'max:255',
             ],
 
             'description' => [

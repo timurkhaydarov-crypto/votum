@@ -245,29 +245,46 @@ class ProductController extends Controller
             'gallery' => $product
                 ->gallery
                 ->map(
-                    fn ($gallery) => [
-                        'id' => $gallery->id,
+                    function ($gallery) {
+                        $galleryImageName = pathinfo(
+                            basename($gallery->image_url),
+                            PATHINFO_FILENAME
+                        );
 
-                        'thumbnail' => '/image/gallery/'
-                            .$product->image_url
-                            .'/thumbnails/'
-                            .$gallery->image_url
-                            .'.webp',
+                        $galleryDirectory = preg_replace(
+                            '/_\d+$/',
+                            '',
+                            $galleryImageName
+                        );
 
-                        'image_url' => '/image/gallery/'
-                            .$product->image_url
-                            .'/'
-                            .$gallery->image_url
-                            .'.webp',
+                        if (! $galleryDirectory) {
+                            $galleryDirectory =
+                                $galleryImageName;
+                        }
 
-                        'title' => $gallery->title,
+                        return [
+                            'id' => $gallery->id,
 
-                        'description' => $gallery->description,
-                    ]
+                            'thumbnail' => '/image/gallery/'
+                                .$galleryDirectory
+                                .'/thumbnails/'
+                                .$galleryImageName
+                                .'.webp',
+
+                            'image_url' => '/image/gallery/'
+                                .$galleryDirectory
+                                .'/'
+                                .$galleryImageName
+                                .'.webp',
+
+                            'title' => $gallery->title,
+
+                            'description' => $gallery->description,
+                        ];
+                    }
                 )
                 ->values()
                 ->all(),
-
             /*
             |--------------------------------------------------------------------------
             | Brand

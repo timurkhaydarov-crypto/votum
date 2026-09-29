@@ -2,40 +2,52 @@
 
 namespace App\Http\Requests\Product;
 
+use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreProductGalleryRequest extends FormRequest
 {
+    /**
+     * Determine if the user is authorized to make this request.
+     */
     public function authorize(): bool
     {
-        return auth()->check()
-            && in_array(auth()->user()->role, ['admin', 'manager'], true);
+        return in_array(
+            $this->user()?->role,
+            ['admin', 'manager'],
+            true
+        );
     }
 
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array<string, ValidationRule|array<mixed>|string>
+     */
     public function rules(): array
     {
         return [
-            'image' => [
+            'token' => [
                 'required',
-                'file',
-                'image',
-                'mimes:jpg,jpeg,png,webp,gif',
-                'max:102400',
+                'string',
+                'max:255',
             ],
 
             'title' => [
-                'nullable',
+                'required',
                 'array',
             ],
 
             'title.ru' => [
-                'nullable',
+                'required',
                 'string',
+                'max:255',
             ],
 
             'title.en' => [
-                'nullable',
+                'required',
                 'string',
+                'max:255',
             ],
 
             'description' => [

@@ -4,6 +4,12 @@ import { useI18n } from 'vue-i18n';
 export function useProductSectionModal({ props, emit }) {
     const { t, locale } = useI18n();
 
+    /*
+    |--------------------------------------------------------------------------
+    | Modal state
+    |--------------------------------------------------------------------------
+    */
+
     const editProduct = ref(null);
     const currentUser = ref(null);
 
@@ -11,9 +17,20 @@ export function useProductSectionModal({ props, emit }) {
     const isSaving = ref(false);
     const formError = ref('');
 
-    const originalGalleryIds = ref([]);
+    /*
+    |--------------------------------------------------------------------------
+    | Original data
+    |--------------------------------------------------------------------------
+    */
+
     const originalFeaturesGalleryIds = ref([]);
     const originalSpecificationIds = ref([]);
+
+    /*
+    |--------------------------------------------------------------------------
+    | Validation errors
+    |--------------------------------------------------------------------------
+    */
 
     const errors = ref({
         full_description_ru: '',
@@ -21,8 +38,17 @@ export function useProductSectionModal({ props, emit }) {
         features_ru: '',
         features_en: '',
         specifications: {},
-        gallery: {},
     });
+
+    /*
+    |--------------------------------------------------------------------------
+    | Universal form
+    |--------------------------------------------------------------------------
+    |
+    | Gallery and certificates are intentionally absent.
+    | They are managed by their own components and APIs.
+    |
+    */
 
     const form = ref({
         details: {
@@ -39,8 +65,6 @@ export function useProductSectionModal({ props, emit }) {
 
         specifications: [],
 
-        gallery: [],
-
         compatible_product_ids: [],
     });
 
@@ -48,7 +72,7 @@ export function useProductSectionModal({ props, emit }) {
 
     /*
     |--------------------------------------------------------------------------
-    | Только редактируемые секции
+    | Supported sections
     |--------------------------------------------------------------------------
     */
 
@@ -60,6 +84,12 @@ export function useProductSectionModal({ props, emit }) {
         'certificates',
         'gallery',
     ];
+
+    /*
+    |--------------------------------------------------------------------------
+    | Permissions
+    |--------------------------------------------------------------------------
+    */
 
     const isManager = computed(() => {
         return ['admin', 'manager'].includes(currentUser.value?.role);
@@ -77,6 +107,12 @@ export function useProductSectionModal({ props, emit }) {
         return !isManager.value;
     });
 
+    /*
+    |--------------------------------------------------------------------------
+    | Product name
+    |--------------------------------------------------------------------------
+    */
+
     const productName = computed(() => {
         const name = editProduct.value?.name ?? props.product?.name;
 
@@ -90,6 +126,12 @@ export function useProductSectionModal({ props, emit }) {
 
         return name[locale.value] ?? name.ru ?? name.en ?? '';
     });
+
+    /*
+    |--------------------------------------------------------------------------
+    | Section title
+    |--------------------------------------------------------------------------
+    */
 
     const sectionTitle = computed(() => {
         switch (props.section) {
@@ -116,11 +158,23 @@ export function useProductSectionModal({ props, emit }) {
         }
     });
 
+    /*
+    |--------------------------------------------------------------------------
+    | Selected compatible products
+    |--------------------------------------------------------------------------
+    */
+
     const selectedCompatibleProducts = computed(() => {
         const ids = new Set((form.value.compatible_product_ids ?? []).map(Number));
 
         return compatibleOptions.value.filter((product) => ids.has(Number(product.id)));
     });
+
+    /*
+    |--------------------------------------------------------------------------
+    | Reset errors
+    |--------------------------------------------------------------------------
+    */
 
     function resetErrors() {
         errors.value = {
@@ -129,9 +183,14 @@ export function useProductSectionModal({ props, emit }) {
             features_ru: '',
             features_en: '',
             specifications: {},
-            gallery: {},
         };
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Reset form
+    |--------------------------------------------------------------------------
+    */
 
     function resetForm() {
         form.value = {
@@ -149,15 +208,12 @@ export function useProductSectionModal({ props, emit }) {
 
             specifications: [],
 
-            gallery: [],
-
             compatible_product_ids: [],
         };
 
         editProduct.value = null;
         compatibleOptions.value = [];
 
-        originalGalleryIds.value = [];
         originalFeaturesGalleryIds.value = [];
         originalSpecificationIds.value = [];
 
@@ -166,11 +222,23 @@ export function useProductSectionModal({ props, emit }) {
         formError.value = '';
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | Clear field error
+    |--------------------------------------------------------------------------
+    */
+
     function clearFieldError(section, field) {
         if (errors.value[section] && typeof errors.value[section] === 'object') {
             delete errors.value[section][field];
         }
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Close
+    |--------------------------------------------------------------------------
+    */
 
     function close(force = false) {
         if (isSaving.value && !force) {
@@ -191,7 +259,6 @@ export function useProductSectionModal({ props, emit }) {
         isSaving,
         formError,
 
-        originalGalleryIds,
         originalFeaturesGalleryIds,
         originalSpecificationIds,
 

@@ -23,20 +23,15 @@ class UploadController extends Controller
         return response()->json(
             [
                 'upload' => [
-                    'token' =>
-                        $upload['token'],
+                    'token' => $upload['token'],
 
-                    'type' =>
-                        $request->string('type')->toString(),
+                    'type' => $request->string('type')->toString(),
 
-                    'original_name' =>
-                        $upload['original_name'],
+                    'original_name' => $upload['original_name'],
 
-                    'mime_type' =>
-                        $upload['mime_type'],
+                    'mime_type' => $upload['mime_type'],
 
-                    'size' =>
-                        $upload['size'],
+                    'size' => $upload['size'],
                 ],
             ],
             Response::HTTP_CREATED
@@ -57,16 +52,14 @@ class UploadController extends Controller
         if (! $deleted) {
             return response()->json(
                 [
-                    'message' =>
-                        'Temporary upload not found.',
+                    'message' => 'Temporary upload not found.',
                 ],
                 Response::HTTP_NOT_FOUND
             );
         }
 
         return response()->json([
-            'message' =>
-                'Temporary upload deleted successfully.',
+            'message' => 'Temporary upload deleted successfully.',
         ]);
     }
 }

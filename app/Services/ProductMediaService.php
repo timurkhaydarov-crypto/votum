@@ -13,6 +13,10 @@ class ProductMediaService
 
     private const FFMPEG_BINARY = '/opt/homebrew/bin/ffmpeg';
 
+    private const GALLERY_MAX_WIDTH = 1600;
+
+    private const GALLERY_THUMBNAIL_WIDTH = 600;
+
     private const IMAGE_EXTENSIONS = [
         'jpg',
         'jpeg',
@@ -26,12 +30,6 @@ class ProductMediaService
         'mov',
     ];
 
-    /**
-     * Main product image.
-     *
-     * Result:
-     * public/image/product/{categorySlug}/{basename}.webp
-     */
     public function promoteProductImage(
         string $token,
         string $categorySlug
@@ -44,34 +42,73 @@ class ProductMediaService
     }
 
     /**
-     * Product gallery image.
+     * Promote an uploaded image to the product gallery.
      *
-     * Result:
-     * public/image/gallery/{productImageBasename}/{basename}.webp
+     * Gallery files use the product image basename as their
+     * directory and receive an incremental suffix:
+     *
+     * kalmar_2.webp
+     * kalmar_3.webp
+     * kalmar_4.webp
+     *
+     * The returned value is stored in product_galleries.image_url:
+     *
+     * kalmar_2
+     * kalmar_3
+     * kalmar_4
      */
     public function promoteGalleryImage(
         string $token,
-        string $productImageBasename
+        string $galleryDirectory
     ): string {
-        $basename = $this->promoteImage(
+        $galleryDirectory =
+            $this->sanitizeBasename(
+                $galleryDirectory
+            );
+
+        $directory = public_path(
+            'image/gallery/'
+            .$galleryDirectory
+        );
+
+        File::ensureDirectoryExists(
+            $directory
+        );
+
+        /*
+         * Find the next gallery index.
+         *
+         * The first gallery image starts with _2 because
+         * the base name without an index belongs to the
+         * product's main image.
+         */
+        $index = $this->getNextGalleryIndex(
+            $directory,
+            $galleryDirectory
+        );
+
+        $basename =
+            $galleryDirectory
+            .'_'
+            .$index;
+
+        $this->promoteImageToBasename(
             $token,
-            'image/gallery/'
-            .trim($productImageBasename, '/')
+            $directory,
+            $basename,
+            self::GALLERY_MAX_WIDTH
         );
 
-        $sourcePath = public_path(
-            'image/gallery/'
-            .$productImageBasename
-            .'/'
+        $sourcePath =
+            $directory
+            .DIRECTORY_SEPARATOR
             .$basename
-            .'.webp'
-        );
+            .'.webp';
 
-        $thumbnailDirectory = public_path(
-            'image/gallery/'
-            .$productImageBasename
-            .'/thumbnails'
-        );
+        $thumbnailDirectory =
+            $directory
+            .DIRECTORY_SEPARATOR
+            .'thumbnails';
 
         File::ensureDirectoryExists(
             $thumbnailDirectory
@@ -86,18 +123,12 @@ class ProductMediaService
         $this->createThumbnail(
             $sourcePath,
             $thumbnailPath,
-            480
+            self::GALLERY_THUMBNAIL_WIDTH
         );
 
         return $basename;
     }
 
-    /**
-     * Features image.
-     *
-     * Result:
-     * public/image/features/{basename}.webp
-     */
     public function promoteFeaturesImage(
         string $token
     ): string {
@@ -107,38 +138,10 @@ class ProductMediaService
         );
     }
 
-    /**
-     * Main product video.
-     *
-     * Creates both:
-     *
-     * public/video/product/{categorySlug}/{basename}.webm
-     * public/video/product/{categorySlug}/{basename}.mp4
-     *
-     * Source handling:
-     *
-     * MP4:
-     *   - WebM: FFmpeg conversion
-     *   - MP4: original file copied without conversion
-     *
-     * WebM:
-     *   - WebM: original file copied without conversion
-     *   - MP4: FFmpeg conversion
-     *
-     * MOV:
-     *   - WebM: FFmpeg conversion
-     *   - MP4: FFmpeg conversion
-     *
-     * Returns only basename without extension.
-     */
     public function promoteVideo(
         string $token,
         string $categorySlug
     ): string {
-        /*
-         * Video conversion may take longer than PHP's
-         * default execution time.
-         */
         set_time_limit(0);
 
         $temporaryUploadService = app(
@@ -177,13 +180,6 @@ class ProductMediaService
             self::LOCAL_DISK
         )->path($tempPath);
 
-        /*
-         * The database stores only basename:
-         *
-         * UUID
-         *
-         * without .mp4 / .webm / .mov
-         */
         $basename = pathinfo(
             $token,
             PATHINFO_FILENAME
@@ -210,9 +206,6 @@ class ProductMediaService
             .$basename
             .'.mp4';
 
-        /*
-         * Make sure FFmpeg exists.
-         */
         if (! is_file(self::FFMPEG_BINARY)) {
             throw new RuntimeException(
                 'FFmpeg executable not found: '
@@ -220,17 +213,6 @@ class ProductMediaService
             );
         }
 
-        /*
-         * =====================================================
-         * WEBM
-         * =====================================================
-         *
-         * If source is already WebM:
-         * simply copy it.
-         *
-         * MP4 / MOV:
-         * convert to WebM using VP9 + Opus.
-         */
         if ($extension === 'webm') {
             if (! copy(
                 $sourcePath,
@@ -276,17 +258,6 @@ class ProductMediaService
             }
         }
 
-        /*
-         * =====================================================
-         * MP4
-         * =====================================================
-         *
-         * If source is already MP4:
-         * simply copy the original file.
-         *
-         * WebM / MOV:
-         * convert to H.264 + AAC.
-         */
         if ($extension === 'mp4') {
             if (! copy(
                 $sourcePath,
@@ -335,26 +306,17 @@ class ProductMediaService
             }
         }
 
-        /*
-         * Remove temporary upload after both files
-         * have been created successfully.
-         */
         Storage::disk(
             self::LOCAL_DISK
         )->delete($tempPath);
 
-        /*
-         * Store only basename in DB.
-         */
         return $basename;
     }
 
-    /**
-     * Promote temporary image to public WebP.
-     */
     protected function promoteImage(
         string $token,
-        string $directory
+        string $directory,
+        ?int $maxWidth = null
     ): string {
         $temporaryUploadService = app(
             TemporaryUploadService::class
@@ -418,7 +380,8 @@ class ProductMediaService
 
         $this->convertToWebp(
             $sourcePath,
-            $targetPath
+            $targetPath,
+            $maxWidth
         );
 
         Storage::disk(
@@ -429,11 +392,177 @@ class ProductMediaService
     }
 
     /**
-     * Convert image to WebP.
+     * Promote an image using an explicitly provided basename.
+     *
+     * This is used by the gallery because the gallery filename
+     * must follow the product naming convention rather than
+     * the temporary upload UUID.
      */
+    protected function promoteImageToBasename(
+        string $token,
+        string $directory,
+        string $basename,
+        ?int $maxWidth = null
+    ): string {
+        $temporaryUploadService = app(
+            TemporaryUploadService::class
+        );
+
+        $tempPath =
+            $temporaryUploadService->resolve($token);
+
+        if (! $tempPath) {
+            throw new RuntimeException(
+                'Temporary image upload not found.'
+            );
+        }
+
+        $extension = strtolower(
+            pathinfo(
+                $token,
+                PATHINFO_EXTENSION
+            )
+        );
+
+        if (
+            ! in_array(
+                $extension,
+                self::IMAGE_EXTENSIONS,
+                true
+            )
+        ) {
+            throw new RuntimeException(
+                'Invalid image upload.'
+            );
+        }
+
+        $sourcePath = Storage::disk(
+            self::LOCAL_DISK
+        )->path($tempPath);
+
+        File::ensureDirectoryExists(
+            $directory
+        );
+
+        $targetPath =
+            $directory
+            .DIRECTORY_SEPARATOR
+            .$basename
+            .'.webp';
+
+        try {
+            $this->convertToWebp(
+                $sourcePath,
+                $targetPath,
+                $maxWidth
+            );
+        } catch (\Throwable $exception) {
+            /*
+             * Do not consume the temporary upload if
+             * image conversion failed.
+             */
+            throw $exception;
+        }
+
+        /*
+         * The temporary upload has now been successfully
+         * promoted and can be removed.
+         */
+        Storage::disk(
+            self::LOCAL_DISK
+        )->delete($tempPath);
+
+        return $basename;
+    }
+
+    /**
+     * Determine the next gallery index.
+     *
+     * Example:
+     *
+     * kalmar.webp
+     * kalmar_2.webp
+     * kalmar_3.webp
+     *
+     * returns 4.
+     */
+    protected function getNextGalleryIndex(
+        string $directory,
+        string $galleryDirectory
+    ): int {
+        $maxIndex = 1;
+
+        if (! is_dir($directory)) {
+            return 2;
+        }
+
+        $files = File::files(
+            $directory
+        );
+
+        foreach ($files as $file) {
+            $filename = $file->getFilename();
+
+            if (
+                ! preg_match(
+                    '/^'
+                    .preg_quote(
+                        $galleryDirectory,
+                        '/'
+                    )
+                    .'_(\d+)\.webp$/i',
+                    $filename,
+                    $matches
+                )
+            ) {
+                continue;
+            }
+
+            $index = (int) $matches[1];
+
+            if ($index > $maxIndex) {
+                $maxIndex = $index;
+            }
+        }
+
+        return max(
+            2,
+            $maxIndex + 1
+        );
+    }
+
+    protected function sanitizeBasename(
+        string $basename
+    ): string {
+        $basename = pathinfo(
+            basename($basename),
+            PATHINFO_FILENAME
+        );
+
+        $basename = preg_replace(
+            '/[^A-Za-z0-9_-]+/',
+            '-',
+            $basename
+        );
+
+        $basename = trim(
+            $basename,
+            '-_'
+        );
+
+        if (! $basename) {
+            throw new RuntimeException(
+                'Unable to determine image basename.'
+            );
+        }
+
+        return $basename;
+    }
+
     protected function convertToWebp(
         string $sourcePath,
-        string $targetPath
+        string $targetPath,
+        ?int $maxWidth = null
     ): void {
         if (! function_exists('imagewebp')) {
             throw new RuntimeException(
@@ -452,20 +581,17 @@ class ProductMediaService
         }
 
         $source = match ($imageInfo[2]) {
-            IMAGETYPE_JPEG =>
-                imagecreatefromjpeg(
-                    $sourcePath
-                ),
+            IMAGETYPE_JPEG => imagecreatefromjpeg(
+                $sourcePath
+            ),
 
-            IMAGETYPE_PNG =>
-                imagecreatefrompng(
-                    $sourcePath
-                ),
+            IMAGETYPE_PNG => imagecreatefrompng(
+                $sourcePath
+            ),
 
-            IMAGETYPE_WEBP =>
-                imagecreatefromwebp(
-                    $sourcePath
-                ),
+            IMAGETYPE_WEBP => imagecreatefromwebp(
+                $sourcePath
+            ),
 
             default => false,
         };
@@ -496,6 +622,69 @@ class ProductMediaService
             true
         );
 
+        $sourceWidth = imagesx(
+            $source
+        );
+
+        $sourceHeight = imagesy(
+            $source
+        );
+
+        /*
+         * Resize only when the source image is wider
+         * than the requested maximum width.
+         *
+         * Small images are never upscaled.
+         */
+        if (
+            $maxWidth !== null
+            && $sourceWidth > $maxWidth
+        ) {
+            $targetWidth = $maxWidth;
+
+            $targetHeight = (int) round(
+                $sourceHeight
+                * (
+                    $targetWidth
+                    / $sourceWidth
+                )
+            );
+
+            $resized = imagecreatetruecolor(
+                $targetWidth,
+                $targetHeight
+            );
+
+            imagealphablending(
+                $resized,
+                false
+            );
+
+            imagesavealpha(
+                $resized,
+                true
+            );
+
+            imagecopyresampled(
+                $resized,
+                $source,
+                0,
+                0,
+                0,
+                0,
+                $targetWidth,
+                $targetHeight,
+                $sourceWidth,
+                $sourceHeight
+            );
+
+            imagedestroy(
+                $source
+            );
+
+            $source = $resized;
+        }
+
         if (
             ! imagewebp(
                 $source,
@@ -517,9 +706,6 @@ class ProductMediaService
         );
     }
 
-    /**
-     * Create gallery thumbnail.
-     */
     protected function createThumbnail(
         string $sourcePath,
         string $targetPath,
@@ -609,3 +795,4 @@ class ProductMediaService
         );
     }
 }
+

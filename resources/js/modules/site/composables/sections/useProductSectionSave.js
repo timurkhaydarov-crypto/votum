@@ -12,18 +12,31 @@ export function useProductSectionSave({
     isManager,
     close,
 }) {
+    /*
+    |--------------------------------------------------------------------------
+    | Validation reset
+    |--------------------------------------------------------------------------
+    */
+
     function resetValidationErrors() {
         errors.value = {
             full_description_ru: '',
             full_description_en: '',
+
             features_ru: '',
             features_en: '',
+
             specifications: {},
-            gallery: {},
         };
 
         formError.value = '';
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Helpers
+    |--------------------------------------------------------------------------
+    */
 
     function normalizeLocalizedValue(value) {
         if (!value) {
@@ -46,157 +59,26 @@ export function useProductSectionSave({
         };
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | Details
+    |--------------------------------------------------------------------------
+    */
+
     function validateDetails() {
         let valid = true;
 
-        if (
-            !String(
-                form.value.details?.ru ?? '',
-            ).trim()
-        ) {
-            errors.value.full_description_ru =
-                'required';
+        if (!String(form.value.details?.ru ?? '').trim()) {
+            errors.value.full_description_ru = 'required';
 
             valid = false;
         }
 
-        if (
-            !String(
-                form.value.details?.en ?? '',
-            ).trim()
-        ) {
-            errors.value.full_description_en =
-                'required';
+        if (!String(form.value.details?.en ?? '').trim()) {
+            errors.value.full_description_en = 'required';
 
             valid = false;
         }
-
-        return valid;
-    }
-
-    function validateFeatures() {
-        let valid = true;
-
-        errors.value.features_ru = '';
-        errors.value.features_en = '';
-
-        if (
-            !String(
-                form.value.features?.ru ?? '',
-            ).trim()
-        ) {
-            errors.value.features_ru =
-                'required';
-
-            valid = false;
-        }
-
-        if (
-            !String(
-                form.value.features?.en ?? '',
-            ).trim()
-        ) {
-            errors.value.features_en =
-                'required';
-
-            valid = false;
-        }
-
-        return valid;
-    }
-
-    function validateSpecifications() {
-        const specificationErrors = {};
-        let valid = true;
-
-        form.value.specifications.forEach(
-            (specification, index) => {
-                const name =
-                    normalizeLocalizedValue(
-                        specification.name,
-                    );
-
-                const value =
-                    normalizeLocalizedValue(
-                        specification.value,
-                    );
-
-                const fieldErrors = {};
-
-                if (!name.ru.trim()) {
-                    fieldErrors.name_ru = true;
-                }
-
-                if (!name.en.trim()) {
-                    fieldErrors.name_en = true;
-                }
-
-                if (!value.ru.trim()) {
-                    fieldErrors.value_ru = true;
-                }
-
-                if (!value.en.trim()) {
-                    fieldErrors.value_en = true;
-                }
-
-                if (
-                    Object.keys(fieldErrors).length
-                ) {
-                    specificationErrors[index] =
-                        fieldErrors;
-
-                    valid = false;
-                }
-            },
-        );
-
-        errors.value.specifications =
-            specificationErrors;
-
-        return valid;
-    }
-
-    function validateGallery() {
-        const galleryErrors = {};
-        let valid = true;
-
-        form.value.gallery.forEach(
-            (item, index) => {
-                const title =
-                    normalizeLocalizedValue(
-                        item.title,
-                    );
-
-                const itemErrors = {};
-
-                if (!title.ru.trim()) {
-                    itemErrors.title_ru = true;
-                }
-
-                if (!title.en.trim()) {
-                    itemErrors.title_en = true;
-                }
-
-                if (
-                    item.is_new &&
-                    !item.file
-                ) {
-                    itemErrors.file = true;
-                }
-
-                if (
-                    Object.keys(itemErrors).length
-                ) {
-                    galleryErrors[index] =
-                        itemErrors;
-
-                    valid = false;
-                }
-            },
-        );
-
-        errors.value.gallery =
-            galleryErrors;
 
         return valid;
     }
@@ -210,17 +92,42 @@ export function useProductSectionSave({
             return false;
         }
 
-        await productsApi.updateDetails(
-            props.product.id,
-            {
-                full_description: {
-                    ru: form.value.details.ru,
-                    en: form.value.details.en,
-                },
+        await productsApi.updateDetails(props.product.id, {
+            full_description: {
+                ru: form.value.details.ru,
+
+                en: form.value.details.en,
             },
-        );
+        });
 
         return true;
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Features
+    |--------------------------------------------------------------------------
+    */
+
+    function validateFeatures() {
+        let valid = true;
+
+        errors.value.features_ru = '';
+        errors.value.features_en = '';
+
+        if (!String(form.value.features?.ru ?? '').trim()) {
+            errors.value.features_ru = 'required';
+
+            valid = false;
+        }
+
+        if (!String(form.value.features?.en ?? '').trim()) {
+            errors.value.features_en = 'required';
+
+            valid = false;
+        }
+
+        return valid;
     }
 
     async function saveFeatures() {
@@ -232,65 +139,89 @@ export function useProductSectionSave({
             return false;
         }
 
-        const productId =
-            props.product.id;
+        const productId = props.product.id;
 
-        await productsApi.updateFeatures(
-            productId,
-            {
-                features: {
-                    ru: form.value.features.ru,
-                    en: form.value.features.en,
-                },
+        await productsApi.updateFeatures(productId, {
+            features: {
+                ru: form.value.features.ru,
+
+                en: form.value.features.en,
             },
+        });
+
+        const currentIds = form.value.features_gallery
+            .filter((item) => item.id)
+            .map((item) => item.id);
+
+        const removedIds = originalFeaturesGalleryIds.value.filter(
+            (id) => !currentIds.includes(id)
         );
 
-        const currentIds =
-            form.value.features_gallery
-                .filter((item) => item.id)
-                .map((item) => item.id);
-
-        const removedIds =
-            originalFeaturesGalleryIds.value.filter(
-                (id) => !currentIds.includes(id),
-            );
-
         for (const galleryId of removedIds) {
-            await productsApi.deleteFeaturesGallery(
-                productId,
-                galleryId,
-            );
+            await productsApi.deleteFeaturesGallery(productId, galleryId);
         }
 
         for (const item of form.value.features_gallery) {
-            if (
-                item.is_new &&
-                item.file
-            ) {
-                await productsApi.createFeaturesGallery(
-                    productId,
-                    item.file,
-                    item.title,
-                );
+            if (item.is_new && item.file) {
+                await productsApi.createFeaturesGallery(productId, item.file, item.title);
 
                 continue;
             }
 
             if (item.id) {
-                await productsApi.updateFeaturesGallery(
-                    productId,
-                    item.id,
-                    {
-                        title:
-                            normalizeLocalizedValue(
-                                item.title,
-                            ),
-                    },
-                );
+                await productsApi.updateFeaturesGallery(productId, item.id, {
+                    title: normalizeLocalizedValue(item.title),
+                });
             }
         }
 
         return true;
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Specifications
+    |--------------------------------------------------------------------------
+    */
+
+    function validateSpecifications() {
+        const specificationErrors = {};
+
+        let valid = true;
+
+        form.value.specifications.forEach((specification, index) => {
+            const name = normalizeLocalizedValue(specification.name);
+
+            const value = normalizeLocalizedValue(specification.value);
+
+            const fieldErrors = {};
+
+            if (!name.ru.trim()) {
+                fieldErrors.name_ru = true;
+            }
+
+            if (!name.en.trim()) {
+                fieldErrors.name_en = true;
+            }
+
+            if (!value.ru.trim()) {
+                fieldErrors.value_ru = true;
+            }
+
+            if (!value.en.trim()) {
+                fieldErrors.value_en = true;
+            }
+
+            if (Object.keys(fieldErrors).length) {
+                specificationErrors[index] = fieldErrors;
+
+                valid = false;
+            }
+        });
+
+        errors.value.specifications = specificationErrors;
+
+        return valid;
     }
 
     async function saveSpecifications() {
@@ -302,133 +233,70 @@ export function useProductSectionSave({
             return false;
         }
 
-        const productId =
-            props.product.id;
+        const productId = props.product.id;
 
-        const currentIds =
-            form.value.specifications
-                .filter((item) => item.id)
-                .map((item) => item.id);
+        const currentIds = form.value.specifications
+            .filter((item) => item.id)
+            .map((item) => item.id);
 
-        const removedIds =
-            originalSpecificationIds.value.filter(
-                (id) => !currentIds.includes(id),
-            );
+        const removedIds = originalSpecificationIds.value.filter((id) => !currentIds.includes(id));
 
         for (const specificationId of removedIds) {
-            await productsApi.deleteSpecification(
-                productId,
-                specificationId,
-            );
+            await productsApi.deleteSpecification(productId, specificationId);
         }
 
-        for (
-            const specification of
-            form.value.specifications
-        ) {
+        for (const specification of form.value.specifications) {
             const payload = {
-                name:
-                    normalizeLocalizedValue(
-                        specification.name,
-                    ),
+                name: normalizeLocalizedValue(specification.name),
 
-                value:
-                    normalizeLocalizedValue(
-                        specification.value,
-                    ),
+                value: normalizeLocalizedValue(specification.value),
             };
 
             if (specification.id) {
-                await productsApi.updateSpecification(
-                    productId,
-                    specification.id,
-                    payload,
-                );
+                await productsApi.updateSpecification(productId, specification.id, payload);
             } else {
-                await productsApi.createSpecification(
-                    productId,
-                    payload,
-                );
+                await productsApi.createSpecification(productId, payload);
             }
         }
 
         return true;
     }
 
-    async function saveGallery() {
-        if (!isManager.value) {
-            return false;
-        }
-
-        if (!validateGallery()) {
-            return false;
-        }
-
-        const productId =
-            props.product.id;
-
-        for (const item of form.value.gallery) {
-            if (
-                item.is_new &&
-                item.file
-            ) {
-                await productsApi.createGallery(
-                    productId,
-                    item.file,
-                    item.title,
-                    item.description,
-                );
-
-                continue;
-            }
-
-            if (item.id) {
-                await productsApi.updateGallery(
-                    productId,
-                    item.id,
-                    {
-                        title:
-                            normalizeLocalizedValue(
-                                item.title,
-                            ),
-
-                        description:
-                            normalizeLocalizedValue(
-                                item.description,
-                            ),
-                    },
-                );
-            }
-        }
-
-        return true;
-    }
+    /*
+    |--------------------------------------------------------------------------
+    | Compatible products
+    |--------------------------------------------------------------------------
+    */
 
     async function saveCompatible() {
         if (!isManager.value) {
             return false;
         }
 
-        await productsApi.updateCompatible(
-            props.product.id,
-            {
-                compatible_product_ids:
-                    (
-                        form.value
-                            .compatible_product_ids ??
-                        []
-                    ).map(Number),
-            },
-        );
+        await productsApi.updateCompatible(props.product.id, {
+            compatible_product_ids: (form.value.compatible_product_ids ?? []).map(Number),
+        });
 
         return true;
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | Save section
+    |--------------------------------------------------------------------------
+    |
+    | Gallery and certificates are intentionally absent.
+    |
+    | Gallery:
+    | ProductGalleryManager
+    |
+    | Certificates:
+    | ProductCertificatesSection
+    |
+    */
+
     async function saveSection() {
-        if (
-            isSaving.value ||
-            !isManager.value
-        ) {
+        if (isSaving.value || !isManager.value) {
             return false;
         }
 
@@ -441,28 +309,19 @@ export function useProductSectionSave({
 
             switch (props.section) {
                 case 'details':
-                    saved =
-                        await saveDetails();
+                    saved = await saveDetails();
                     break;
 
                 case 'features':
-                    saved =
-                        await saveFeatures();
+                    saved = await saveFeatures();
                     break;
 
                 case 'specifications':
-                    saved =
-                        await saveSpecifications();
-                    break;
-
-                case 'gallery':
-                    saved =
-                        await saveGallery();
+                    saved = await saveSpecifications();
                     break;
 
                 case 'compatible':
-                    saved =
-                        await saveCompatible();
+                    saved = await saveCompatible();
                     break;
 
                 default:
@@ -474,25 +333,18 @@ export function useProductSectionSave({
             }
 
             emit('updated', {
-                productId:
-                    props.product.id,
+                productId: props.product.id,
 
-                section:
-                    props.section,
+                section: props.section,
             });
 
             close(true);
 
             return true;
         } catch (error) {
-            console.error(
-                'Failed to save product section:',
-                error,
-            );
+            console.error('Failed to save product section:', error);
 
-            formError.value =
-                error?.message ??
-                'Не удалось сохранить изменения.';
+            formError.value = error?.message ?? 'Не удалось сохранить изменения.';
 
             return false;
         } finally {
@@ -504,12 +356,10 @@ export function useProductSectionSave({
         validateDetails,
         validateFeatures,
         validateSpecifications,
-        validateGallery,
 
         saveDetails,
         saveFeatures,
         saveSpecifications,
-        saveGallery,
         saveCompatible,
 
         saveSection,

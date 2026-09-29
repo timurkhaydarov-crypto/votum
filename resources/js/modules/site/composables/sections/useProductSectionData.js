@@ -1,5 +1,4 @@
 import { productsApi } from '../../services/productsApi.js';
-
 import { fetchJsonApi } from '../../services/fetchJsonApi.js';
 
 export function useProductSectionData({
@@ -11,12 +10,17 @@ export function useProductSectionData({
     formError,
     form,
     compatibleOptions,
-    originalGalleryIds,
     originalFeaturesGalleryIds,
     originalSpecificationIds,
     resetErrors,
     resetForm,
 }) {
+    /*
+    |--------------------------------------------------------------------------
+    | Localized helpers
+    |--------------------------------------------------------------------------
+    */
+
     function normalizeLocalizedObject(value) {
         if (!value) {
             return {
@@ -56,19 +60,11 @@ export function useProductSectionData({
         return product.article ?? `#${product.id}`;
     }
 
-    function getProductImageName(product) {
-        if (!product) {
-            return '';
-        }
-
-        const imageUrl = product.image_url ?? product.image ?? '';
-
-        if (!imageUrl) {
-            return '';
-        }
-
-        return imageUrl.replace(/\.[^.]+$/, '');
-    }
+    /*
+    |--------------------------------------------------------------------------
+    | Features
+    |--------------------------------------------------------------------------
+    */
 
     function getFeaturesImageUrl(imageUrl) {
         if (!imageUrl) {
@@ -89,7 +85,11 @@ export function useProductSectionData({
             return '';
         }
 
-        return `/image/features/${encodeURIComponent(folder)}/${encodeURIComponent(baseName)}.webp`;
+        return (
+            `/image/features/` +
+            `${encodeURIComponent(folder)}/` +
+            `${encodeURIComponent(baseName)}.webp`
+        );
     }
 
     function normalizeFeaturesGallery(items) {
@@ -102,31 +102,27 @@ export function useProductSectionData({
 
             return {
                 id: item.id ?? null,
+
                 title: normalizeLocalizedObject(item.title),
+
                 image_url: imageUrl,
+
                 image_name: getFeaturesImageUrl(imageUrl),
+
                 preview_url: item.preview_url ?? getFeaturesImageUrl(imageUrl),
+
                 is_new: false,
+
                 file: null,
             };
         });
     }
 
-    function normalizeGallery(items) {
-        if (!Array.isArray(items)) {
-            return [];
-        }
-
-        return items.map((item) => ({
-            id: item.id ?? null,
-            title: normalizeLocalizedObject(item.title),
-            description: normalizeLocalizedObject(item.description),
-            image_url: item.image_url ?? item.image ?? '',
-            preview_url: item.preview_url ?? item.image_url ?? item.image ?? '',
-            is_new: false,
-            file: null,
-        }));
-    }
+    /*
+    |--------------------------------------------------------------------------
+    | Specifications
+    |--------------------------------------------------------------------------
+    */
 
     function normalizeSpecifications(items) {
         if (!Array.isArray(items)) {
@@ -135,16 +131,35 @@ export function useProductSectionData({
 
         return items.map((item) => ({
             id: item.id ?? null,
+
             name: normalizeLocalizedObject(item.name),
+
             value: normalizeLocalizedObject(item.value),
         }));
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Current authenticated user
+    |--------------------------------------------------------------------------
+    */
 
     async function loadCurrentUser() {
         const response = await fetchJsonApi('/api/user');
 
         currentUser.value = response?.user ?? response ?? null;
+
+        return currentUser.value;
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Load universal section data
+    |--------------------------------------------------------------------------
+    |
+    | Gallery and certificates are intentionally excluded.
+    |
+    */
 
     async function loadSectionData() {
         if (!props.isOpen || !props.product?.id || !props.section) {
@@ -175,6 +190,7 @@ export function useProductSectionData({
 
                 form.value.features = {
                     ru: features.description_ru ?? features.ru ?? features.description?.ru ?? '',
+
                     en: features.description_en ?? features.en ?? features.description?.en ?? '',
                 };
 
@@ -211,40 +227,6 @@ export function useProductSectionData({
 
             /*
             |--------------------------------------------------------------------------
-            | GALLERY
-            |--------------------------------------------------------------------------
-            */
-
-            if (props.section === 'gallery') {
-                const response = await productsApi.getGallery(productId);
-
-                const gallery = response?.gallery ?? response?.data ?? response ?? [];
-
-                form.value.gallery = normalizeGallery(gallery);
-
-                originalGalleryIds.value = form.value.gallery
-                    .filter((item) => item.id)
-                    .map((item) => item.id);
-
-                return;
-            }
-
-            /*
-            |--------------------------------------------------------------------------
-            | CERTIFICATES
-            |--------------------------------------------------------------------------
-            |
-            | Certificates are handled independently by
-            | ProductCertificatesSection.
-            |
-            */
-
-            if (props.section === 'certificates') {
-                return;
-            }
-
-            /*
-            |--------------------------------------------------------------------------
             | DETAILS / COMPATIBLE
             |--------------------------------------------------------------------------
             */
@@ -263,6 +245,7 @@ export function useProductSectionData({
 
             form.value.details = {
                 ru: product.full_description?.ru ?? product.full_description_ru ?? '',
+
                 en: product.full_description?.en ?? product.full_description_en ?? '',
             };
 
@@ -274,6 +257,7 @@ export function useProductSectionData({
 
             form.value.features = {
                 ru: product.features?.ru ?? product.features?.description_ru ?? '',
+
                 en: product.features?.en ?? product.features?.description_en ?? '',
             };
 
@@ -300,18 +284,6 @@ export function useProductSectionData({
             form.value.specifications = normalizeSpecifications(product.specifications ?? []);
 
             originalSpecificationIds.value = form.value.specifications
-                .filter((item) => item.id)
-                .map((item) => item.id);
-
-            /*
-            |--------------------------------------------------------------------------
-            | GALLERY
-            |--------------------------------------------------------------------------
-            */
-
-            form.value.gallery = normalizeGallery(product.gallery ?? []);
-
-            originalGalleryIds.value = form.value.gallery
                 .filter((item) => item.id)
                 .map((item) => item.id);
 
@@ -345,10 +317,8 @@ export function useProductSectionData({
     return {
         normalizeLocalizedObject,
         getProductLabel,
-        getProductImageName,
         getFeaturesImageUrl,
         normalizeFeaturesGallery,
-        normalizeGallery,
         normalizeSpecifications,
         loadCurrentUser,
         loadSectionData,

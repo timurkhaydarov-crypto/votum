@@ -120,19 +120,17 @@
                         :product-id="props.product?.id"
                         :is-manager="isManager"
                         :is-admin="isAdmin"
-                        @updated="emit('updated')"
+                        @updated="handleSectionUpdated"
                     />
 
                     <!-- =================================================
                          GALLERY
                          ================================================= -->
-                    <ProductGallerySection
+                    <ProductGalleryManager
                         v-else-if="props.section === 'gallery'"
-                        :form="form"
-                        :errors="errors"
+                        :product="props.product"
                         :is-manager="isManager"
-                        :add-gallery-files="addGalleryFiles"
-                        :remove-gallery-item="removeGalleryItem"
+                        @updated="handleSectionUpdated"
                     />
 
                     <!-- =================================================
@@ -153,7 +151,11 @@
                  FOOTER
                  ===================================================== -->
             <div
-                v-if="props.section !== 'certificates' && canSaveSection"
+                v-if="
+                    props.section !== 'certificates' &&
+                    props.section !== 'gallery' &&
+                    canSaveSection
+                "
                 class="flex items-center justify-end gap-3 border-t border-slate-200 bg-slate-50 px-6 py-4"
             >
                 <button
@@ -202,7 +204,7 @@ import ProductFeaturesSection from './sections/ProductFeaturesSection.vue';
 import ProductSpecificationsSection from './sections/ProductSpecificationsSection.vue';
 import ProductCompatibleSection from './sections/ProductCompatibleSection.vue';
 import ProductCertificatesSection from './sections/ProductCertificatesSection.vue';
-import ProductGallerySection from './sections/ProductGallerySection.vue';
+import ProductGalleryManager from './ProductGalleryManager.vue';
 
 /*
 |--------------------------------------------------------------------------
@@ -254,7 +256,6 @@ const {
     isLoading,
     isSaving,
     formError,
-    originalGalleryIds,
     originalFeaturesGalleryIds,
     originalSpecificationIds,
     errors,
@@ -287,14 +288,13 @@ const data = useProductSectionData({
     formError,
     form,
     compatibleOptions,
-    originalGalleryIds,
     originalFeaturesGalleryIds,
     originalSpecificationIds,
     resetErrors,
     resetForm,
 });
 
-const { loadSectionData, getFeaturesImageUrl } = data;
+const { loadSectionData, loadCurrentUser, getFeaturesImageUrl } = data;
 
 /*
 |--------------------------------------------------------------------------
@@ -303,7 +303,6 @@ const { loadSectionData, getFeaturesImageUrl } = data;
 */
 
 const files = useProductSectionFiles({
-    props,
     form,
     isManager,
     getFeaturesImageUrl,
@@ -313,8 +312,6 @@ const {
     FEATURES_GALLERY_MAX,
     addFeaturesGalleryFiles,
     removeFeaturesGalleryItem,
-    addGalleryFiles,
-    removeGalleryItem,
     revokeAllPreviews,
 } = files;
 
@@ -351,6 +348,17 @@ function isSupportedSection(section) {
 
 /*
 |--------------------------------------------------------------------------
+| Section update
+|--------------------------------------------------------------------------
+*/
+
+function handleSectionUpdated() {
+    emit('updated');
+    close();
+}
+
+/*
+|--------------------------------------------------------------------------
 | Load section data
 |--------------------------------------------------------------------------
 */
@@ -359,6 +367,22 @@ watch(
     [() => props.isOpen, () => props.section, () => props.product?.id],
     async () => {
         if (!props.isOpen) {
+            return;
+        }
+
+        /*
+         * Gallery and certificates have their own APIs.
+         *
+         * We only need the current authenticated user
+         * because isManager/isAdmin depend on currentUser.
+         */
+        if (props.section === 'gallery' || props.section === 'certificates') {
+            try {
+                await loadCurrentUser();
+            } catch (error) {
+                console.error('Failed to load current user:', error);
+            }
+
             return;
         }
 
