@@ -20,6 +20,7 @@
             ></div>
 
             <AddToRequestButton
+            v-if="product.status"
                 :product-id="product.id"
             />
         </div>

@@ -51,6 +51,7 @@ export const normalizeProduct = (product, locale = 'ru') => ({
     groupTitle: normalizeRelationTitle(product.group, 'group', locale),
     price: product.price,
     quantity: product.quantity,
+    status: product.status == null ? null : Boolean(product.status),
     imageUrl: product.image_url || '',
     videoUrl: product.video_url || '',
     pdfUrl: product.pdf_url || '',

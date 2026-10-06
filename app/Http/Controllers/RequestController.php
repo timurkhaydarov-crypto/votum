@@ -2,15 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\SendRequestTelegramNotification;
+use App\Mail\RequestSubmittedMail;
 use App\Models\Cart\Cart;
 use App\Models\Cart\CartItem;
 use App\Models\Request\Request as RequestModel;
 use App\Models\Request\RequestItem;
+use Illuminate\Support\Facades\App;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Response;
+use Throwable;
 
 class RequestController extends Controller
 {
@@ -30,29 +36,73 @@ class RequestController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
+        $locale = $request->header('X-App-Locale');
+        App::setLocale(in_array($locale, ['en', 'ru'], true)
+            ? $locale
+            : config('app.locale'));
+
+        if (filled($request->input('website'))) {
+            return response()->json([
+                'request' => null,
+            ], Response::HTTP_ACCEPTED);
+        }
+
+        $request->merge([
+            'name' => is_string($request->input('name'))
+                ? trim($request->input('name'))
+                : $request->input('name'),
+            'phone' => is_string($request->input('phone'))
+                ? trim($request->input('phone'))
+                : $request->input('phone'),
+            'email' => is_string($request->input('email'))
+                ? strtolower(trim($request->input('email')))
+                : $request->input('email'),
+            'comment' => is_string($request->input('comment'))
+                ? trim($request->input('comment'))
+                : $request->input('comment'),
+            'subject' => is_string($request->input('subject'))
+                ? trim($request->input('subject'))
+                : $request->input('subject'),
+        ]);
+
         $validated = $request->validate([
             'name' => [
                 'required',
                 'string',
-                'max:255',
+                'min:2',
+                'max:100',
             ],
 
             'phone' => [
+                'bail',
                 'required',
                 'string',
-                'max:50',
+                'max:32',
+                function ($attribute, $value, $fail) {
+                    $digits = preg_replace('/\\D/u', '', $value);
+
+                    if (
+                        ! preg_match('/^\\+?[0-9().\\s-]+$/u', $value)
+                        || strlen($digits) < 7
+                        || strlen($digits) > 15
+                    ) {
+                        $fail(__('validation.phone'));
+                    }
+                },
             ],
 
             'email' => [
-                'nullable',
-                'email',
-                'max:255',
+                'bail',
+                'required',
+                'string',
+                'email:rfc',
+                'max:254',
             ],
 
             'comment' => [
                 'nullable',
                 'string',
-                'max:5000',
+                'max:2000',
             ],
 
             'context' => [
@@ -64,7 +114,7 @@ class RequestController extends Controller
             'subject' => [
                 'nullable',
                 'string',
-                'max:255',
+                'max:150',
             ],
         ]);
 
@@ -212,6 +262,8 @@ class RequestController extends Controller
             }
         );
 
+        $this->queueRequestEmails($createdRequest);
+
         return response()->json([
             'message' => 'Request created successfully.',
 
@@ -251,6 +303,8 @@ class RequestController extends Controller
             'context' => $validated['context'] ?? 'contact',
         ]);
 
+        $this->queueRequestEmails($createdRequest);
+
         /*
          * Save latest request in session.
          */
@@ -270,6 +324,91 @@ class RequestController extends Controller
                 'context' => $createdRequest->context,
             ],
         ], Response::HTTP_CREATED);
+    }
+
+    /**
+     * Queue request notifications for the company and requester.
+     */
+    private function queueRequestEmails(
+        RequestModel $requestModel
+    ): void {
+        $requestModel->loadMissing('items');
+
+        $telegramToken = config('services.telegram.bot_token');
+        $telegramChatIds = array_filter(array_map(
+            'trim',
+            explode(',', (string) config('services.telegram.chat_ids', ''))
+        ));
+
+        if ($telegramToken && $telegramChatIds) {
+            foreach ($telegramChatIds as $chatId) {
+                SendRequestTelegramNotification::dispatch(
+                    $requestModel,
+                    $chatId
+                );
+            }
+        }
+
+        $recipients = collect([
+            config('mail.company_address'),
+            ...explode(
+                ',',
+                (string) config('mail.manager_addresses', '')
+            ),
+        ])
+            ->map(fn ($address) => trim((string) $address))
+            ->filter(fn ($address) => $address !== '')
+            ->filter(fn ($address) => filter_var($address, FILTER_VALIDATE_EMAIL))
+            ->unique()
+            ->values();
+
+        if ($recipients->isEmpty()) {
+            Log::error('Company request email recipients are not configured.', [
+                'request_id' => $requestModel->id,
+            ]);
+        }
+
+        foreach ($recipients as $recipient) {
+            try {
+                $mail = new RequestSubmittedMail(
+                    $requestModel,
+                    true
+                );
+
+                if ($requestModel->email) {
+                    $mail->replyTo(
+                        $requestModel->email,
+                        $requestModel->name
+                    );
+                }
+
+                Mail::to($recipient)->queue($mail);
+            } catch (Throwable $exception) {
+                Log::error('Could not queue company request email.', [
+                    'request_id' => $requestModel->id,
+                    'recipient' => $recipient,
+                    'exception' => $exception::class,
+                ]);
+            }
+        }
+
+        if (! filter_var($requestModel->email, FILTER_VALIDATE_EMAIL)) {
+            return;
+        }
+
+        try {
+            Mail::to($requestModel->email)->queue(
+                new RequestSubmittedMail(
+                    $requestModel,
+                    false
+                )
+            );
+        } catch (Throwable $exception) {
+            Log::error('Could not queue requester confirmation email.', [
+                'request_id' => $requestModel->id,
+                'exception' => $exception::class,
+            ]);
+        }
     }
 
     /**

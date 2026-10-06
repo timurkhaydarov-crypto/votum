@@ -180,6 +180,7 @@
                     :can-manage="canManage"
                     @change-info="openInfoModal"
                     @manage-info="handleManageInfo"
+                    @status-updated="emit('statusUpdated', $event)"
                 />
 
                 <ProductPurchaseActions
@@ -276,7 +277,7 @@ const props = defineProps({
     },
 });
 
-const emit = defineEmits(['manageInfo']);
+const emit = defineEmits(['manageInfo', 'statusUpdated']);
 
 const isPlaying = ref(false);
 

@@ -15,29 +15,58 @@
                 class="h-0.5 w-0.5 rounded-full bg-slate-300"
             ></span>
 
-            <span
-                :class="[
-                    'inline-flex items-center gap-1.5 text-[10px] font-semibold',
-                    isInStock
-                        ? 'text-emerald-600'
-                        : 'text-slate-400',
-                ]"
-            >
+            <div class="inline-flex items-center gap-2">
                 <span
                     :class="[
-                        'h-1.5 w-1.5 rounded-full',
+                        'inline-flex items-center gap-1.5 text-[10px] font-semibold',
                         isInStock
-                            ? 'bg-emerald-500'
-                            : 'bg-slate-300',
+                            ? 'text-emerald-600'
+                            : 'text-red-600',
                     ]"
-                ></span>
+                >
+                    <span
+                        :class="[
+                            'h-1.5 w-1.5 rounded-full',
+                            isInStock
+                                ? 'bg-emerald-500'
+                                : 'bg-red-500',
+                        ]"
+                    ></span>
 
-                {{
-                    isInStock
-                        ? $t('product.inStock')
-                        : $t('product.outOfStock')
-                }}
-            </span>
+                    {{
+                        isInStock
+                            ? $t('product.inStock')
+                            : $t('product.outOfStock')
+                    }}
+                </span>
+
+                <button
+                    v-if="canManage"
+                    type="button"
+                    role="switch"
+                    :aria-checked="isInStock"
+                    :aria-busy="isSavingStatus"
+                    :aria-label="isInStock ? $t('product.outOfStock') : $t('product.inStock')"
+                    :title="isInStock ? $t('product.outOfStock') : $t('product.inStock')"
+                    :disabled="isSavingStatus"
+                    class="relative inline-flex h-4 w-7 shrink-0 items-center rounded-full transition-colors disabled:cursor-wait disabled:opacity-60"
+                    :class="isInStock ? 'bg-emerald-500' : 'bg-red-500'"
+                    @click="toggleAvailability"
+                >
+                    <span
+                        class="h-3 w-3 rounded-full bg-white transition-transform"
+                        :class="isInStock ? 'translate-x-3.5' : 'translate-x-0.5'"
+                    ></span>
+                </button>
+            </div>
+
+            <p
+                v-if="statusError"
+                role="alert"
+                class="mt-1 text-xs text-red-600"
+            >
+                {{ statusError }}
+            </p>
         </div>
 
         <!-- TITLE -->
@@ -98,10 +127,11 @@
 </template>
 
 <script setup>
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import InfoItem from './InfoItem.vue';
+import { productsApi } from '../../../services/productsApi.js';
 
 const { t, locale } = useI18n();
 
@@ -125,7 +155,11 @@ const props = defineProps({
 const emit = defineEmits([
     'changeInfo',
     'manageInfo',
+    'statusUpdated',
 ]);
+
+const isSavingStatus = ref(false);
+const statusError = ref('');
 
 /*
 |--------------------------------------------------------------------------
@@ -146,6 +180,30 @@ const pdfSrc = computed(() => {
 
     return `/document/specification/${locale.value}/${props.product.imageUrl}.pdf`;
 });
+
+const toggleAvailability = async () => {
+    if (!props.canManage || isSavingStatus.value) {
+        return;
+    }
+
+    const status = !props.isInStock;
+    isSavingStatus.value = true;
+    statusError.value = '';
+
+    try {
+        const response = await productsApi.updateStatus(
+            props.product.id,
+            status,
+        );
+
+        emit('statusUpdated', Boolean(response?.status ?? status));
+    } catch (error) {
+        statusError.value =
+            error?.message || t('messages.fail.default');
+    } finally {
+        isSavingStatus.value = false;
+    }
+};
 
 /*
 |--------------------------------------------------------------------------

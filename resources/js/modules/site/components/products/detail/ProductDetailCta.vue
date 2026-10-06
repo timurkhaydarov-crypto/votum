@@ -11,21 +11,19 @@
                 <div
                     class="text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-400"
                 >
-                    Need assistance?
+                    {{ $t('contacts.cta.eyebrow') }}
                 </div>
 
                 <h2
                     class="mt-3 text-2xl font-bold tracking-tight text-white sm:text-3xl"
                 >
-                    Нужна помощь в выборе оборудования?
+                    {{ $t('contacts.cta.title') }}
                 </h2>
 
                 <p
                     class="mt-3 text-sm leading-6 text-slate-400"
                 >
-                    Наши специалисты помогут подобрать
-                    конфигурацию оборудования под конкретную
-                    задачу контроля.
+                    {{ $t('contacts.cta.description') }}
                 </p>
             </div>
 
@@ -33,7 +31,7 @@
                 to="/contacts"
                 class="relative mt-7 inline-flex shrink-0 items-center justify-center gap-3 rounded-xl bg-white px-6 py-3.5 text-sm font-semibold text-slate-900 transition hover:bg-slate-100 lg:mt-0"
             >
-                Связаться со специалистом
+                {{ $t('contacts.cta.button') }}
 
                 <i class="bi bi-arrow-right"></i>
             </RouterLink>

@@ -9,13 +9,15 @@
             <!-- =====================================================
                  HEADER
                  ===================================================== -->
-            <div class="flex items-center justify-between border-b border-slate-200 px-6 py-4">
+            <div
+                class="flex items-center justify-between border-b border-slate-200 px-6 py-4"
+            >
                 <div class="min-w-0">
                     <div
                         class="flex items-center gap-2 text-xs font-medium uppercase tracking-wide text-slate-400"
                     >
                         <span>
-                            {{ t('certificates.title', 'Раздел продукта') }}
+                            {{ t('certificates.title') }}
                         </span>
 
                         <i class="bi bi-chevron-right"></i>
@@ -25,7 +27,9 @@
                         </span>
                     </div>
 
-                    <h2 class="mt-1 truncate text-xl font-semibold text-slate-900">
+                    <h2
+                        class="mt-1 truncate text-xl font-semibold text-slate-900"
+                    >
                         {{ productName }}
                     </h2>
                 </div>
@@ -45,18 +49,26 @@
                  ===================================================== -->
             <div class="min-h-0 flex-1 overflow-y-auto">
                 <!-- Loading -->
-                <div v-if="isLoading" class="flex min-h-[320px] items-center justify-center">
-                    <div class="flex items-center gap-3 text-sm text-slate-500">
+                <div
+                    v-if="isLoading"
+                    class="flex min-h-[320px] items-center justify-center"
+                >
+                    <div
+                        class="flex items-center gap-3 text-sm text-slate-500"
+                    >
                         <span
                             class="h-5 w-5 animate-spin rounded-full border-2 border-slate-300 border-t-slate-700"
                         ></span>
 
-                        {{ t('common.loading', 'Загрузка...') }}
+                        {{ t('common.loading') }}
                     </div>
                 </div>
 
                 <!-- Error -->
-                <div v-else-if="formError" class="p-6">
+                <div
+                    v-else-if="formError"
+                    class="p-6"
+                >
                     <div
                         class="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
                     >
@@ -65,7 +77,10 @@
                 </div>
 
                 <!-- Section -->
-                <div v-else class="p-6">
+                <div
+                    v-else
+                    class="p-6"
+                >
                     <!-- =================================================
                          DETAILS
                          ================================================= -->
@@ -105,11 +120,9 @@
                          ================================================= -->
                     <ProductCompatibleSection
                         v-else-if="props.section === 'compatible'"
-                        :form="form"
-                        :errors="errors"
-                        :compatible-options="compatibleOptions"
-                        :selected-products="selectedCompatibleProducts"
+                        :product-id="props.product?.id"
                         :is-manager="isManager"
+                        @updated="emit('updated')"
                     />
 
                     <!-- =================================================
@@ -140,8 +153,14 @@
                         v-else
                         class="flex min-h-[240px] items-center justify-center rounded-xl border border-dashed border-slate-300 bg-slate-50"
                     >
-                        <div class="text-center text-sm text-slate-500">
-                            {{ t('products.sections.unsupported', 'Раздел не поддерживается.') }}
+                        <div
+                            class="text-center text-sm text-slate-500"
+                        >
+                            {{
+                                t(
+                                    'products.sections.unsupported',
+                                )
+                            }}
                         </div>
                     </div>
                 </div>
@@ -152,6 +171,7 @@
                  ===================================================== -->
             <div
                 v-if="
+                    props.section !== 'compatible' &&
                     props.section !== 'certificates' &&
                     props.section !== 'gallery' &&
                     canSaveSection
@@ -164,7 +184,7 @@
                     :disabled="isSaving"
                     @click="close"
                 >
-                    {{ t('common.cancel', 'Отмена') }}
+                    {{ t('actions.cancel') }}
                 </button>
 
                 <button
@@ -178,12 +198,15 @@
                         class="h-4 w-4 animate-spin rounded-full border-2 border-slate-500 border-t-white"
                     ></span>
 
-                    <i v-else class="bi bi-check-lg"></i>
+                    <i
+                        v-else
+                        class="bi bi-check-lg"
+                    ></i>
 
                     {{
                         isSaving
-                            ? t('common.saving', 'Сохранение...')
-                            : t('common.save', 'Сохранить')
+                            ? t('actions.saving')
+                            : t('actions.save')
                     }}
                 </button>
             </div>
@@ -235,7 +258,10 @@ const props = defineProps({
 |--------------------------------------------------------------------------
 */
 
-const emit = defineEmits(['close', 'updated']);
+const emit = defineEmits([
+    'close',
+    'updated',
+]);
 
 /*
 |--------------------------------------------------------------------------
@@ -294,7 +320,11 @@ const data = useProductSectionData({
     resetForm,
 });
 
-const { loadSectionData, loadCurrentUser, getFeaturesImageUrl } = data;
+const {
+    loadSectionData,
+    loadCurrentUser,
+    getFeaturesImageUrl,
+} = data;
 
 /*
 |--------------------------------------------------------------------------
@@ -354,7 +384,14 @@ function isSupportedSection(section) {
 
 function handleSectionUpdated() {
     emit('updated');
-    close();
+
+    if (
+        props.section === 'compatible' ||
+        props.section === 'certificates' ||
+        props.section === 'gallery'
+    ) {
+        close();
+    }
 }
 
 /*
@@ -364,7 +401,11 @@ function handleSectionUpdated() {
 */
 
 watch(
-    [() => props.isOpen, () => props.section, () => props.product?.id],
+    [
+        () => props.isOpen,
+        () => props.section,
+        () => props.product?.id,
+    ],
     async () => {
         if (!props.isOpen) {
             return;
@@ -376,11 +417,17 @@ watch(
          * We only need the current authenticated user
          * because isManager/isAdmin depend on currentUser.
          */
-        if (props.section === 'gallery' || props.section === 'certificates') {
+        if (
+            props.section === 'gallery' ||
+            props.section === 'certificates'
+        ) {
             try {
                 await loadCurrentUser();
             } catch (error) {
-                console.error('Failed to load current user:', error);
+                console.error(
+                    'Failed to load current user:',
+                    error,
+                );
             }
 
             return;
@@ -394,7 +441,7 @@ watch(
     },
     {
         immediate: true,
-    }
+    },
 );
 
 /*

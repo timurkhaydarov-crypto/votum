@@ -6,7 +6,7 @@
 
         <div class="mb-6 flex justify-end">
             <button
-                v-if="canManage && !isUserLoading"
+                v-if="showCreateButton && canManage && !isUserLoading"
                 type="button"
                 class="inline-flex items-center gap-2 rounded-xl bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
                 :disabled="
@@ -146,6 +146,11 @@ import { ActionType } from '../../constants/actions.js';
 */
 
 const props = defineProps({
+    showCreateButton: {
+        type: Boolean,
+        default: true,
+    },
+
     categoryId: {
         type: [Number, String],
         default: null,

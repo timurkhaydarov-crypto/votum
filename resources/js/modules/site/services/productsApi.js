@@ -53,6 +53,16 @@ export const productsApi = {
         );
     },
 
+    updateStatus(productId, status) {
+        return fetchJsonApi(
+            `${PRODUCT_API_URL}/item/${encodeURIComponent(productId)}/status`,
+            {
+                method: 'PATCH',
+                body: JSON.stringify({ status }),
+            }
+        );
+    },
+
     /*
     |--------------------------------------------------------------------------
     | Product details

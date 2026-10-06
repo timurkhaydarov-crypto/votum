@@ -9,6 +9,7 @@ use App\Http\Controllers\EmailController;
 use App\Http\Controllers\FeaturesGalleryController;
 use App\Http\Controllers\OperatingHourController;
 use App\Http\Controllers\PhoneController;
+use App\Http\Controllers\ProductCompatibilityController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductDocumentController;
 use App\Http\Controllers\ProductDocumentFileController;
@@ -98,7 +99,6 @@ Route::prefix('products')->group(function () {
         'groups',
         [ProductController::class, 'groups']
     );
-
     Route::get(
         'category/{category:slug}/group/{group:slug}',
         [ProductController::class, 'productsByGroup']
@@ -113,6 +113,10 @@ Route::prefix('products')->group(function () {
         'item',
         [ProductController::class, 'index']
     );
+    Route::get(
+        'item/{product}/compatibilities',
+        [ProductCompatibilityController::class, 'index']
+     );
 
     /*
     |--------------------------------------------------------------------------
@@ -159,6 +163,11 @@ Route::prefix('products')->group(function () {
             [ProductController::class, 'update']
         );
 
+        Route::patch(
+            'item/{product}/status',
+            [ProductController::class, 'updateStatus']
+        );
+
         Route::delete(
             'item/{product}',
             [ProductController::class, 'destroy']
@@ -172,6 +181,21 @@ Route::prefix('products')->group(function () {
         Route::put(
             'item/{product}/compatible',
             [ProductController::class, 'updateCompatible']
+        );
+        
+        /*
+        |--------------------------------------------------------------------------
+        | Product compatibility management
+        |--------------------------------------------------------------------------
+        */
+        Route::post(
+            'item/{product}/compatibilities/{compatibleProduct}',
+            [ ProductCompatibilityController::class, 'attach']
+        );
+        
+        Route::delete(
+            'item/{product}/compatibilities/{compatibleProduct}',
+            [ ProductCompatibilityController::class, 'detach']
         );
 
         /*
@@ -538,7 +562,7 @@ Route::get(
 Route::post(
     '/requests',
     [RequestController::class, 'store']
-);
+)->middleware('throttle:5,10');
 
 Route::get(
     '/requests/{request}',

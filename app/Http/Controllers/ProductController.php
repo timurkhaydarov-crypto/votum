@@ -904,6 +904,29 @@ class ProductController extends Controller
     }
 
     /**
+     * Update only the product availability status.
+     */
+    public function updateStatus(
+        Request $request,
+        Product $product
+    ): JsonResponse {
+        $validated = $request->validate([
+            'status' => [
+                'required',
+                'boolean',
+            ],
+        ]);
+
+        $product->update([
+            'status' => $validated['status'],
+        ]);
+
+        return response()->json([
+            'status' => (bool) $product->status,
+        ]);
+    }
+
+    /**
      * Return data required for the primary product form.
      */
     protected function productFormOptions(): array

@@ -11,8 +11,14 @@ export const useProductDetails = () => {
     const isNotFound = ref(false);
     const errorMessage = ref('');
 
-    const loadProductById = async (productId) => {
-        isLoading.value = true;
+    const loadProductById = async (
+        productId,
+        { silent = false } = {},
+    ) => {
+        if (!silent) {
+            isLoading.value = true;
+        }
+
         isNotFound.value = false;
         errorMessage.value = '';
 
@@ -29,7 +35,9 @@ export const useProductDetails = () => {
 
             errorMessage.value = error?.message || 'Failed to load product';
         } finally {
-            isLoading.value = false;
+            if (!silent) {
+                isLoading.value = false;
+            }
         }
     };
 

@@ -346,7 +346,13 @@ export default {
             caption: 'Central office',
             hoursLabel: 'Operating hours',
         },
-
+        cta: {
+            eyebrow: 'Need assistance?',
+            title: 'Need help choosing the right equipment?',
+            description:
+                'Our specialists will help you select the right equipment configuration for your specific inspection task.',
+            button: 'Contact a specialist',
+        },
         dealers: {
             eyebrow: 'Dealer network',
             title: 'Our representatives',
@@ -801,6 +807,7 @@ export default {
             privacy: 'By clicking the button, you agree to the processing of the provided data.',
             emptyCart: 'Your request is empty. Add equipment from the catalog.',
             submitError: 'Failed to submit the request. Please try again.',
+            rateLimited: 'Too many attempts. Please wait a few minutes and try again.',
         },
 
         summary: {

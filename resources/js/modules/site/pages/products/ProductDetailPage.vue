@@ -37,13 +37,18 @@
                 :back-link="backLink"
                 :back-label="backLabel"
                 @manage-info="handleManageInfo"
+                @status-updated="handleProductStatusUpdated"
             />
 
             <!-- ===================================================== -->
             <!-- COMPATIBLE PRODUCTS -->
             <!-- ===================================================== -->
             <template v-if="hasCompatibleProducts">
-                <ProductCompatible :compatible-products="product.compatible_products" />
+                <ProductCompatible
+                    :compatible-products="product.compatible_products"
+                    :is-manager="canManage"
+                    @edit="openCompatibleEditor"
+                />
             </template>
 
             <ProductSectionPlaceholder
@@ -116,7 +121,11 @@
         <!-- ========================================================= -->
         <!-- FULL PRODUCT MANAGEMENT -->
         <!-- ========================================================= -->
-        <ProductManagement ref="productManagementRef" @updated="handleProductUpdated" />
+        <ProductManagement
+            ref="productManagementRef"
+            :show-create-button="false"
+            @updated="handleProductUpdated"
+        />
 
         <!-- ========================================================= -->
         <!-- SECTION EDIT MODAL -->
@@ -162,7 +171,13 @@ const { t, locale } = useI18n();
  | Product
  *-------------------------------------------------------------------------- */
 
-const { product, isLoading, isNotFound, errorMessage, loadProductById } = useProductDetails();
+const {
+    product,
+    isLoading,
+    isNotFound,
+    errorMessage,
+    loadProductById,
+} = useProductDetails();
 
 /* |--------------------------------------------------------------------------
  | Product management
@@ -199,6 +214,10 @@ const openSectionManager = (section) => {
     isSectionModalOpen.value = true;
 };
 
+const openCompatibleEditor = () => {
+    openSectionManager('compatible');
+};
+
 const closeSectionModal = () => {
     isSectionModalOpen.value = false;
     selectedSection.value = null;
@@ -213,14 +232,23 @@ const handleProductUpdated = async () => {
         return;
     }
 
-    await loadProductById(productId.value);
+    await loadProductById(productId.value, { silent: true });
+};
+
+const handleProductStatusUpdated = (status) => {
+    if (product.value) {
+        product.value.status = status;
+    }
 };
 
 /* |--------------------------------------------------------------------------
  | Standard transducers
  *-------------------------------------------------------------------------- */
 
-const { products: standardTransducers, loadProductsByGroup } = useProductsCatalog();
+const {
+    products: standardTransducers,
+    loadProductsByGroup,
+} = useProductsCatalog();
 
 /* |--------------------------------------------------------------------------
  | Route
@@ -267,7 +295,11 @@ const productTitle = computed(() => {
  | Breadcrumbs
  *-------------------------------------------------------------------------- */
 
-const { breadcrumbs, backLink, backLabel } = useProductBreadcrumbs({
+const {
+    breadcrumbs,
+    backLink,
+    backLabel,
+} = useProductBreadcrumbs({
     categorySlug,
     categoryTitle,
     groupSlug,
@@ -316,7 +348,10 @@ const hasCompatibleProducts = computed(() => {
  *-------------------------------------------------------------------------- */
 
 const hasCertificates = computed(() => {
-    return Array.isArray(product.value?.certificates) && product.value.certificates.length > 0;
+    return (
+        Array.isArray(product.value?.certificates) &&
+        product.value.certificates.length > 0
+    );
 });
 
 /* |--------------------------------------------------------------------------
@@ -325,7 +360,9 @@ const hasCertificates = computed(() => {
 
 const galleryImages = computed(() => {
     return normalizeArray(
-        product.value?.photogallery || product.value?.gallery || product.value?.galleryImages
+        product.value?.photogallery ||
+            product.value?.gallery ||
+            product.value?.galleryImages
     );
 });
 
@@ -338,7 +375,10 @@ const hasGallery = computed(() => {
  *-------------------------------------------------------------------------- */
 
 const hasProductTransducers = computed(() => {
-    const value = product.value?.transducers ?? product.value?.probes ?? product.value?.converters;
+    const value =
+        product.value?.transducers ??
+        product.value?.probes ??
+        product.value?.converters;
 
     return Array.isArray(value) && value.length > 0;
 });
@@ -400,7 +440,11 @@ const imageSrc = computed(() => {
         return '/image/logo.svg';
     }
 
-    if (image.startsWith('http://') || image.startsWith('https://') || image.startsWith('/')) {
+    if (
+        image.startsWith('http://') ||
+        image.startsWith('https://') ||
+        image.startsWith('/')
+    ) {
         return image;
     }
 
@@ -408,7 +452,9 @@ const imageSrc = computed(() => {
         return `/image/product/${image}`;
     }
 
-    const imageName = image.includes('.') ? image : `${image}.webp`;
+    const imageName = image.includes('.')
+        ? image
+        : `${image}.webp`;
 
     return `/image/product/${product.value.categorySlug}/${imageName}`;
 });
@@ -418,6 +464,10 @@ const imageSrc = computed(() => {
  *-------------------------------------------------------------------------- */
 
 const isInStock = computed(() => {
+    if (product.value?.status !== null && product.value?.status !== undefined) {
+        return Boolean(product.value.status);
+    }
+
     return Number(product.value?.quantity || 0) > 0;
 });
 
@@ -462,7 +512,10 @@ const groupBadgeClasses = computed(() => {
  *-------------------------------------------------------------------------- */
 
 const productTransducers = computed(() => {
-    const value = product.value?.transducers ?? product.value?.probes ?? product.value?.converters;
+    const value =
+        product.value?.transducers ??
+        product.value?.probes ??
+        product.value?.converters;
 
     if (!Array.isArray(value)) {
         return [];

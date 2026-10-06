@@ -40,77 +40,10 @@
                 </span>
             </div>
 
-            <!-- Actions -->
-
-            <div
-                v-if="variant === 'default'"
-                class="absolute right-3 top-3 z-10 flex gap-1.5"
-            >
-                <!-- Favorite -->
-
-                <button
-                    type="button"
-                    :aria-label="t('productCard.addToFavorites')"
-                    class="flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200/80 bg-white/95 text-slate-400 shadow-sm backdrop-blur transition hover:border-slate-300 hover:text-slate-900 active:scale-95"
-                >
-                    <svg
-                        class="h-3.5 w-3.5"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        stroke-width="1.8"
-                    >
-                        <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78 5.5 5.5 0 0 0 0-7.78Z"
-                        />
-                    </svg>
-                </button>
-
-                <!-- Cart -->
-
-                <button
-                    type="button"
-                    :aria-label="t('productCard.addToCart')"
-                    :disabled="adding"
-                    class="flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200/80 bg-white/95 text-slate-400 shadow-sm backdrop-blur transition hover:border-slate-900 hover:bg-slate-900 hover:text-white active:scale-95 disabled:cursor-not-allowed disabled:opacity-60"
-                    @click="handleAddToCart"
-                >
-                    <i
-                        v-if="adding"
-                        class="bi bi-arrow-repeat animate-spin text-sm"
-                    ></i>
-
-                    <i
-                        v-else-if="added"
-                        class="bi bi-check-lg text-sm"
-                    ></i>
-
-                    <svg
-                        v-else
-                        class="h-3.5 w-3.5"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        stroke-width="1.8"
-                    >
-                        <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            d="M3 3h2l2.4 11.2a2 2 0 0 0 2 1.6h7.8a2 2 0 0 0 1.9-1.4L21 7H6"
-                        />
-
-                        <circle cx="10" cy="20" r="1" />
-                        <circle cx="18" cy="20" r="1" />
-                    </svg>
-                </button>
-            </div>
-
             <!-- MANAGEMENT -->
 
             <div
-                v-if="canManage"
+                v-if="canManage && variant === 'default'"
                 class="absolute z-auto bottom-3 right-3 z-30 flex gap-1.5"
             >
                 <!-- Edit -->
@@ -237,6 +170,7 @@
                 <div class="flex items-center justify-between gap-3">
                     <div class="flex w-full shrink-0 gap-1.5">
                         <button
+                            v-if="product.status"
                             type="button"
                             :aria-label="t('productCard.addToCart')"
                             :disabled="adding"

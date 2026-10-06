@@ -2,8 +2,19 @@ vue
 <template>
     <form
         class="p-5 sm:p-7"
+        novalidate
         @submit.prevent="handleSubmit"
     >
+        <input
+            v-model="form.website"
+            type="text"
+            name="website"
+            autocomplete="off"
+            tabindex="-1"
+            aria-hidden="true"
+            class="absolute -left-[9999px] h-px w-px overflow-hidden"
+        />
+
         <!-- HEADER -->
         <div class="mb-6 pr-10">
             <div
@@ -98,6 +109,7 @@ vue
                     class="mb-2 block text-xs font-semibold text-slate-700"
                 >
                     {{ t('request.form.email') }}
+                    <span class="text-red-500">*</span>
                 </label>
 
                 <input
@@ -105,6 +117,7 @@ vue
                     v-model="form.email"
                     type="email"
                     autocomplete="email"
+                    required
                     :placeholder="t('request.form.emailPlaceholder')"
                     :disabled="submitting"
                     class="w-full rounded-lg border border-slate-200 bg-white px-3.5 py-2.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-slate-400 focus:ring-2 focus:ring-slate-100 disabled:cursor-not-allowed disabled:bg-slate-50"
@@ -249,7 +262,7 @@ const emit = defineEmits([
     'success',
 ]);
 
-const { t } = useI18n();
+const { t, locale } = useI18n();
 
 const {
     itemCount,
@@ -261,6 +274,7 @@ const form = reactive({
     phone: '',
     email: '',
     comment: '',
+    website: '',
 });
 
 const errors = ref({});
@@ -313,7 +327,8 @@ const handleSubmit = async () => {
             phone: form.phone,
             email: form.email || null,
             comment: form.comment || null,
-        });
+            website: form.website,
+        }, locale.value);
 
         /*
          * Laravel clears the server-side cart
@@ -342,9 +357,17 @@ const handleSubmit = async () => {
         /*
          * General error.
          */
-        submitError.value =
-            error?.message
-            || t('request.form.submitError');
+        const hasVisibleFieldErrors = [
+            'name',
+            'phone',
+            'email',
+        ].some((field) => errors.value[field]?.length);
+
+        submitError.value = error?.status === 429
+            ? t('request.form.rateLimited')
+            : hasVisibleFieldErrors
+                ? null
+                : t('request.form.submitError');
 
     } finally {
         submitting.value = false;
