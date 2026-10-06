@@ -129,13 +129,10 @@ const loadProductContext = async () => {
     }
 
     try {
-        const response = await productsApi.getCreate();
-
-        const categories =
-            response?.options?.categories ?? [];
-
-        const groups =
-            response?.options?.groups ?? [];
+        const [categories, groups] = await Promise.all([
+            productsApi.getCategories(),
+            productsApi.getGroups(),
+        ]);
 
         const category = categories.find(
             (item) => item.slug === categorySlug.value
@@ -284,4 +281,3 @@ watch(
     }
 );
 </script>
-

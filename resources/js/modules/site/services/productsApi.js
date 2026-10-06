@@ -8,6 +8,14 @@ export const productsApi = {
         return fetchJsonApi(`${PRODUCT_API_URL}/item`);
     },
 
+    getCategories() {
+        return fetchJsonApi(`${PRODUCT_API_URL}/categories`);
+    },
+
+    getGroups() {
+        return fetchJsonApi(`${PRODUCT_API_URL}/groups`);
+    },
+
     getByCategorySlug(categorySlug) {
         return fetchJsonApi(
             `${PRODUCT_API_URL}/category/${encodeURIComponent(categorySlug)}`
