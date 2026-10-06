@@ -15,13 +15,14 @@ if [[ ! -f "$release/artisan" || ! -f "$shared/.env" ]]; then
     exit 1
 fi
 
-if [[ -e "$release/storage" || -L "$release/storage" ]]; then
-    echo "Release already contains a storage path; refusing to replace it." >&2
+if [[ -e "$release/.env" || -L "$release/.env" || -e "$release/storage" || -L "$release/storage" ]]; then
+    echo "Release already contains an environment or storage path; refusing to replace it." >&2
     exit 1
 fi
 
 ln -s "$shared/.env" "$release/.env"
 ln -s "$shared/storage" "$release/storage"
+test -r "$release/.env"
 
 install -d -o votum-deploy -g www-data -m 2775 "$release/bootstrap/cache"
 install -d -o votum-deploy -g www-data -m 2775 \
@@ -36,8 +37,22 @@ chmod -R ug+rwX "$release/bootstrap/cache"
 
 cd "$release"
 umask 0002
-php artisan migrate --force
-php artisan optimize
+runuser -u www-data -- php artisan optimize:clear
+runuser -u www-data -- php artisan migrate --force
+runuser -u www-data -- php artisan optimize
+runuser -u www-data -- php -r '
+    require "vendor/autoload.php";
+    $app = require "bootstrap/app.php";
+    $app->make(Illuminate\Contracts\Console\Kernel::class)->bootstrap();
+    if (
+        config("database.default") !== "pgsql"
+        || ! filled(config("app.key"))
+        || ! in_array("votum.ru", config("sanctum.stateful"), true)
+    ) {
+        fwrite(STDERR, "Production configuration is incomplete; refusing to activate release.\n");
+        exit(1);
+    }
+'
 php artisan storage:link --force
 
 ln -sfn "$release" "$root/current.new"

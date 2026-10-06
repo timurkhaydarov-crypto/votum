@@ -40,8 +40,10 @@ factory creates accounts with the default password `password`.
 Keep SMTP and Telegram credentials only in `/var/www/votum/shared/.env` on the
 VDS. Configure `MAIL_MAILER=smtp`, `MAIL_HOST`, `MAIL_PORT`, `MAIL_USERNAME`,
 `MAIL_PASSWORD`, `MAIL_FROM_ADDRESS`, `MAIL_MANAGER_ADDRESSES`,
-`TELEGRAM_BOT_TOKEN`, and `TELEGRAM_CHAT_IDS` there. After updating `.env`,
-refresh cached configuration and restart the queue worker:
+`TELEGRAM_BOT_TOKEN`, and `TELEGRAM_CHAT_IDS` there. Keep
+`SANCTUM_STATEFUL_DOMAINS=votum.ru,www.votum.ru` configured so browser API
+requests retain their Laravel session. After updating `.env`, refresh cached
+configuration and restart the queue worker:
 
 ```bash
 cd /var/www/votum/current
