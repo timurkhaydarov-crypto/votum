@@ -17,5 +17,6 @@ class ProductionSeederTest extends TestCase
 
         $this->assertDatabaseCount('users', 0);
         $this->assertGreaterThan(0, DB::table('products')->count());
+        $this->assertGreaterThan(0, DB::table('product_specifications')->count());
     }
 }

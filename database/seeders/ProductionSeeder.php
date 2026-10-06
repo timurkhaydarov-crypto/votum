@@ -16,6 +16,7 @@ use Database\Seeders\Product\ProductCompatibilitySeeder;
 use Database\Seeders\Product\ProductFeaturesSeeder;
 use Database\Seeders\Product\ProductGallerySeeder;
 use Database\Seeders\Product\ProductSeeder;
+use Database\Seeders\Product\ProductSpecificationSeeder;
 use Database\Seeders\Product\SectorSeeder;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -39,6 +40,7 @@ class ProductionSeeder extends Seeder
                 CertificateSeeder::class,
                 BrandSeeder::class,
                 ProductSeeder::class,
+                ProductSpecificationSeeder::class,
                 SectorSeeder::class,
                 MethodSeeder::class,
                 ProductFeaturesSeeder::class,
