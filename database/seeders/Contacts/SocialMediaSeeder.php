@@ -2,8 +2,8 @@
 
 namespace Database\Seeders\Contacts;
 
-use Illuminate\Database\Seeder;
 use App\Models\Contacts\SocialMedia;
+use Illuminate\Database\Seeder;
 
 class SocialMediaSeeder extends Seeder
 {
@@ -14,9 +14,10 @@ class SocialMediaSeeder extends Seeder
     {
         $platforms = ['whatsapp'];
         foreach ($platforms as $platform) {
-            SocialMedia::factory()->create([
+            SocialMedia::query()->create([
                 'platform' => $platform,
                 'url' => 'https://wa.me/message/EI6YVQKAHJVXD1',
+                'icon' => $platform,
             ]);
         }
     }

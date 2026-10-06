@@ -2,9 +2,10 @@
 
 namespace Database\Seeders\Contacts;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
 use App\Models\Contacts\OperatingHours;
+use App\Models\Department;
+use Illuminate\Database\Seeder;
+
 class OperatingHoursSeeder extends Seeder
 {
     /**
@@ -12,11 +13,17 @@ class OperatingHoursSeeder extends Seeder
      */
     public function run(): void
     {
-        OperatingHours::factory()->create([
+        $departmentId = Department::query()->orderBy('id')->value('id');
+
+        if (! $departmentId) {
+            throw new \RuntimeException('Operating hours require a seeded department.');
+        }
+
+        OperatingHours::query()->create([
             'from' => 'monday',
             'to' => 'friday',
             'time' => '09:00 - 18:00',
-            'department_id' => 1,
+            'department_id' => $departmentId,
         ]);
     }
 }

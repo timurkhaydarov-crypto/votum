@@ -18,10 +18,16 @@ class PhoneSeeder extends Seeder
             2 => '+7(499)995-00-62',
             3 => '+7(499)995-24-75',
         ];
-        $departmentId = 1;
-        foreach ($phones as $departmentId => $phone) {
-            Phone::factory()->create([
-                'department_id' => $departmentId,
+        $departments = Department::query()->orderBy('id')->get();
+        $phoneNumbers = array_values($phones);
+
+        if ($departments->count() < count($phoneNumbers)) {
+            throw new \RuntimeException('Each seeded phone number requires a department.');
+        }
+
+        foreach ($phoneNumbers as $index => $phone) {
+            Phone::query()->create([
+                'department_id' => $departments[$index]->id,
                 'phone' => $phone,
             ]);
         }

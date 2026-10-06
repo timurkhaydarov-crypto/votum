@@ -2,9 +2,9 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
 use App\Models\Department;
+use Illuminate\Database\Seeder;
+
 class DepartmentSeeder extends Seeder
 {
     /**
@@ -14,12 +14,12 @@ class DepartmentSeeder extends Seeder
     {
         $departments = [
             ['ru' => 'Приемная', 'en' => 'Reception'],
-            // ['ru' => 'Отдел продаж', 'en' => 'Sales department'],
-            // ['ru' => 'Техническая поддержка', 'en' => 'Technical support'],
+            ['ru' => 'Отдел продаж', 'en' => 'Sales department'],
+            ['ru' => 'Техническая поддержка', 'en' => 'Technical support'],
         ];
 
         foreach ($departments as $department) {
-            Department::factory()->create([
+            Department::query()->create([
                 'department_name' => $department,
             ]);
         }

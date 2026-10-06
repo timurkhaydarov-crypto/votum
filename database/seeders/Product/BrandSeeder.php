@@ -2,8 +2,9 @@
 
 namespace Database\Seeders\Product;
 
-use Illuminate\Database\Seeder;
 use App\Models\Product\Brand;
+use Illuminate\Database\Seeder;
+
 class BrandSeeder extends Seeder
 {
     /**
@@ -22,7 +23,7 @@ class BrandSeeder extends Seeder
         ];
 
         foreach ($brands as $item) {
-            Brand::factory()->create([
+            Brand::query()->create([
                 'brand' => $item['brand'],
                 'logo' => 'brand_technovotum_logo',
                 'description' => $item['description'],

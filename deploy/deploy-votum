@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if [[ $# -ne 1 || ! "$1" =~ ^[0-9a-f]{40}$ ]]; then
+    echo "Usage: deploy-votum <40-character commit SHA>" >&2
+    exit 2
+fi
+
+root=/var/www/votum
+release="$root/releases/$1"
+shared="$root/shared"
+
+if [[ ! -f "$release/artisan" || ! -f "$shared/.env" ]]; then
+    echo "Release files or shared production environment are missing." >&2
+    exit 1
+fi
+
+if [[ -e "$release/storage" || -L "$release/storage" ]]; then
+    echo "Release already contains a storage path; refusing to replace it." >&2
+    exit 1
+fi
+
+ln -s "$shared/.env" "$release/.env"
+ln -s "$shared/storage" "$release/storage"
+
+install -d -o votum-deploy -g www-data -m 2775 "$release/bootstrap/cache"
+install -d -o votum-deploy -g www-data -m 2775 \
+    "$shared/storage/app/public" \
+    "$shared/storage/app/private/uploads" \
+    "$shared/storage/framework/cache/data" \
+    "$shared/storage/framework/sessions" \
+    "$shared/storage/framework/views" \
+    "$shared/storage/logs"
+chown -R votum-deploy:www-data "$release/bootstrap/cache"
+chmod -R ug+rwX "$release/bootstrap/cache"
+
+cd "$release"
+umask 0002
+php artisan migrate --force
+php artisan optimize
+php artisan storage:link --force
+
+ln -sfn "$release" "$root/current.new"
+mv -Tf "$root/current.new" "$root/current"
+
+systemctl reload php8.3-fpm
+systemctl restart votum-queue.service
+systemctl restart votum-schedule.timer
+
+echo "Activated VOTUM release $1"

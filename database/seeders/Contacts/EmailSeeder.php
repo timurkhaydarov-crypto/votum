@@ -18,7 +18,7 @@ class EmailSeeder extends Seeder
         ];
 
         Department::query()->get()->each(function ($department) use ($prefixes) {
-            Email::factory()->create([
+            Email::query()->create([
                 'department_id' => $department->id,
                 'email' => ($prefixes[$department->id] ?? 'info').'@votum.ru',
             ]);
