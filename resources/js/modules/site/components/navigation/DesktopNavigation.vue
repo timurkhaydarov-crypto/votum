@@ -37,7 +37,6 @@ vue
             class="relative"
             @mouseenter="openProducts"
             @mouseleave="closeProducts"
-            @contextmenu.prevent
         >
 
             <button
@@ -96,7 +95,6 @@ vue
             class="relative"
             @mouseenter="openServices"
             @mouseleave="closeServices"
-            @contextmenu.prevent
         >
 
             <button
@@ -344,4 +342,3 @@ onBeforeUnmount(() => {
     }
 }
 </style>
-

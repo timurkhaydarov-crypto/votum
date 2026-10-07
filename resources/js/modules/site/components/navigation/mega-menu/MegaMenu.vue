@@ -18,7 +18,6 @@
                    -translate-x-1/2
                    pt-3"
             style="width: min(1050px, calc(100vw - 32px));"
-            @contextmenu.prevent
         >
 
             <div
