@@ -23,8 +23,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
+    $user = $request->user('sanctum');
+
+    return $user ?? response('null', 200, ['Content-Type' => 'application/json']);
+});
 
 /*
 |--------------------------------------------------------------------------

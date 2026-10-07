@@ -30,37 +30,137 @@
                 >
                     <CompanyContactCard
                         :label="t('company.contact.items.address.label')"
-                        :value="t('company.contact.items.address.value')"
+                        :items="addressItems"
                         icon="bi-geo-alt"
                     />
 
                     <CompanyContactCard
                         :label="t('company.contact.items.phone.label')"
-                        :value="t('company.contact.items.phone.value')"
+                        :items="phoneItems"
                         icon="bi-telephone"
                     />
 
                     <CompanyContactCard
                         :label="t('company.contact.items.email.label')"
-                        :value="t('company.contact.items.email.value')"
+                        :items="emailItems"
                         icon="bi-envelope"
                     />
 
                     <CompanyContactCard
                         :label="t('company.contact.items.hours.label')"
-                        :value="t('company.contact.items.hours.value')"
+                        :items="hoursItems"
                         icon="bi-clock"
                     />
                 </div>
+
+                <p
+                    v-if="contactLoadError"
+                    class="mt-4 text-sm text-red-700"
+                    role="alert"
+                >
+                    {{ t('company.contact.loadError') }}
+                </p>
             </div>
         </div>
     </section>
 </template>
 
 <script setup>
+import { computed, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { contactsApi } from '../../services/contactsApi.js'
 import CompanySectionEyebrow from './shared/CompanySectionEyebrow.vue'
 import CompanyContactCard from './shared/CompanyContactCard.vue'
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
+const phones = ref([])
+const emails = ref([])
+const operatingHours = ref([])
+const contactLoadError = ref(false)
+
+const addressItems = computed(() => [
+    { text: t('contacts.centralOffice.address') },
+])
+
+const getDepartmentName = (name) => {
+    if (!name) {
+        return ''
+    }
+
+    if (typeof name === 'string') {
+        return name
+    }
+
+    return name[locale.value] ?? name.ru ?? name.en ?? ''
+}
+
+const phoneItems = computed(() =>
+    phones.value.flatMap((department) =>
+        (department.contacts ?? []).map((contact) => ({
+            id: contact.id,
+            text: contact.phone,
+            href: `tel:${String(contact.phone).replace(/[^\d+]/g, '')}`,
+            department:
+                phones.value.length > 1
+                    ? getDepartmentName(department.name)
+                    : '',
+        }))
+    )
+)
+
+const emailItems = computed(() =>
+    emails.value.flatMap((department) =>
+        (department.contacts ?? []).map((contact) => ({
+            id: contact.id,
+            text: contact.email,
+            href: `mailto:${contact.email}`,
+            department:
+                emails.value.length > 1
+                    ? getDepartmentName(department.name)
+                    : '',
+        }))
+    )
+)
+
+const formatDayRange = (from, to) => {
+    const day = (value) => value ? t(`weekdays.${value.toLowerCase()}`) : ''
+
+    if (from && to && from !== to) {
+        return `${day(from)} — ${day(to)}`
+    }
+
+    return day(from || to)
+}
+
+const hoursItems = computed(() =>
+    operatingHours.value.flatMap((department) =>
+        (department.contacts ?? []).map((hours) => ({
+            id: hours.id,
+            text: [formatDayRange(hours.from, hours.to), hours.time]
+                .filter(Boolean)
+                .join(', '),
+            department:
+                operatingHours.value.length > 1
+                    ? getDepartmentName(department.name)
+                    : '',
+        }))
+    )
+)
+
+onMounted(async () => {
+    try {
+        const [phoneData, emailData, operatingHoursData] = await Promise.all([
+            contactsApi.phones.index(),
+            contactsApi.emails.index(),
+            contactsApi.operatingHours.index(),
+        ])
+
+        phones.value = phoneData
+        emails.value = emailData
+        operatingHours.value = operatingHoursData
+    } catch (error) {
+        console.error('Failed to load company contacts:', error)
+        contactLoadError.value = true
+    }
+})
 </script>

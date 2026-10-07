@@ -296,24 +296,22 @@ export default {
             items: {
                 address: {
                     label: 'Address',
-                    value: 'Company address',
                 },
 
                 phone: {
                     label: 'Phone',
-                    value: 'Company phone',
                 },
 
                 email: {
                     label: 'E-mail',
-                    value: 'Company e-mail',
                 },
 
                 hours: {
                     label: 'Working hours',
-                    value: 'Mon–Fri, 09:00–18:00',
                 },
             },
+
+            loadError: 'Failed to load contacts. Please refresh the page.',
         },
     },
     contacts: {

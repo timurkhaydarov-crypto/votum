@@ -297,24 +297,22 @@ export default {
             items: {
                 address: {
                     label: 'Адрес',
-                    value: 'Адрес компании',
                 },
 
                 phone: {
                     label: 'Телефон',
-                    value: 'Телефон компании',
                 },
 
                 email: {
                     label: 'E-mail',
-                    value: 'E-mail компании',
                 },
 
                 hours: {
                     label: 'Режим работы',
-                    value: 'Пн–Пт, 09:00–18:00',
                 },
             },
+
+            loadError: 'Не удалось загрузить контакты. Попробуйте обновить страницу.',
         },
     },
 

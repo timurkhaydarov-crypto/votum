@@ -16,9 +16,24 @@
             </div>
 
             <div
+                v-for="item in items"
+                :key="item.id ?? `${item.href ?? ''}-${item.text}`"
                 class="mt-2 text-base font-semibold leading-6 text-slate-900"
             >
-                {{ value }}
+                <div
+                    v-if="item.department"
+                    class="mb-1 text-xs font-medium text-slate-500"
+                >
+                    {{ item.department }}
+                </div>
+                <a
+                    v-if="item.href"
+                    :href="item.href"
+                    class="break-words hover:underline"
+                >
+                    {{ item.text }}
+                </a>
+                <span v-else>{{ item.text }}</span>
             </div>
         </div>
     </article>
@@ -31,9 +46,9 @@ defineProps({
         required: true,
     },
 
-    value: {
-        type: String,
-        required: true,
+    items: {
+        type: Array,
+        default: () => [],
     },
 
     icon: {
