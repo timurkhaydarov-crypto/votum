@@ -24,16 +24,13 @@
                         {{ t('company.global.description') }}
                     </p>
                 </div>
-                <div
-                    class="overflow-hidden rounded-2xl border border-slate-200"
-                >
+
                     <img
                         :src="'/image/GeographySection.webp'"
                         :alt="t('company.global.title')"
-                        class="block aspect-[4/3] h-auto w-full object-contain"
+                        class="block h-full w-full object-contain rounded-2xl border border-slate-200 bg-slate-100"
                         loading="lazy"
                     />
-                </div>
             </div>
         </div>
     </section>
