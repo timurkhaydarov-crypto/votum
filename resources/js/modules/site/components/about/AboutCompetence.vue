@@ -40,6 +40,7 @@
                         </span>
 
                         <RouterLink
+                            v-if="item.href"
                             :to="item.href"
                             class="flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 text-slate-500 transition duration-300 hover:border-slate-950 hover:bg-slate-950 hover:text-white"
                             :aria-label="$t(`about.competence.${item.key}.link`)"

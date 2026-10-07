@@ -3,7 +3,10 @@
         <!-- ===================================================== -->
         <!-- GROUP FILTER -->
         <!-- ===================================================== -->
-        <div v-if="products.length" class="mb-5 flex flex-wrap items-center gap-2">
+        <div
+            v-if="products.length && showGroupFilters"
+            class="mb-4 flex flex-wrap items-center gap-2"
+        >
             <button
                 v-for="group in groups"
                 :key="group.slug"
@@ -25,6 +28,25 @@
                     {{ group.count }}
                 </span>
             </button>
+        </div>
+        <div
+            v-if="products.length || $slots.actions"
+            class="mb-5 flex flex-wrap items-start justify-between gap-3"
+        >
+            <label v-if="products.length" class="relative block w-full max-w-xl">
+                <i
+                    class="bi bi-search pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
+                    aria-hidden="true"
+                ></i>
+                <input
+                    v-model="searchQuery"
+                    type="search"
+                    :aria-label="t('actions.search')"
+                    :placeholder="t('actions.search')"
+                    class="h-11 w-full rounded-xl border border-slate-200 bg-white pl-10 pr-4 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-slate-400 focus:ring-2 focus:ring-slate-900/5"
+                />
+            </label>
+            <slot name="actions"></slot>
         </div>
         <!-- ===================================================== -->
         <!-- LOADING -->
@@ -79,50 +101,77 @@ import ProductCard from './ProductCard.vue';
         products: { type: Array, default: () => [] },
         isLoading: { type: Boolean, default: false },
         errorMessage: { type: String, default: '' },
+        showGroupFilters: { type: Boolean, default: true },
     });
 /* |-------------------------------------------------------------------------- | Emits |-------------------------------------------------------------------------- */ const emit =
     defineEmits(['edit', 'delete']);
-/* |-------------------------------------------------------------------------- | Active group |-------------------------------------------------------------------------- */ const activeGroup =
-    ref('all');
-/* |-------------------------------------------------------------------------- | Group configuration |-------------------------------------------------------------------------- */ const groupConfig =
+const activeGroup = ref('all');
+const searchQuery = ref('');
+
+const groupOptions = [
     {
-        'railway-sector': { dot: 'bg-red-500' },
-        'aerospace-sector': { dot: 'bg-blue-500' },
-        'industrial-sector': { dot: 'bg-orange-500' },
-    };
-/* |-------------------------------------------------------------------------- | Unique groups from products |-------------------------------------------------------------------------- | | Получаем только те groupSlug, которые реально присутствуют | в props.products. | |-------------------------------------------------------------------------- */ const groups =
-    computed(() => {
-        const uniqueGroups = [
-            ...new Set(props.products.map((product) => product.groupSlug).filter(Boolean)),
-        ];
-        return [
-            {
-                slug: 'all',
-                title: t('common.all'),
-                dot: 'bg-slate-400',
-                count: props.products.length,
-            },
-            ...uniqueGroups.map((slug) => {
-                const config = groupConfig[slug];
-                const groupProduct = props.products.find((product) => product.groupSlug === slug);
-                return {
-                    slug,
-                    title: groupProduct?.groupTitle || slug,
-                    dot: config?.dot || 'bg-slate-400',
-                    count: props.products.filter((product) => product.groupSlug === slug).length,
-                };
-            }),
-        ];
-    });
-/* |-------------------------------------------------------------------------- | Filtered products |-------------------------------------------------------------------------- */ const filteredProducts =
-    computed(() => {
-        if (activeGroup.value === 'all') {
-            return props.products;
+        slug: 'railway-sector',
+        title: () => t('product.form.sectors.railway'),
+        dot: 'bg-red-500',
+    },
+    {
+        slug: 'aerospace-sector',
+        title: () => t('product.form.sectors.aerospace'),
+        dot: 'bg-blue-500',
+    },
+    {
+        slug: 'industrial-sector',
+        title: () => t('about.industries.industry'),
+        dot: 'bg-orange-500',
+    },
+];
+
+const groups = computed(() => [
+    {
+        slug: 'all',
+        title: t('common.all'),
+        dot: 'bg-slate-400',
+        count: props.products.length,
+    },
+    ...groupOptions.map((group) => ({
+        ...group,
+        title: group.title(),
+        count: props.products.filter((product) => product.groupSlug === group.slug).length,
+    })),
+]);
+
+const filteredProducts = computed(() => {
+    const query = searchQuery.value.trim().toLocaleLowerCase();
+
+    return props.products.filter((product) => {
+        const matchesGroup =
+            activeGroup.value === 'all' || product.groupSlug === activeGroup.value;
+
+        if (!matchesGroup) {
+            return false;
         }
-        return props.products.filter((product) => {
-            return product.groupSlug === activeGroup.value;
-        });
+
+        if (!query) {
+            return true;
+        }
+
+        const searchableText = [
+            product.article,
+            product.name,
+            product.shortDescription,
+            product.fullDescription,
+            product.groupTitle,
+            product.categoryTitle,
+            product.application,
+            product.method,
+        ]
+            .filter(Boolean)
+            .join(' ')
+            .toLocaleLowerCase();
+
+        return searchableText.includes(query);
     });
+});
 /* |-------------------------------------------------------------------------- | Reset active group |-------------------------------------------------------------------------- | | Если после обновления products выбранная группа больше | не существует, возвращаемся на "Все". | |-------------------------------------------------------------------------- */ watch(
     groups,
     (newGroups) => {

@@ -40,7 +40,9 @@
              rounded-lg px-3 py-2
              text-sm font-medium
              text-[#252525]
-             hover:bg-gray-100">
+             hover:bg-gray-100"
+            @click="$emit('navigate')"
+        >
 
             {{ allLabel || t('megaMenu.allProducts') }}
 
@@ -55,6 +57,8 @@
 import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
+
+defineEmits(['navigate'])
 
 defineProps({
     title: String,

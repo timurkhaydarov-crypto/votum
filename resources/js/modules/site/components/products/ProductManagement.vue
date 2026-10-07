@@ -1,18 +1,17 @@
 <template>
-    <div>
+    <div :class="{ contents: inlineCreateButton }">
         <!-- ===================================================== -->
         <!-- CREATE -->
         <!-- ===================================================== -->
 
-        <div class="mb-6 flex justify-end">
+        <div :class="inlineCreateButton ? '' : 'mb-6 flex justify-end'">
             <button
-                v-if="showCreateButton && canManage && !isUserLoading"
+                v-if="showCreateButton && canManage && !isUserLoading && canCreate"
                 type="button"
                 class="inline-flex items-center gap-2 rounded-xl bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
                 :disabled="
                     isSaving ||
-                    isDeleting ||
-                    !canCreate
+                    isDeleting
                 "
                 @click="openCreate"
             >
@@ -146,6 +145,11 @@ import { ActionType } from '../../constants/actions.js';
 */
 
 const props = defineProps({
+    inlineCreateButton: {
+        type: Boolean,
+        default: false,
+    },
+
     showCreateButton: {
         type: Boolean,
         default: true,

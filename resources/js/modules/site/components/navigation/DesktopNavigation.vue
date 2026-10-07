@@ -2,6 +2,7 @@ vue
 <template>
 
     <nav
+        ref="navigationRef"
         class="absolute left-1/2 hidden
            -translate-x-1/2
            items-center gap-1
@@ -37,6 +38,7 @@ vue
             class="relative"
             @mouseenter="openProducts"
             @mouseleave="closeProducts"
+            @contextmenu="pinProductsOpen"
         >
 
             <button
@@ -95,6 +97,7 @@ vue
             class="relative"
             @mouseenter="openServices"
             @mouseleave="closeServices"
+            @contextmenu="pinServicesOpen"
         >
 
             <button
@@ -224,6 +227,9 @@ const {
 const productsOpen = ref(false)
 const servicesOpen = ref(false)
 const productCategories = ref([])
+const navigationRef = ref(null)
+const productsContextMenuPinned = ref(false)
+const servicesContextMenuPinned = ref(false)
 
 /*
 |--------------------------------------------------------------------------
@@ -260,7 +266,68 @@ const loadProductCategories = async () => {
     }
 }
 
+const pinProductsOpen = () => {
+    clearTimeout(productsOpenTimer)
+    clearTimeout(productsCloseTimer)
+    productsContextMenuPinned.value = true
+    productsOpen.value = true
+}
+
+const pinServicesOpen = () => {
+    clearTimeout(servicesOpenTimer)
+    clearTimeout(servicesCloseTimer)
+    servicesContextMenuPinned.value = true
+    servicesOpen.value = true
+}
+
+const handleContextMenuPointerMove = (event) => {
+    if (
+        !productsContextMenuPinned.value
+        && !servicesContextMenuPinned.value
+    ) {
+        return
+    }
+
+    const target = document.elementFromPoint(event.clientX, event.clientY)
+    const pointerIsInsideNavigation =
+        target && navigationRef.value?.contains(target)
+
+    productsContextMenuPinned.value = false
+    servicesContextMenuPinned.value = false
+
+    if (!pointerIsInsideNavigation) {
+        productsOpen.value = false
+        servicesOpen.value = false
+    }
+}
+
+const handleContextMenuPointerDown = (event) => {
+    if (event.button === 2) {
+        return
+    }
+
+    if (
+        !productsContextMenuPinned.value
+        && !servicesContextMenuPinned.value
+    ) {
+        return
+    }
+
+    productsContextMenuPinned.value = false
+    servicesContextMenuPinned.value = false
+
+    if (!navigationRef.value?.contains(event.target)) {
+        productsOpen.value = false
+        servicesOpen.value = false
+    }
+}
+
 onMounted(loadProductCategories)
+
+onMounted(() => {
+    document.addEventListener('pointermove', handleContextMenuPointerMove)
+    document.addEventListener('pointerdown', handleContextMenuPointerDown)
+})
 
 watch(locale, () => {
     loadProductCategories()
@@ -273,6 +340,7 @@ watch(locale, () => {
 */
 
 const openProducts = () => {
+    productsContextMenuPinned.value = false
     clearTimeout(productsCloseTimer)
 
     clearTimeout(productsOpenTimer)
@@ -284,6 +352,10 @@ const openProducts = () => {
 }
 
 const closeProducts = () => {
+    if (productsContextMenuPinned.value) {
+        return
+    }
+
     clearTimeout(productsOpenTimer)
 
     clearTimeout(productsCloseTimer)
@@ -300,6 +372,7 @@ const closeProducts = () => {
 */
 
 const openServices = () => {
+    servicesContextMenuPinned.value = false
     clearTimeout(servicesCloseTimer)
 
     clearTimeout(servicesOpenTimer)
@@ -311,6 +384,10 @@ const openServices = () => {
 }
 
 const closeServices = () => {
+    if (servicesContextMenuPinned.value) {
+        return
+    }
+
     clearTimeout(servicesOpenTimer)
 
     clearTimeout(servicesCloseTimer)
@@ -327,6 +404,9 @@ const closeServices = () => {
 */
 
 onBeforeUnmount(() => {
+    document.removeEventListener('pointermove', handleContextMenuPointerMove)
+    document.removeEventListener('pointerdown', handleContextMenuPointerDown)
+
     clearTimeout(productsOpenTimer)
     clearTimeout(productsCloseTimer)
 

@@ -3,20 +3,25 @@
         title="Вся продукция"
         subtitle="Полный каталог доступной продукции"
     >
-        <ProductManagement
-            ref="productManagementRef"
-            @created="handleProductCreated"
-            @updated="handleProductUpdated"
-            @deleted="handleProductDeleted"
-        />
-
         <ProductGrid
             :products="products"
             :is-loading="isLoading"
             :error-message="errorMessage"
             @edit="handleEdit"
             @delete="handleDelete"
-        />
+        >
+            <template #actions>
+                <div class="ml-auto shrink-0">
+                    <ProductManagement
+                        ref="productManagementRef"
+                        inline-create-button
+                        @created="handleProductCreated"
+                        @updated="handleProductUpdated"
+                        @deleted="handleProductDeleted"
+                    />
+                </div>
+            </template>
+        </ProductGrid>
     </ProductsLayout>
 </template>
 
@@ -101,4 +106,3 @@ onMounted(() => {
     loadAllProducts();
 });
 </script>
-

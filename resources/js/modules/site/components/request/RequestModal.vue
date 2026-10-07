@@ -32,7 +32,7 @@ vue
                             v-if="!success"
                             type="button"
                             class="absolute right-4 top-4 z-10 flex h-9 w-9 items-center justify-center rounded-full text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
-                            :aria-label="t('request.modal.close')"
+                            :aria-label="t('request.success.close')"
                             @click="handleClose"
                         >
                             <i class="bi bi-x-lg text-sm"></i>
@@ -117,6 +117,7 @@ const props = defineProps({
 
 const emit = defineEmits([
     'close',
+    'success',
 ]);
 
 const { t } = useI18n();
@@ -157,6 +158,7 @@ const handleClose = () => {
 const handleSuccess = (data) => {
     request.value = data?.request ?? data;
     success.value = true;
+    emit('success', data);
 };
 
 /**
@@ -187,4 +189,3 @@ onBeforeUnmount(() => {
     );
 });
 </script>
-

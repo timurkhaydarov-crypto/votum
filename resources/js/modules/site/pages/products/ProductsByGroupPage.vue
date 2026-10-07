@@ -4,23 +4,30 @@
         :subtitle="pageSubtitle"
     >
         <ProductBreadcrumbs :items="breadcrumbs" />
-        <ProductManagement
-            ref="productManagementRef"
-            :category-id="categoryId"
-            :group-id="groupId"
-            :category-slug="categorySlug"
-            @created="handleProductCreated"
-            @updated="handleProductUpdated"
-            @deleted="handleProductDeleted"
-        />
 
         <ProductGrid
             :products="products"
             :is-loading="isLoading"
             :error-message="errorMessage"
+            :show-group-filters="false"
             @edit="handleEdit"
             @delete="handleDelete"
-        />
+        >
+            <template #actions>
+                <div class="ml-auto shrink-0">
+                    <ProductManagement
+                        ref="productManagementRef"
+                        inline-create-button
+                        :category-id="categoryId"
+                        :group-id="groupId"
+                        :category-slug="categorySlug"
+                        @created="handleProductCreated"
+                        @updated="handleProductUpdated"
+                        @deleted="handleProductDeleted"
+                    />
+                </div>
+            </template>
+        </ProductGrid>
     </ProductsLayout>
 </template>
 

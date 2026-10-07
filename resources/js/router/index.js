@@ -14,6 +14,7 @@ import ProductDetailPage from '../modules/site/pages/products/ProductDetailPage.
 import ContactsPage from '../modules/site/pages/ContactsPage.vue';
 import AboutPage from '../modules/site/pages/AboutPage.vue';
 import CartPage from '../modules/site/pages/CartPage.vue';
+import ServicesAllPage from '../modules/site/pages/services/ServicesAllPage.vue';
 
 import SpecialistsPage from '../modules/site/pages/services/training/Specialists.vue'
 import SeminarsPage from '../modules/site/pages/services/training/Seminars.vue'
@@ -117,6 +118,11 @@ const router = createRouter({
             path: '/about',
             name: 'about',
             component: AboutPage,
+        },
+        {
+            path: '/services',
+            name: 'services.all',
+            component: ServicesAllPage,
         },
         {
             path: '/services/training/specialists',

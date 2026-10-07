@@ -36,7 +36,9 @@
            hover:-translate-y-0.5
            hover:border-gray-200
            hover:bg-white
-           hover:shadow-[0_12px_35px_rgba(0,0,0,0.08)]">
+           hover:shadow-[0_12px_35px_rgba(0,0,0,0.08)]"
+                @click="$emit('navigate')"
+            >
 
                 <!-- Иконка -->
 
@@ -120,6 +122,8 @@
 import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
+
+defineEmits(['navigate'])
 
 defineProps({
     category: {
