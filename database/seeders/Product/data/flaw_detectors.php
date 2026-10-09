@@ -9,7 +9,7 @@ return [
         ],
         'category' => 'flaw-detectors',
         'group' => 'railway-sector',
-        'groups' => ['railway-sector', 'aerospace-sector', 'industrial-sector'],
+        'groups' => ['railway-sector'],
         'certificates' => ['chameleon_1', 'chameleon_2', 'chameleon_3', 'chameleon_4'],
         'short_description' => [
             'ru' => 'Многоканальный дефектоскоп на фазированных решётках общего назначения для контроля металлических и композиционных материалов.',
@@ -39,7 +39,7 @@ return [
         ],
         'category' => 'flaw-detectors',
         'group' => 'railway-sector',
-        'groups' => ['railway-sector', 'aerospace-sector', 'industrial-sector'],
+        'groups' => ['railway-sector'],
         'certificates' => ['chameleon_1', 'chameleon_2', 'chameleon_3', 'chameleon_4'],
         'short_description' => [
             'ru' => 'Дефектоскоп на фазированных решётках для локального ультразвукового контроля железнодорожных рельсов.',
@@ -159,7 +159,7 @@ return [
         ],
         'category' => 'flaw-detectors',
         'group' => 'railway-sector',
-        'groups' => ['railway-sector', 'aerospace-sector', 'industrial-sector'],
+        'groups' => ['railway-sector'],
         'certificates' => ['5m_1', '5m_2', '5m_3', '5m_4', '5m_5', '5m_6', '5m_7', '5m_8', '5m_9', '5m_10'],
         'short_description' => [
             'ru' => 'Ультразвуковой дефектоскоп для контроля подошвы и перьев подошвы железнодорожных рельсов.',
@@ -188,8 +188,8 @@ return [
             'en' => 'DAMI-C09',
         ],
         'category' => 'flaw-detectors',
-        'group' => 'railway-sector',
-        'groups' => ['railway-sector', 'aerospace-sector', 'industrial-sector'],
+        'group' => 'aerospace-sector',
+        'groups' => ['aerospace-sector'],
         'certificates' => ['dami_1', 'dami_2', 'dami_3', 'dami_4', 'dami_5'],
         'short_description' => [
             'ru' => 'Многофункциональный переносной дефектоскоп для контроля композиционных материалов, металлических конструкций и сотовых структур.',

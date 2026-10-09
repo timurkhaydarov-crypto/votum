@@ -8,7 +8,7 @@
             >
                 <div>
                     <CompanySectionEyebrow
-                        number="07"
+                        number="03"
                         :label="t('company.contact.eyebrow')"
                     />
 
@@ -77,6 +77,10 @@ const phones = ref([])
 const emails = ref([])
 const operatingHours = ref([])
 const contactLoadError = ref(false)
+const visiblePhoneNumbers = new Set([
+    '74999950061',
+    '74999950062',
+])
 
 const addressItems = computed(() => [
     { text: t('contacts.centralOffice.address') },
@@ -96,15 +100,22 @@ const getDepartmentName = (name) => {
 
 const phoneItems = computed(() =>
     phones.value.flatMap((department) =>
-        (department.contacts ?? []).map((contact) => ({
-            id: contact.id,
-            text: contact.phone,
-            href: `tel:${String(contact.phone).replace(/[^\d+]/g, '')}`,
-            department:
-                phones.value.length > 1
-                    ? getDepartmentName(department.name)
-                    : '',
-        }))
+        (department.contacts ?? [])
+            .filter(
+                (contact) =>
+                    visiblePhoneNumbers.has(
+                        String(contact.phone).replace(/\D/g, '')
+                    )
+            )
+            .map((contact) => ({
+                id: contact.id,
+                text: contact.phone,
+                href: `tel:${String(contact.phone).replace(/[^\d+]/g, '')}`,
+                department:
+                    phones.value.length > 1
+                        ? getDepartmentName(department.name)
+                        : '',
+            }))
     )
 )
 

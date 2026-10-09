@@ -152,6 +152,23 @@ export const serviceCategories = [
                 icon: 'bi-search'
             }
         ]
+    },
+
+    {
+        title: 'Разработка индивидуальных проектов',
+        shortTitle: 'Индивидуальные проекты',
+        icon: 'bi-diagram-3',
+        href: '/services/individual-projects',
+
+        items: [
+            {
+                title: 'Обсудить проект',
+                description:
+                    'Обсудим задачу и требования к вашему проекту',
+                href: '/services/individual-projects',
+                icon: 'bi-chat-dots'
+            }
+        ]
     }
 
 ]

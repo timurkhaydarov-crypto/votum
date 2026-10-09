@@ -45,9 +45,7 @@
                 <div
                     :class="[
                         'grid',
-                        variant === 'cards'
-                            ? 'grid-cols-[minmax(190px,260px)_minmax(0,1fr)]'
-                            : 'grid-cols-[minmax(190px,260px)_minmax(0,1fr)_minmax(170px,210px)]'
+                        'grid-cols-[minmax(190px,260px)_minmax(0,1fr)]'
                     ]"
                 >
 
@@ -62,14 +60,11 @@
 
                     <!-- MAIN CONTENT -->
 
-                    <div
-                        class="min-w-0 overflow-hidden border-r border-gray-100"
-                    >
+                    <div class="min-w-0 overflow-hidden">
 
                         <MegaMenuContent
                             v-if="variant === 'content'"
                             :category="categories[activeCategory]"
-                            @product-hover="handleProductHover"
                             @navigate="closeMegaMenu"
                         />
 
@@ -80,25 +75,6 @@
                         />
 
                     </div>
-
-
-                    <!-- PREVIEW -->
-
-                    <aside
-                        v-if="variant !== 'cards'"
-                        class="p-0"
-                        @mouseenter="clearPreviewHideTimer()"
-                        @mouseleave="schedulePreviewHide()"
-                    >
-
-                        <MegaMenuPreview
-                            :product="previewProduct"
-                            :image="previewProductImage"
-                            :description="previewProductDescription"
-                        />
-
-                    </aside>
-
                 </div>
 
 
@@ -134,16 +110,7 @@ import MegaMenuHeader from './MegaMenuHeader.vue'
 import MegaMenuCategories from './MegaMenuCategories.vue'
 import MegaMenuContent from './MegaMenuContent.vue'
 import MegaMenuCards from './MegaMenuCards.vue'
-import MegaMenuPreview from './MegaMenuPreview.vue'
 import MegaMenuFooter from './MegaMenuFooter.vue'
-
-import {
-    useProductPreviewHover
-} from './useProductPreviewHover.js'
-
-import {
-    resolveProductById
-} from '../navigation.data.js'
 
 
 const { t } = useI18n()
@@ -265,234 +232,16 @@ const selectCategory = (index) => {
 
 /*
 |--------------------------------------------------------------------------
-| Product preview
-|--------------------------------------------------------------------------
-*/
-
-const {
-    hoveredProductId,
-    clearPreviewHideTimer,
-    schedulePreviewHide,
-    handleProductHover
-} = useProductPreviewHover()
-
-
-/*
-|--------------------------------------------------------------------------
 | Close mega menu
 |--------------------------------------------------------------------------
 */
 
 const closeMegaMenu = () => {
-    clearPreviewHideTimer()
     emit('update:open', false)
     emit('navigate')
     emit('close')
 
 }
 
-
-/*
-|--------------------------------------------------------------------------
-| Current category
-|--------------------------------------------------------------------------
-*/
-
-const currentCategory = computed(() => {
-
-    return props.categories[
-        activeCategory.value
-    ] || null
-
-})
-
-
-/*
-|--------------------------------------------------------------------------
-| Fallback preview product
-|--------------------------------------------------------------------------
-*/
-
-const fallbackPreviewProduct = computed(() => {
-
-    const category = currentCategory.value
-
-    if (!category?.groups?.length) {
-        return null
-    }
-
-    for (const group of category.groups) {
-
-        if (
-            !Array.isArray(group.productIds) ||
-            !group.productIds.length
-        ) {
-            continue
-        }
-
-        return resolveProductById(
-            group.productIds[0]
-        )
-
-    }
-
-    return null
-
-})
-
-
-/*
-|--------------------------------------------------------------------------
-| Product map
-|--------------------------------------------------------------------------
-*/
-
-const productMap = computed(() => {
-
-    const map = {}
-
-    for (const category of props.categories || []) {
-
-        for (const group of category.groups || []) {
-
-            if (!Array.isArray(group.products)) {
-                continue
-            }
-
-            for (const product of group.products) {
-
-                if (product?.id) {
-
-                    map[product.id] = product
-
-                }
-
-            }
-
-        }
-
-    }
-
-    return map
-
-})
-
-
-/*
-|--------------------------------------------------------------------------
-| Preview product
-|--------------------------------------------------------------------------
-*/
-
-const previewProduct = computed(() => {
-
-    if (!hoveredProductId.value) {
-        return null
-    }
-
-    return (
-        productMap.value[
-            hoveredProductId.value
-        ] ||
-        resolveProductById(
-            hoveredProductId.value
-        )
-    )
-
-})
-
-
-/*
-|--------------------------------------------------------------------------
-| Preview category title
-|--------------------------------------------------------------------------
-*/
-
-const previewProductCategoryTitle = computed(() => {
-
-    return (
-        currentCategory.value?.shortTitle ||
-        currentCategory.value?.title ||
-        t('megaMenu.deviceDefault')
-    )
-
-})
-
-
-/*
-|--------------------------------------------------------------------------
-| Preview image
-|--------------------------------------------------------------------------
-*/
-
-const previewProductImage = computed(() => {
-
-    if (!previewProduct.value) {
-        return ''
-    }
-
-    const categorySlug =
-        currentCategory.value?.id ||
-        currentCategory.value?.slug
-
-    const rawImageName =
-        previewProduct.value.image_url || ''
-
-    if (!categorySlug || !rawImageName) {
-        return ''
-    }
-
-    const imageName =
-        rawImageName.includes('.')
-            ? rawImageName
-            : `${rawImageName}.webp`
-
-    return `/image/product/${categorySlug}/${imageName}`
-
-})
-
-
-/*
-|--------------------------------------------------------------------------
-| Preview description
-|--------------------------------------------------------------------------
-*/
-
-const previewProductDescription = computed(() => {
-
-    if (!previewProduct.value) {
-
-        return t(
-            'megaMenu.deviceHint'
-        )
-
-    }
-
-    return (
-        previewProduct.value.description ||
-        t(
-            'megaMenu.deviceDescription',
-            {
-                product:
-                    previewProduct.value.title.toLowerCase()
-            }
-        )
-    )
-
-})
-
-
-/*
-|--------------------------------------------------------------------------
-| Preview image error
-|--------------------------------------------------------------------------
-*/
-
-const onPreviewImageError = (event) => {
-
-    event.target.src =
-        '/image/logo.svg'
-
-}
 
 </script>

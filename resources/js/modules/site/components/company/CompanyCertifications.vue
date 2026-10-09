@@ -8,7 +8,7 @@
             >
                 <div>
                     <CompanySectionEyebrow
-                        number="04"
+                        number="01"
                         :label="t('company.certifications.eyebrow')"
                         dark
                     />

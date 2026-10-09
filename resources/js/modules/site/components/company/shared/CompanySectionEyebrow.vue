@@ -6,7 +6,7 @@
                 dark ? 'text-white/65' : 'text-slate-500',
             ]"
         >
-            {{ number }}
+            <!-- {{ number }} -->
         </span>
 
         <span

@@ -36,38 +36,21 @@
         <!-- ====================================== -->
 
         <div
-            :class="[
-                category.groups?.length > 3
-                    ? 'grid grid-cols-2 gap-x-3 gap-y-1.5'
-                    : 'flex flex-col gap-1.5'
-            ]"
+                :class="[
+                    category.groups?.length > 3
+                        ? 'grid grid-cols-2 gap-2'
+                        : 'flex flex-col gap-2'
+                ]"
         >
 
-            <div
-                v-for="group in category.groups"
-                :key="`${category.id}-${group.id}`"
-                class="relative rounded-xl transition-all duration-300"
-            >
-
-                <!-- ================================== -->
-                <!-- GROUP HEADER -->
-                <!-- ================================== -->
-
-                <button
-                    type="button"
-                    class="group relative flex w-full items-center gap-2
-                           rounded-[10px] border border-transparent px-2 py-[8px]
-                           text-left text-[#252525]
-                           transition-all duration-[220ms]
-                           hover:bg-[#f8f8f8]
-                           active:scale-[0.995]"
-                    :class="{
-                        'border-gray-200 bg-[#f5f5f5]':
-                            isGroupOpen(group.id)
-                    }"
-                    @mouseenter="hoveredGroupId = group.id"
-                    @mouseleave="hoveredGroupId = null"
-                    @click="toggleGroup(group.id)"
+                <RouterLink
+                    v-for="group in category.groups"
+                    :key="`${category.id}-${group.id}`"
+                    :to="group.href"
+                    class="group flex min-w-0 items-center gap-3 rounded-lg
+                           border border-gray-100 px-3 py-3 text-[#252525]
+                           transition-colors hover:border-gray-300 hover:bg-[#f8f8f8]"
+                    @click="emit('navigate')"
                 >
 
                     <!-- ICON -->
@@ -76,11 +59,8 @@
                         class="flex size-[22px] shrink-0 items-center
                                justify-center rounded-[5px]
                                bg-gray-100 text-[12px] text-gray-400
-                               transition-all duration-300"
-                        :class="{
-                            'bg-gray-900 text-white':
-                                isGroupHighlighted(group.id)
-                        }"
+                               transition-colors group-hover:bg-gray-900
+                               group-hover:text-white"
                     >
 
                         <i
@@ -101,85 +81,18 @@
 
                     <!-- TITLE -->
 
-                    <span
-                        class="flex-1 text-[12px] font-semibold
-                               leading-4 text-[#252525]
-                               transition-colors duration-[220ms]"
-                    >
-                        {{ group.title }}
+                    <span class="min-w-0 flex-1">
+                        <span class="block truncate text-[12px] font-semibold leading-4">
+                            {{ group.title }}
+                        </span>
+                        <span class="mt-1 block text-[11px] leading-4 text-gray-500">
+                            {{ t('megaMenu.showAllProducts') }}
+                        </span>
                     </span>
 
+                    <i class="bi bi-arrow-right shrink-0 text-xs text-gray-400 transition-transform group-hover:translate-x-1 group-hover:text-gray-900"></i>
 
-                    <!-- CHEVRON -->
-
-                    <span
-                        class="flex size-[24px] shrink-0 items-center
-                               justify-center rounded-[5px]
-                               text-[9px] text-[#b0b0b0]
-                               transition-all duration-300"
-                        :class="{
-                            'bg-gray-200 text-gray-600':
-                                hoveredGroupId === group.id,
-
-                            'rotate-180 bg-gray-200 text-gray-900':
-                                isGroupOpen(group.id)
-                        }"
-                    >
-
-                        <i class="bi bi-chevron-down"></i>
-
-                    </span>
-
-                </button>
-
-
-                <!-- ================================== -->
-                <!-- PRODUCTS -->
-                <!-- ================================== -->
-
-                <div
-                    class="grid grid-rows-[0fr] opacity-0
-                           transition-[grid-template-rows,opacity]
-                           duration-[450ms]
-                           ease-[cubic-bezier(0.16,1,0.3,1)]"
-                    :class="{
-                        'grid-rows-[1fr] opacity-100':
-                            isGroupOpen(group.id)
-                    }"
-                >
-
-                    <div class="min-h-0 overflow-hidden">
-
-                        <div
-                            class="mr-3 mb-2 mt-0
-                                   -translate-x-0.5 -translate-y-1.5
-                                   px-0 pb-1 pt-3
-                                   opacity-0
-                                   transition-[transform,opacity]
-                                   duration-[400ms]
-                                   ease-[cubic-bezier(0.16,1,0.3,1)]"
-                            :class="{
-                                'translate-y-0 opacity-100':
-                                    isGroupOpen(group.id)
-                            }"
-                        >
-
-                            <MegaMenuGroup
-                                :group="group"
-                                :limit="Infinity"
-                                :all-link="group.href"
-                                :all-label="t('megaMenu.showAllProducts')"
-                                @product-hover="emit('product-hover', $event)"
-                                @navigate="closeMegaMenu"
-                            />
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
+                </RouterLink>
 
         </div>
 
@@ -202,7 +115,7 @@
             >
 
                 <span>
-                    {{ t('megaMenu.allCategory') }}
+                    {{ t('megaMenu.allCategory', { category: category.title.toLowerCase() }) }}
                 </span>
 
                 <span
@@ -230,14 +143,7 @@
 
 <script setup>
 
-import {
-    ref,
-    watch
-} from 'vue'
-
 import { useI18n } from 'vue-i18n'
-
-import MegaMenuGroup from './MegaMenuGroup.vue'
 
 import {
     Icon
@@ -247,13 +153,9 @@ import {
 const { t } = useI18n()
 
 
-const emit = defineEmits([
-    'product-hover',
-    'navigate'
-])
+const emit = defineEmits(['navigate'])
 
-
-const props = defineProps({
+defineProps({
 
     category: {
         type: Object,
@@ -261,110 +163,5 @@ const props = defineProps({
     }
 
 })
-
-
-/*
-|--------------------------------------------------------------------------
-| Active group
-|--------------------------------------------------------------------------
-*/
-
-const openGroupId = ref(null)
-
-
-/*
-|--------------------------------------------------------------------------
-| Hover group
-|--------------------------------------------------------------------------
-*/
-
-const hoveredGroupId = ref(null)
-
-
-/*
-|--------------------------------------------------------------------------
-| Toggle
-|--------------------------------------------------------------------------
-*/
-
-const toggleGroup = (groupId) => {
-
-    openGroupId.value =
-        openGroupId.value === groupId
-            ? null
-            : groupId
-
-}
-
-
-/*
-|--------------------------------------------------------------------------
-| Open state
-|--------------------------------------------------------------------------
-*/
-
-const isGroupOpen = (groupId) => {
-
-    return openGroupId.value === groupId
-
-}
-
-
-/*
-|--------------------------------------------------------------------------
-| Highlight state
-|--------------------------------------------------------------------------
-*/
-
-const isGroupHighlighted = (groupId) => {
-
-    return (
-        hoveredGroupId.value === groupId ||
-        openGroupId.value === groupId
-    )
-
-}
-
-
-/*
-|--------------------------------------------------------------------------
-| Close mega menu
-|--------------------------------------------------------------------------
-|
-| Передаём событие родительскому компоненту.
-| Сам этот компонент не управляет состоянием
-| всего mega-menu.
-|
-*/
-
-const closeMegaMenu = () => {
-
-    hoveredGroupId.value = null
-
-    openGroupId.value = null
-
-    emit('product-hover', null)
-
-    emit('navigate')
-
-}
-
-
-/*
-|--------------------------------------------------------------------------
-| Category changed
-|--------------------------------------------------------------------------
-*/
-
-watch(
-    () => props.category,
-    () => {
-
-        hoveredGroupId.value = null
-
-        openGroupId.value = null
-
-    }
-)
 
 </script>

@@ -20,12 +20,12 @@
                 :key="item.id ?? `${item.href ?? ''}-${item.text}`"
                 class="mt-2 text-base font-semibold leading-6 text-slate-900"
             >
-                <div
+                <!-- <div
                     v-if="item.department"
                     class="mb-1 text-xs font-medium text-slate-500"
                 >
                     {{ item.department }}
-                </div>
+                </div> -->
                 <a
                     v-if="item.href"
                     :href="item.href"

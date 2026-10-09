@@ -15,6 +15,7 @@ import ContactsPage from '../modules/site/pages/ContactsPage.vue';
 import AboutPage from '../modules/site/pages/AboutPage.vue';
 import CartPage from '../modules/site/pages/CartPage.vue';
 import ServicesAllPage from '../modules/site/pages/services/ServicesAllPage.vue';
+import IndividualProjectsPage from '../modules/site/pages/services/IndividualProjectsPage.vue';
 
 import SpecialistsPage from '../modules/site/pages/services/training/Specialists.vue'
 import SeminarsPage from '../modules/site/pages/services/training/Seminars.vue'
@@ -123,6 +124,11 @@ const router = createRouter({
             path: '/services',
             name: 'services.all',
             component: ServicesAllPage,
+        },
+        {
+            path: '/services/individual-projects',
+            name: 'services.individual-projects',
+            component: IndividualProjectsPage,
         },
         {
             path: '/services/training/specialists',

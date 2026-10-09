@@ -7,7 +7,7 @@
                 class="max-w-4xl"
             >
                 <CompanySectionEyebrow
-                    number="06"
+                    number="04"
                     :label="t('company.getStarted.eyebrow')"
                     dark
                 />

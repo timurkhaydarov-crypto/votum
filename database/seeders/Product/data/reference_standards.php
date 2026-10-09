@@ -333,7 +333,7 @@ return [
         ],
         'category' => 'reference-standards',
         'group' => 'specialized-railroad',
-        'groups' => ['specialized-railroad', 'railway-sector'],
+        'groups' => ['specialized-railroad'],
         'certificates' => [],
         'short_description' => [
             'ru' => 'Ультразвуковой настроечный образец для контроля осей колесных пар вагонов.',
@@ -363,7 +363,7 @@ return [
         ],
         'category' => 'reference-standards',
         'group' => 'specialized-railroad',
-        'groups' => ['specialized-railroad', 'railway-sector'],
+        'groups' => ['specialized-railroad'],
         'certificates' => [],
         'short_description' => [
             'ru' => 'Комплект ультразвуковых настроечных образцов для контроля колесных пар вагонов.',
@@ -390,7 +390,7 @@ return [
         'name' => ['ru' => 'ОН-6-СТ45', 'en' => 'ON-6-ST45'],
         'category' => 'reference-standards',
         'group' => 'specialized-railroad',
-        'groups' => ['specialized-railroad', 'railway-sector'],
+        'groups' => ['specialized-railroad'],
         'certificates' => [],
         'short_description' => [
             'ru' => 'Вихретоковый настроечный образец для контроля стали, аналог ЖД СОП НО-037.',
@@ -417,7 +417,7 @@ return [
         'name' => ['ru' => 'ОН-7-СТ20', 'en' => 'ON-7-ST20'],
         'category' => 'reference-standards',
         'group' => 'specialized-railroad',
-        'groups' => ['specialized-railroad', 'railway-sector'],
+        'groups' => ['specialized-railroad'],
         'certificates' => [],
         'short_description' => [
             'ru' => 'Вихретоковый настроечный образец для контроля стали, аналог ЖД СОП НО-038.',

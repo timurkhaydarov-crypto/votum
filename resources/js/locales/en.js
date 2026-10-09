@@ -677,11 +677,13 @@ export default {
     },
 
     hero: {
-        badge: 'NDT Equipment Manufacturer',
-        titleBefore: 'We create the',
-        titleGradient: 'future of NDT',
+        badge: 'NDT equipment development and manufacturing',
+        titleBefore: 'TECHNOVOTUM',
+        titleGradient: 'NDT equipment',
         subtitle:
-            'A world-class manufacturer of non-destructive testing equipment. Development, prototyping and serial production are carried out at our own facilities — from ultrasonic flaw detectors to advanced phased array systems.',
+            'At our own production facilities, we develop NDT equipment, build prototypes and launch serial production. Our range includes ultrasonic flaw detectors, phased array systems and automated inspection installations. We design electronics and software, then test and configure the equipment before delivery.',
+
+        mapAlt: 'Non-destructive testing equipment and the industries it serves',
 
         requestQuote: 'Request a quote',
         viewProducts: 'View products',
@@ -742,7 +744,7 @@ export default {
         showAllProducts: 'Show all products',
         showAllCategory: 'Show all category',
         showAllGroup: 'Show all group',
-        allCategory: 'All categories',
+        allCategory: 'All {category}',
         details: 'Details',
         contactUs: 'Contact us',
         noProducts: 'No products available',

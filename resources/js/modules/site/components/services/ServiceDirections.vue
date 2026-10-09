@@ -3,14 +3,7 @@
         <!-- Header -->
         <div class="mb-10">
             <div class="flex items-center gap-4">
-                <span
-                    class="font-mono text-xs font-medium tracking-[0.2em] text-slate-400"
-                >
-                    02
-                </span>
-
                 <span class="h-px w-10 bg-slate-900"></span>
-
                 <span
                     class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500"
                 >

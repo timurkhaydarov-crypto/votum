@@ -889,5 +889,103 @@ export default {
                 },
             },
         },
+
+        individualProjects: {
+            eyebrow: 'CUSTOM PROJECT DEVELOPMENT',
+
+            title: 'Purpose-built solutions for your inspection needs',
+
+            description:
+                'We develop specialized non-destructive testing systems around the inspection object, operating conditions and the customer’s technical requirements.',
+
+            request: 'Discuss your project',
+
+            imageAlt: 'Engineering design for non-destructive testing solutions',
+
+            overview: {
+                eyebrow: 'PROJECT DESIGN',
+
+                title: 'From the initial challenge to a complete technical solution',
+
+                description:
+                    'Every custom project starts with an analysis of the inspection task and operating conditions. We use this to define the system configuration, select suitable testing methods and establish requirements for equipment, software and integration.',
+            },
+
+            directions: {
+                eyebrow: 'DEVELOPMENT PROCESS',
+
+                title: 'What the project includes',
+
+                items: {
+                    requirementsAnalysis: {
+                        title: 'Requirements analysis',
+
+                        description:
+                            'We study the inspection object, operating conditions, site constraints and expected outcome.',
+                    },
+
+                    technicalDesign: {
+                        title: 'Technical design',
+
+                        description:
+                            'We define the system components, testing methods, measurement channels and software requirements.',
+                    },
+
+                    integratedDevelopment: {
+                        title: 'Development and integration',
+
+                        description:
+                            'We combine equipment, electronics and software into a solution tailored to the specific task.',
+                    },
+                },
+            },
+
+            benefits: {
+                eyebrow: 'OUR APPROACH',
+
+                title: 'Designed around your operating requirements',
+
+                items: {
+                    taskSpecific: {
+                        title: 'Task-specific design',
+
+                        description:
+                            'The system configuration reflects the inspection object and real operating conditions.',
+                    },
+
+                    interdisciplinaryTeam: {
+                        title: 'Engineering expertise',
+
+                        description:
+                            'Design decisions account for electronics, mechanics, measurement systems and software.',
+                    },
+
+                    singleCycle: {
+                        title: 'Integrated solution',
+
+                        description:
+                            'Hardware and software are designed as one system rather than a collection of disconnected devices.',
+                    },
+
+                    qualityTesting: {
+                        title: 'Verified performance',
+
+                        description:
+                            'Before delivery, the solution is configured and checked against the agreed requirements.',
+                    },
+                },
+            },
+
+            cta: {
+                eyebrow: 'DISCUSS YOUR PROJECT',
+
+                title: 'Tell us about your inspection challenge',
+
+                description:
+                    'Contact the TECHNOVOTUM team to discuss system requirements, operating conditions and possible development stages.',
+
+                button: 'Contact us',
+            },
+        },
     },
 };

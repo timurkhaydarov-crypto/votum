@@ -2,15 +2,15 @@
     <section class="min-h-screen bg-gray-300 text-slate-100 sm:pt-[100px]">
         <TopPagePanel class="hidden sm:block" />
         <MainMenu class="hidden bg-white sm:!fixed sm:inset-x-0 sm:top-[40px] sm:z-[60] sm:block" />
-        <HeroSection />
-         <TrustedBy />
-        <CompanyAbout />
-        <CompanyManufacturing />
-        <CompanyQuality />
+        <HomeHeroSection />
+
+        <!-- <TrustedBy /> -->
+        <!-- <CompanyAbout /> -->
+        <!-- <CompanyManufacturing /> -->
+        <!-- <CompanyQuality /> -->
         <CompanyCertifications />
-        <CompanyGlobalPresence />
-        <CompanyGetStarted />
         <CompanyContact />
+        <!-- <CompanyGetStarted /> -->
     </section>
 </template>
 
@@ -20,13 +20,12 @@ import router from '../../../router';
 import { authApi } from '../../auth/services/authApi';
 import TopPagePanel from '../components/TopPagePanel/index.vue';
 import MainMenu from '../components/navigation/MainHeader.vue';
-import HeroSection from '../components/HeroSection.vue';
-import TrustedBy from '../components/company/TrustedBy.vue'
+import HomeHeroSection from '../components/HomeHeroSection.vue';
+// import TrustedBy from '../components/company/TrustedBy.vue'
 import CompanyAbout from '../components/company/CompanyAbout.vue'
-import CompanyManufacturing from '../components/company/CompanyManufacturing.vue'
-import CompanyQuality from '../components/company/CompanyQuality.vue'
+// import CompanyManufacturing from '../components/company/CompanyManufacturing.vue'
+// import CompanyQuality from '../components/company/CompanyQuality.vue'
 import CompanyCertifications from '../components/company/CompanyCertifications.vue'
-import CompanyGlobalPresence from '../components/company/CompanyGlobalPresence.vue'
 import CompanyGetStarted from '../components/company/CompanyGetStarted.vue'
 import CompanyContact from '../components/company/CompanyContact.vue'
 import { useGlobalAlert } from '../composables/useGlobalAlert';
