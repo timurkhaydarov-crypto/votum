@@ -24,8 +24,10 @@ commit or share the private key. The workflow pins the VDS SSH host key in
 
 After the workflow is present on `main` and the secret is configured, each push
 to `main` runs the tests, builds the frontend, and deploys a new release.
-`workflow_dispatch` can also be used to deploy the current `main` branch
-manually from the Actions tab.
+The workflow caches Composer and npm dependencies. The server keeps the active
+release and the two most recent previous releases, pruning older ones
+automatically. `workflow_dispatch` can also be used to deploy the current
+`main` branch manually from the Actions tab.
 
 ### First database initialization
 

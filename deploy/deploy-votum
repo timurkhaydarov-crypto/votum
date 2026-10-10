@@ -62,4 +62,16 @@ systemctl reload php8.3-fpm
 systemctl restart votum-queue.service
 systemctl restart votum-schedule.timer
 
+kept_old_releases=0
+while IFS=' ' read -r _ stale_release; do
+    [[ "$stale_release" =~ ^[0-9a-f]{40}$ ]] || continue
+    [[ "$stale_release" == "$1" ]] && continue
+
+    ((kept_old_releases += 1))
+    if ((kept_old_releases > 2)); then
+        echo "Removing stale release: $stale_release"
+        rm -rf "$root/releases/$stale_release"
+    fi
+done < <(find "$root/releases" -mindepth 1 -maxdepth 1 -type d -printf '%T@ %f\n' | sort -nr)
+
 echo "Activated VOTUM release $1"
