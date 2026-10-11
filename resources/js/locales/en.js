@@ -678,6 +678,8 @@ export default {
 
     hero: {
         badge: 'NDT equipment development and manufacturing',
+        homeTitleBefore: 'Development and manufacturing',
+        homeTitleGradient: 'of NDT equipment',
         titleBefore: 'TECHNOVOTUM',
         titleGradient: 'NDT equipment',
         subtitle:

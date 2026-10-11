@@ -32,8 +32,6 @@
                 :image-src="imageSrc"
                 :is-in-stock="isInStock"
                 :can-manage="canManage"
-                :group-dot-class="groupDotClass"
-                :group-badge-classes="groupBadgeClasses"
                 :back-link="backLink"
                 :back-label="backLabel"
                 @manage-info="handleManageInfo"
@@ -469,42 +467,6 @@ const isInStock = computed(() => {
     }
 
     return Number(product.value?.quantity || 0) > 0;
-});
-
-/* |--------------------------------------------------------------------------
- | Group colors
- *-------------------------------------------------------------------------- */
-
-const groupDotClass = computed(() => {
-    switch (product.value?.groupSlug) {
-        case 'railway-sector':
-            return 'bg-red-500';
-
-        case 'aerospace-sector':
-            return 'bg-blue-500';
-
-        case 'industrial-sector':
-            return 'bg-orange-500';
-
-        default:
-            return 'bg-slate-400';
-    }
-});
-
-const groupBadgeClasses = computed(() => {
-    switch (product.value?.groupSlug) {
-        case 'railway-sector':
-            return 'border-red-100 bg-red-50 text-red-700';
-
-        case 'aerospace-sector':
-            return 'border-blue-100 bg-blue-50 text-blue-700';
-
-        case 'industrial-sector':
-            return 'border-orange-100 bg-orange-50 text-orange-700';
-
-        default:
-            return 'border-slate-200 bg-white text-slate-600';
-    }
 });
 
 /* |--------------------------------------------------------------------------

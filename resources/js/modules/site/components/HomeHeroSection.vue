@@ -4,15 +4,10 @@
 
         <div class="home-hero__container">
             <div class="home-hero__content">
-                <div class="home-hero__eyebrow">
-                    <span class="home-hero__status-dot"></span>
-                    <span>{{ $t('hero.badge') }}</span>
-                </div>
-
                 <h1 class="home-hero__title">
-                    {{ $t('hero.titleBefore') }}
+                    {{ $t('hero.homeTitleBefore') }}
                     <br />
-                    <span>{{ $t('hero.titleGradient') }}</span>
+                    <span>{{ $t('hero.homeTitleGradient') }}</span>
                 </h1>
 
                 <p class="home-hero__description">

@@ -38,31 +38,6 @@
                     class="pointer-events-none absolute inset-x-0 bottom-0 z-[2] h-28 bg-gradient-to-t from-slate-100/70 to-transparent"
                 ></div>
 
-                <!-- GROUP -->
-
-                <div class="absolute left-4 top-4 z-20 flex flex-col items-start gap-1">
-                    <RouterLink
-                        v-for="group in groupBadges"
-                        :key="group.slug || group.title"
-                        :to="`/products/${product.categorySlug}/${group.slug}`"
-                    >
-                        <span
-                            class="inline-flex max-w-[280px] items-center gap-2 rounded-lg border border-slate-900 bg-slate-900 px-3 py-2 text-[9px] font-semibold uppercase tracking-[0.1em] text-white shadow-lg shadow-slate-900/10 transition-all duration-200 hover:bg-slate-800"
-                        >
-                            <span
-                                class="h-1.5 w-1.5 shrink-0 rounded-full"
-                                :class="groupDotClassFor(group.slug)"
-                            ></span>
-
-                            <span class="truncate">
-                                {{ group.title }}
-                            </span>
-
-                            <i class="bi bi-arrow-up-right text-[9px] opacity-50"></i>
-                        </span>
-                    </RouterLink>
-                </div>
-
                 <!-- CONTROL METHODS -->
 
                 <ProductControlMethods :methods="product.method" />
@@ -259,16 +234,6 @@ const props = defineProps({
         default: false,
     },
 
-    groupDotClass: {
-        type: String,
-        default: 'bg-slate-400',
-    },
-
-    groupBadgeClasses: {
-        type: String,
-        default: 'border-slate-200 bg-white text-slate-600',
-    },
-
     backLink: {
         type: String,
         default: '/products',
@@ -328,53 +293,6 @@ const videoSrc = computed(() => {
 const videoKey = computed(() => {
     return `video-${videoFormat.value}-${videoBasename.value}`;
 });
-
-const groupBadges = computed(() => {
-    const groups = Array.isArray(props.product.groups)
-        ? props.product.groups
-        : [];
-    const mainGroup = {
-        slug: props.product.groupSlug || props.product.group?.slug,
-        title: props.product.groupTitle || props.product.group?.title || props.product.group?.group,
-    };
-    const uniqueGroups = new Map(
-        [mainGroup, ...groups]
-            .filter((group) => group.slug && group.title)
-            .map((group) => [group.slug, group])
-    );
-
-    const badges = uniqueGroups.size
-        ? [...uniqueGroups.values()]
-        : [{
-            slug: props.product.groupSlug || props.product.group?.slug || '',
-            title: props.product.groupTitle || props.product.group?.title || props.product.group?.group || 'NDT Equipment',
-        }];
-
-    return badges.map((group) => {
-        const groupTitle = String(group.title).trim().toLocaleLowerCase();
-        const isShowAllGroup = group.slug === 'show-category'
-            || groupTitle === 'показать все'
-            || groupTitle === 'show all';
-
-        return {
-            ...group,
-            title: isShowAllGroup
-                ? props.product.categoryTitle || props.product.category?.title || group.title
-                : group.title,
-        };
-    });
-});
-
-const groupDotClassFor = (slug) => {
-    const groupColors = {
-        'railway-sector': 'bg-red-500',
-        'aerospace-sector': 'bg-blue-500',
-        'industrial-sector': 'bg-orange-500',
-    };
-
-    return groupColors[slug]
-        || (slug === props.product.groupSlug ? props.groupDotClass : 'bg-slate-400');
-};
 
 /*
 |--------------------------------------------------------------------------

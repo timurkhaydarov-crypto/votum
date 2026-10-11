@@ -687,6 +687,8 @@ export default {
 
     hero: {
         badge: 'Разработка и производство оборудования НК',
+        homeTitleBefore: 'Разработка и производство',
+        homeTitleGradient: 'оборудования НК',
         titleBefore: 'ТЕХНОВОТУМ',
         titleGradient: 'оборудование для НК',
         subtitle:
