@@ -8,7 +8,7 @@
             class="mb-4 flex flex-wrap items-center gap-2"
         >
             <button
-                v-for="group in groups"
+                v-for="group in groups.filter((group) => group.count > 0)"
                 :key="group.slug"
                 type="button"
                 class="inline-flex h-9 items-center gap-2 rounded-lg border px-3.5 text-xs font-semibold transition-all duration-200"

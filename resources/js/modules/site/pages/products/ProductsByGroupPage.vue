@@ -123,10 +123,12 @@ const groupSlug = computed(() => {
 
 const categoryId = ref(null);
 const groupId = ref(null);
+const currentGroupTitle = ref('');
 
 const loadProductContext = async () => {
     categoryId.value = null;
     groupId.value = null;
+    currentGroupTitle.value = '';
 
     if (
         !categorySlug.value ||
@@ -151,6 +153,12 @@ const loadProductContext = async () => {
 
         categoryId.value = category?.id ?? null;
         groupId.value = group?.id ?? null;
+        const localizedGroup = group?.group;
+        currentGroupTitle.value = (
+            typeof localizedGroup === 'object' && localizedGroup !== null
+                ? localizedGroup[locale.value] || localizedGroup.ru || localizedGroup.en
+                : localizedGroup
+        ) || group?.title || groupSlug.value;
     } catch (error) {
         categoryId.value = null;
         groupId.value = null;
@@ -176,10 +184,7 @@ const categoryTitle = computed(() => {
 });
 
 const groupTitle = computed(() => {
-    return (
-        products.value[0]?.groupTitle ||
-        groupSlug.value
-    );
+    return currentGroupTitle.value || groupSlug.value;
 });
 
 const pageTitle = computed(() => {
@@ -284,6 +289,7 @@ watch(
 watch(
     locale,
     () => {
+        loadProductContext();
         loadGroupProducts();
     }
 );

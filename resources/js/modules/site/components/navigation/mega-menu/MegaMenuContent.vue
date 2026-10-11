@@ -102,6 +102,7 @@
         <!-- ====================================== -->
 
         <div
+            v-if="!(category.groups?.length === 1 && category.groups[0].id === 'show-category')"
             class="mt-3 border-t border-gray-200 pt-2.5"
         >
 

@@ -26,7 +26,11 @@ export const useProductBreadcrumbs = ({
             });
         }
 
-        if (categorySlug?.value && groupSlug?.value) {
+        if (
+            categorySlug?.value &&
+            groupSlug?.value &&
+            groupSlug.value !== 'show-category'
+        ) {
             crumbs.push({
                 label: groupTitle?.value || groupSlug.value,
                 to: `/products/${categorySlug.value}/${groupSlug.value}`,

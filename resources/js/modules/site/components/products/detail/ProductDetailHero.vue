@@ -40,25 +40,28 @@
 
                 <!-- GROUP -->
 
-                <RouterLink
-                    :to="`/products/${product.categorySlug}/${product.groupSlug}`"
-                    class="absolute left-4 top-4 z-20"
-                >
-                    <span
-                        class="inline-flex max-w-[280px] items-center gap-2 rounded-lg border border-slate-900 bg-slate-900 px-3 py-2 text-[9px] font-semibold uppercase tracking-[0.1em] text-white shadow-lg shadow-slate-900/10 transition-all duration-200 hover:bg-slate-800"
+                <div class="absolute left-4 top-4 z-20 flex flex-col items-start gap-1">
+                    <RouterLink
+                        v-for="group in groupBadges"
+                        :key="group.slug || group.title"
+                        :to="`/products/${product.categorySlug}/${group.slug}`"
                     >
                         <span
-                            class="h-1.5 w-1.5 shrink-0 rounded-full"
-                            :class="groupDotClass"
-                        ></span>
+                            class="inline-flex max-w-[280px] items-center gap-2 rounded-lg border border-slate-900 bg-slate-900 px-3 py-2 text-[9px] font-semibold uppercase tracking-[0.1em] text-white shadow-lg shadow-slate-900/10 transition-all duration-200 hover:bg-slate-800"
+                        >
+                            <span
+                                class="h-1.5 w-1.5 shrink-0 rounded-full"
+                                :class="groupDotClassFor(group.slug)"
+                            ></span>
 
-                        <span class="truncate">
-                            {{ product.groupTitle || 'NDT Equipment' }}
+                            <span class="truncate">
+                                {{ group.title }}
+                            </span>
+
+                            <i class="bi bi-arrow-up-right text-[9px] opacity-50"></i>
                         </span>
-
-                        <i class="bi bi-arrow-up-right text-[9px] opacity-50"></i>
-                    </span>
-                </RouterLink>
+                    </RouterLink>
+                </div>
 
                 <!-- CONTROL METHODS -->
 
@@ -325,6 +328,53 @@ const videoSrc = computed(() => {
 const videoKey = computed(() => {
     return `video-${videoFormat.value}-${videoBasename.value}`;
 });
+
+const groupBadges = computed(() => {
+    const groups = Array.isArray(props.product.groups)
+        ? props.product.groups
+        : [];
+    const mainGroup = {
+        slug: props.product.groupSlug || props.product.group?.slug,
+        title: props.product.groupTitle || props.product.group?.title || props.product.group?.group,
+    };
+    const uniqueGroups = new Map(
+        [mainGroup, ...groups]
+            .filter((group) => group.slug && group.title)
+            .map((group) => [group.slug, group])
+    );
+
+    const badges = uniqueGroups.size
+        ? [...uniqueGroups.values()]
+        : [{
+            slug: props.product.groupSlug || props.product.group?.slug || '',
+            title: props.product.groupTitle || props.product.group?.title || props.product.group?.group || 'NDT Equipment',
+        }];
+
+    return badges.map((group) => {
+        const groupTitle = String(group.title).trim().toLocaleLowerCase();
+        const isShowAllGroup = group.slug === 'show-category'
+            || groupTitle === 'показать все'
+            || groupTitle === 'show all';
+
+        return {
+            ...group,
+            title: isShowAllGroup
+                ? props.product.categoryTitle || props.product.category?.title || group.title
+                : group.title,
+        };
+    });
+});
+
+const groupDotClassFor = (slug) => {
+    const groupColors = {
+        'railway-sector': 'bg-red-500',
+        'aerospace-sector': 'bg-blue-500',
+        'industrial-sector': 'bg-orange-500',
+    };
+
+    return groupColors[slug]
+        || (slug === props.product.groupSlug ? props.groupDotClass : 'bg-slate-400');
+};
 
 /*
 |--------------------------------------------------------------------------

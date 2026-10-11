@@ -217,6 +217,18 @@ class GroupSeeder extends Seeder
                 ],
                 'image_url' => null,
             ],
+            [
+                'group' => [
+                    'ru' => 'Показать все',
+                    'en' => 'Show all',
+                ],
+                'slug' => 'show-category',
+                'description' => [
+                    'ru' => '',
+                    'en' => '',
+                ],
+                'image_url' => null,
+            ],
         ];
 
         foreach ($groups as $item) {

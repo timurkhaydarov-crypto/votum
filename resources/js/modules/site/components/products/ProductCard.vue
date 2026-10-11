@@ -24,18 +24,20 @@
 
             <div
                 v-if="variant === 'default'"
-                class="absolute left-3 top-3 z-10 max-w-[calc(100%-100px)]"
+                class="absolute left-3 top-3 z-10 flex max-w-[calc(100%-100px)] flex-wrap gap-1"
             >
                 <span
+                    v-for="group in groupBadges"
+                    :key="group.slug || group.title"
                     class="inline-flex max-w-full items-center gap-1.5 rounded-lg bg-slate-900 px-2.5 py-1.5 text-[9px] font-semibold uppercase tracking-[0.08em] text-white shadow-sm"
                 >
                     <span
                         class="h-1.5 w-1.5 shrink-0 rounded-full"
-                        :class="groupDotClass"
+                        :class="groupDotClass(group.slug)"
                     ></span>
 
                     <span class="truncate">
-                        {{ badgeText }}
+                        {{ group.title }}
                     </span>
                 </span>
             </div>
@@ -419,27 +421,43 @@ const categoryTitle = computed(() => {
     );
 });
 
-const badgeText = computed(() => {
-    return (
-        localizedValue(
-            props.product.groupTitle,
-        ) ||
-        localizedValue(
-            props.product.group?.title,
-        ) ||
-        localizedValue(
-            props.product.group?.group,
-        ) ||
-        t('productCard.badgeFallback')
+const groupBadges = computed(() => {
+    const groups = Array.isArray(props.product.groups)
+        ? props.product.groups
+        : [];
+    const mainGroup = {
+        slug: props.product.groupSlug || props.product.group?.slug,
+        title: props.product.groupTitle
+            || localizedValue(props.product.group?.title)
+            || localizedValue(props.product.group?.group),
+    };
+    const allGroups = [mainGroup, ...groups]
+        .filter((group) => group.slug && group.title);
+    const uniqueGroups = new Map(
+        allGroups.map((group) => [group.slug, group])
     );
+
+    const badges = uniqueGroups.size
+        ? [...uniqueGroups.values()]
+        : [{ slug: null, title: t('productCard.badgeFallback') }];
+
+    return badges.map((group) => {
+        const title = String(group.title).trim().toLocaleLowerCase();
+        const isShowAllGroup = group.slug === 'show-category'
+            || title === 'показать все'
+            || title === 'show all';
+
+        return {
+            ...group,
+            title: isShowAllGroup
+                ? categoryTitle.value || group.title
+                : group.title,
+        };
+    });
 });
 
-const groupDotClass = computed(() => {
-    const groupSlug = String(
-        props.product.groupSlug ||
-        props.product.group?.slug ||
-        '',
-    )
+const groupDotClass = (slug) => {
+    const groupSlug = String(slug || '')
         .trim()
         .toLowerCase();
 
@@ -453,7 +471,7 @@ const groupDotClass = computed(() => {
         groupColors[groupSlug] ||
         'bg-slate-400'
     );
-});
+};
 
 const inStockLabel = computed(() => {
     return Number(

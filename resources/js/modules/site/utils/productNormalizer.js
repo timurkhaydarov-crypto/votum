@@ -49,6 +49,12 @@ export const normalizeProduct = (product, locale = 'ru') => ({
     categoryTitle: normalizeRelationTitle(product.category, 'category', locale),
     groupSlug: product.group?.slug || null,
     groupTitle: normalizeRelationTitle(product.group, 'group', locale),
+    groups: Array.isArray(product.groups)
+        ? product.groups.map((group) => ({
+            slug: group.slug || null,
+            title: normalizeRelationTitle(group, 'group', locale),
+        }))
+        : [],
     price: product.price,
     quantity: product.quantity,
     status: product.status == null ? null : Boolean(product.status),
