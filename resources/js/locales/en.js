@@ -360,6 +360,9 @@ export default {
             informationComingSoon: 'Contact information is being updated.',
             location: 'location',
             locations: 'locations',
+            brand: 'TECHNOVOTUM',
+            addressLabel: 'Address',
+            close: 'Close',
             countries: {
                 kazakhstan: 'Kazakhstan',
                 latvia: 'Latvia',

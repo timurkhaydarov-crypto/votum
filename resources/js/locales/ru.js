@@ -359,8 +359,11 @@ export default {
                 'Официальные представители и партнеры ТЕХНОВОТУМ в странах СНГ, Европы, Азии и Африки.',
             noInformation: 'Информация отсутствует',
             informationComingSoon: 'Контактная информация уточняется.',
-            location: 'точка',
-            locations: 'точек',
+            location: 'локация',
+            locations: 'локаций',
+            brand: 'ТЕХНОВОТУМ',
+            addressLabel: 'Адрес',
+            close: 'Закрыть',
             countries: {
                 kazakhstan: 'Казахстан',
                 latvia: 'Латвия',

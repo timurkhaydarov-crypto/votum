@@ -44,7 +44,7 @@
                                 <div
                                     class="text-xs font-semibold uppercase tracking-[0.16em] text-slate-400"
                                 >
-                                    Техновотум
+                                    {{ $t('contacts.dealers.brand') }}
                                 </div>
 
                                 <h2
@@ -140,7 +140,7 @@
                                         <p
                                             class="mt-1 text-sm leading-6 text-slate-700"
                                         >
-                                            {{ location.address }}
+                                            {{ locationAddress(location) }}
                                         </p>
                                     </div>
                                 </div>
@@ -242,6 +242,8 @@
 </template>
 
 <script setup>
+import { useI18n } from 'vue-i18n';
+
 defineProps({
     dealer: {
         type: Object,
@@ -250,6 +252,18 @@ defineProps({
 });
 
 defineEmits(['close']);
+
+const { locale } = useI18n();
+
+const locationAddress = (location) => {
+    const address = location.address;
+
+    if (typeof address === 'string') {
+        return address;
+    }
+
+    return address?.[locale.value] || address?.ru || address?.en || '';
+};
 
 const phoneHref = (phone) => {
     if (!phone) {

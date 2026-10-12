@@ -93,6 +93,8 @@
 </template>
 
 <script setup>
+import { useI18n } from 'vue-i18n'
+
 defineProps({
     dealers: {
         type: Array,
@@ -102,7 +104,9 @@ defineProps({
 
 defineEmits(['select']);
 
+const { t } = useI18n()
+
 const locationWord = (count) => {
-    return count === 1 ? 'location' : 'locations';
+    return count === 1 ? t('contacts.dealers.location') : t('contacts.dealers.locations');
 };
 </script>

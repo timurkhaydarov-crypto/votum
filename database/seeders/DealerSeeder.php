@@ -12,7 +12,7 @@ class DealerSeeder extends Seeder
      */
     public function run(): void
     {
-        $dealers = require __DIR__ . '/Dealer/data/dealers.php';
+        $dealers = require __DIR__.'/Dealer/data/dealers.php';
 
         foreach ($dealers as $dealerData) {
             $locations = $dealerData['locations'];
@@ -32,9 +32,7 @@ class DealerSeeder extends Seeder
                 unset($locationData['phones']);
 
                 $location = $dealer->locations()->updateOrCreate(
-                    [
-                        'address' => $locationData['address'],
-                    ],
+                    ['sort_order' => $locationData['sort_order']],
                     $locationData
                 );
 

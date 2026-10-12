@@ -19,7 +19,13 @@ class DealerLocation extends Model
     protected $casts = [
         'is_active' => 'boolean',
         'sort_order' => 'integer',
+        'address' => 'array',
     ];
+
+    protected function asJson($value, $flags = 0)
+    {
+        return parent::asJson($value, $flags | JSON_UNESCAPED_UNICODE);
+    }
 
     /**
      * Dealer.
@@ -38,4 +44,3 @@ class DealerLocation extends Model
             ->orderBy('sort_order');
     }
 }
-
