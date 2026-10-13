@@ -7,6 +7,7 @@
             :products="products"
             :is-loading="isLoading"
             :error-message="errorMessage"
+            filter-by-category
             @edit="handleEdit"
             @delete="handleDelete"
         >

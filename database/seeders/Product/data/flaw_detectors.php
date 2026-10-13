@@ -8,8 +8,8 @@ return [
             'en' => 'CHAMELEON 32+ (32/64)',
         ],
         'category' => 'flaw-detectors',
-        'group' => 'railway-sector',
-        'groups' => ['railway-sector'],
+        'group' => 'industrial-sector',
+        'groups' => ['industrial-sector'],
         'certificates' => ['chameleon_1', 'chameleon_2', 'chameleon_3', 'chameleon_4'],
         'short_description' => [
             'ru' => 'Многоканальный дефектоскоп на фазированных решётках общего назначения для контроля металлических и композиционных материалов.',

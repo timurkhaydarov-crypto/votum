@@ -42,7 +42,6 @@
                         : 'flex flex-col gap-2'
                 ]"
         >
-
                 <RouterLink
                     v-for="group in category.groups"
                     :key="`${category.id}-${group.id}`"

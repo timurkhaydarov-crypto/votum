@@ -17,6 +17,7 @@ class ProductMenuService
                 $groups = $category->products
                     ->flatMap(fn ($product) => $product->groups)
                     ->unique('id')
+                    ->sortBy('id')
                     ->values()
                     ->map(function ($group) use ($category, $locale) {
                         $groupProducts = $category->products

@@ -8,16 +8,21 @@
             :key="`${item.label}-${index}`"
         >
             <RouterLink
-                v-if="item.to"
+                v-if="item.to && index < items.length - 1"
                 :to="item.to"
-                class="transition hover:text-slate-800"
+                class="text-slate-500 transition hover:text-slate-800"
             >
                 {{ item.label }}
             </RouterLink>
 
             <span
                 v-else
-                class="font-medium text-slate-700"
+                :aria-current="index === items.length - 1 ? 'page' : undefined"
+                :class="
+                    index === items.length - 1
+                        ? 'font-semibold text-slate-950'
+                        : 'text-slate-500'
+                "
             >
                 {{ item.label }}
             </span>

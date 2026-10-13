@@ -1,33 +1,49 @@
 <template>
     <section>
         <!-- ===================================================== -->
-        <!-- GROUP FILTER -->
+        <!-- PRODUCT FILTER -->
         <!-- ===================================================== -->
         <div
             v-if="products.length && showGroupFilters"
             class="mb-4 flex flex-wrap items-center gap-2"
         >
-            <button
-                v-for="group in groups.filter((group) => group.count > 0)"
-                :key="group.slug"
-                type="button"
-                class="inline-flex h-9 items-center gap-2 rounded-lg border px-3.5 text-xs font-semibold transition-all duration-200"
-                :class="
-                    activeGroup === group.slug
-                        ? 'border-slate-900 bg-slate-900 text-white shadow-sm'
-                        : 'border-slate-200 bg-white text-slate-600 hover:border-slate-300 hover:bg-slate-50 hover:text-slate-900'
-                "
-                @click="activeGroup = group.slug"
+            <template
+                v-for="filter in filters"
+                :key="filter.slug"
             >
-                <span class="h-1.5 w-1.5 shrink-0 rounded-full" :class="group.dot"></span>
-                <span> {{ group.title }} </span>
-                <span
-                    class="ml-0.5 text-[10px] font-medium"
-                    :class="activeGroup === group.slug ? 'text-white/60' : 'text-slate-400'"
+                <RouterLink
+                    v-if="filterByCategory"
+                    :to="categoryLink(filter.slug)"
+                    class="inline-flex h-9 items-center gap-2 rounded-lg border border-slate-200 bg-white px-3.5 text-xs font-semibold text-slate-600 transition-all duration-200 hover:border-slate-300 hover:bg-slate-50 hover:text-slate-900"
                 >
-                    {{ group.count }}
-                </span>
-            </button>
+                    <span class="h-1.5 w-1.5 shrink-0 rounded-full" :class="filter.dot"></span>
+                    <span>{{ filter.title }}</span>
+                    <span class="ml-0.5 text-[10px] font-medium text-slate-400">
+                        {{ filter.count }}
+                    </span>
+                </RouterLink>
+
+                <button
+                    v-else
+                    type="button"
+                    class="inline-flex h-9 items-center gap-2 rounded-lg border px-3.5 text-xs font-semibold transition-all duration-200"
+                    :class="
+                        activeFilter === filter.slug
+                            ? 'border-slate-900 bg-slate-900 text-white shadow-sm'
+                            : 'border-slate-200 bg-white text-slate-600 hover:border-slate-300 hover:bg-slate-50 hover:text-slate-900'
+                    "
+                    @click="activeFilter = filter.slug"
+                >
+                    <span class="h-1.5 w-1.5 shrink-0 rounded-full" :class="filter.dot"></span>
+                    <span>{{ filter.title }}</span>
+                    <span
+                        class="ml-0.5 text-[10px] font-medium"
+                        :class="activeFilter === filter.slug ? 'text-white/60' : 'text-slate-400'"
+                    >
+                        {{ filter.count }}
+                    </span>
+                </button>
+            </template>
         </div>
         <div
             v-if="products.length || $slots.actions"
@@ -102,52 +118,70 @@ import ProductCard from './ProductCard.vue';
         isLoading: { type: Boolean, default: false },
         errorMessage: { type: String, default: '' },
         showGroupFilters: { type: Boolean, default: true },
+        filterByCategory: { type: Boolean, default: false },
     });
 /* |-------------------------------------------------------------------------- | Emits |-------------------------------------------------------------------------- */ const emit =
     defineEmits(['edit', 'delete']);
-const activeGroup = ref('all');
+const activeFilter = ref('all');
 const searchQuery = ref('');
 
-const groupOptions = [
-    {
-        slug: 'railway-sector',
-        title: () => t('product.form.sectors.railway'),
-        dot: 'bg-red-500',
-    },
-    {
-        slug: 'aerospace-sector',
-        title: () => t('product.form.sectors.aerospace'),
-        dot: 'bg-blue-500',
-    },
-    {
-        slug: 'industrial-sector',
-        title: () => t('about.industries.industry'),
-        dot: 'bg-orange-500',
-    },
-];
+const filterDots = {
+    'railway-sector': 'bg-red-500',
+    'aerospace-sector': 'bg-blue-500',
+    'industrial-sector': 'bg-orange-500',
+};
 
-const groups = computed(() => [
-    {
-        slug: 'all',
-        title: t('common.all'),
-        dot: 'bg-slate-400',
-        count: props.products.length,
-    },
-    ...groupOptions.map((group) => ({
-        ...group,
-        title: group.title(),
-        count: props.products.filter((product) => product.groupSlug === group.slug).length,
-    })),
-]);
+const filters = computed(() => {
+    const options = props.filterByCategory
+        ? props.products
+            .filter((product) => product.categorySlug)
+            .map((product) => ({
+                slug: product.categorySlug,
+                title: product.categoryTitle,
+            }))
+        : props.products.flatMap((product) => product.groups || []);
+    const uniqueOptions = new Map();
+
+    options.forEach((option) => {
+        if (option.slug && !uniqueOptions.has(option.slug)) {
+            uniqueOptions.set(option.slug, option);
+        }
+    });
+
+    return [
+        {
+            slug: 'all',
+            title: t('common.all'),
+            dot: 'bg-slate-400',
+            count: props.products.length,
+        },
+        ...Array.from(uniqueOptions.values()).map((option) => {
+            return {
+                slug: option.slug,
+                title: option.title || option.slug,
+                dot: filterDots[option.slug] || 'bg-slate-400',
+                count: props.filterByCategory
+                    ? props.products.filter((product) => product.categorySlug === option.slug).length
+                    : props.products.filter((product) =>
+                        product.groups?.some((group) => group.slug === option.slug)
+                    ).length,
+            };
+        }),
+    ];
+});
+
+const categoryLink = (slug) => slug === 'all' ? '/products' : `/products/${slug}`;
 
 const filteredProducts = computed(() => {
     const query = searchQuery.value.trim().toLocaleLowerCase();
 
     return props.products.filter((product) => {
-        const matchesGroup =
-            activeGroup.value === 'all' || product.groupSlug === activeGroup.value;
+        const matchesFilter =
+            props.filterByCategory ||
+            activeFilter.value === 'all' ||
+            product.groups?.some((group) => group.slug === activeFilter.value);
 
-        if (!matchesGroup) {
+        if (!matchesFilter) {
             return false;
         }
 
@@ -173,11 +207,11 @@ const filteredProducts = computed(() => {
     });
 });
 /* |-------------------------------------------------------------------------- | Reset active group |-------------------------------------------------------------------------- | | Если после обновления products выбранная группа больше | не существует, возвращаемся на "Все". | |-------------------------------------------------------------------------- */ watch(
-    groups,
-    (newGroups) => {
-        const exists = newGroups.some((group) => group.slug === activeGroup.value);
+    filters,
+    (newFilters) => {
+        const exists = newFilters.some((filter) => filter.slug === activeFilter.value);
         if (!exists) {
-            activeGroup.value = 'all';
+            activeFilter.value = 'all';
         }
     },
     { immediate: true }
