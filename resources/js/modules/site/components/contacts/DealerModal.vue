@@ -107,6 +107,40 @@
                                 :key="location.id"
                                 class="rounded-2xl border border-slate-200 bg-slate-50 p-5"
                             >
+                                <!-- Dealer name -->
+                                <div
+                                    v-if="location.name"
+                                    class="mb-4 flex items-start gap-3"
+                                >
+                                    <div
+                                        class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white text-slate-500"
+                                    >
+                                        <svg
+                                            viewBox="0 0 24 24"
+                                            class="h-4 w-4"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            stroke-width="1.7"
+                                        >
+                                            <path
+                                                d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6M9 9h.01M15 9h.01M9 12h.01M15 12h.01"
+                                            />
+                                        </svg>
+                                    </div>
+
+                                    <div class="min-w-0">
+                                        <div
+                                            class="text-[11px] font-semibold uppercase tracking-wider text-slate-400"
+                                        >
+                                            {{ $t('contacts.dealers.nameLabel') }}
+                                        </div>
+
+                                        <p class="mt-1 text-sm font-medium leading-6 text-slate-700">
+                                            {{ locationName(location) }}
+                                        </p>
+                                    </div>
+                                </div>
+
                                 <!-- Address -->
                                 <div class="mb-4 flex items-start gap-3">
                                     <div
@@ -144,6 +178,44 @@
                                         </p>
                                     </div>
                                 </div>
+
+                                <!-- Map -->
+                                <a
+                                    v-if="location.map_link"
+                                    :href="location.map_link"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    class="mb-2 flex items-center gap-3 rounded-xl bg-white px-3 py-2.5 text-sm font-medium text-slate-700 transition hover:text-slate-950"
+                                >
+                                    <span
+                                        class="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-slate-500"
+                                    >
+                                        <svg
+                                            viewBox="0 0 24 24"
+                                            class="h-4 w-4"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            stroke-width="1.7"
+                                        >
+                                            <path
+                                                d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"
+                                            />
+                                            <circle cx="12" cy="10" r="2.5" />
+                                        </svg>
+                                    </span>
+
+                                    <span>{{ $t('contacts.dealers.mapLabel') }}</span>
+
+                                    <svg
+                                        viewBox="0 0 16 16"
+                                        class="ml-auto h-3.5 w-3.5 shrink-0"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        stroke-width="1.5"
+                                    >
+                                        <path d="M5 11 11 5M6 5h5v5" />
+                                    </svg>
+                                </a>
 
                                 <!-- Website -->
                                 <a
@@ -187,6 +259,35 @@
                                     >
                                         <path d="M5 11 11 5M6 5h5v5" />
                                     </svg>
+                                </a>
+
+                                <!-- Email -->
+                                <a
+                                    v-if="location.email"
+                                    :href="`mailto:${location.email}`"
+                                    class="mb-4 flex items-center gap-3 rounded-xl bg-white px-3 py-2.5 text-sm font-medium text-slate-700 transition hover:text-slate-950"
+                                >
+                                    <span
+                                        class="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-slate-500"
+                                    >
+                                        <svg
+                                            viewBox="0 0 24 24"
+                                            class="h-4 w-4"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            stroke-width="1.7"
+                                        >
+                                            <rect x="3" y="5" width="18" height="14" rx="2" />
+                                            <path d="m4 7 8 6 8-6" />
+                                        </svg>
+                                    </span>
+
+                                    <span class="min-w-0">
+                                        <span class="block text-[10px] font-semibold uppercase tracking-wider text-slate-400">
+                                            {{ $t('contacts.dealers.emailLabel') }}
+                                        </span>
+                                        <span class="block truncate">{{ location.email }}</span>
+                                    </span>
                                 </a>
 
                                 <!-- Phones -->
@@ -254,6 +355,16 @@ defineProps({
 defineEmits(['close']);
 
 const { locale } = useI18n();
+
+const locationName = (location) => {
+    const name = location.name;
+
+    if (typeof name === 'string') {
+        return name;
+    }
+
+    return name?.[locale.value] || name?.ru || name?.en || '';
+};
 
 const locationAddress = (location) => {
     const address = location.address;

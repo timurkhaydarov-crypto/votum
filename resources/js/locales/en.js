@@ -361,7 +361,10 @@ export default {
             location: 'location',
             locations: 'locations',
             brand: 'TECHNOVOTUM',
+            nameLabel: 'Organization',
             addressLabel: 'Address',
+            mapLabel: 'Open on map',
+            emailLabel: 'Email',
             close: 'Close',
             countries: {
                 kazakhstan: 'Kazakhstan',

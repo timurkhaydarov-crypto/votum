@@ -10,7 +10,10 @@ class DealerLocation extends Model
 {
     protected $fillable = [
         'dealer_id',
+        'name',
         'address',
+        'map_link',
+        'email',
         'website',
         'sort_order',
         'is_active',
@@ -19,6 +22,7 @@ class DealerLocation extends Model
     protected $casts = [
         'is_active' => 'boolean',
         'sort_order' => 'integer',
+        'name' => 'array',
         'address' => 'array',
     ];
 

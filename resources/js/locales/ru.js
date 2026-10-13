@@ -362,7 +362,10 @@ export default {
             location: 'локация',
             locations: 'локаций',
             brand: 'ТЕХНОВОТУМ',
+            nameLabel: 'Организация',
             addressLabel: 'Адрес',
+            mapLabel: 'Открыть на карте',
+            emailLabel: 'Электронная почта',
             close: 'Закрыть',
             countries: {
                 kazakhstan: 'Казахстан',
