@@ -181,4 +181,145 @@ const router = createRouter({
     },
 });
 
+let pendingCatalogTarget = null;
+let lastHistoryPosition = router.options.history.state.position;
+
+const isCatalogRoute = (route) => route.matched.some(
+    (record) => record.path === '/products' || record.path.startsWith('/products/'),
+);
+
+const hasCatalogHistory = () => {
+    return typeof window !== 'undefined' &&
+        window.history.state?.__productCatalogTrail === true;
+};
+
+const markCatalogHistory = () => {
+    if (typeof window === 'undefined') {
+        return;
+    }
+
+    window.history.replaceState(
+        {
+            ...window.history.state,
+            __productCatalogTrail: true,
+        },
+        '',
+        window.location.href,
+    );
+};
+
+router.beforeEach((to, from) => {
+    const historyPosition = router.options.history.state.position;
+    const isHistoryTraversal = historyPosition !== lastHistoryPosition;
+
+    if (isHistoryTraversal) {
+        lastHistoryPosition = historyPosition;
+        pendingCatalogTarget = null;
+        return true;
+    }
+
+    if (pendingCatalogTarget) {
+        return true;
+    }
+
+    if (to.name === 'products.category') {
+        if (from.name === 'products.all' || (from.matched.length > 0 && isCatalogRoute(from))) {
+            return true;
+        }
+
+        if (from.matched.length === 0 && hasCatalogHistory()) {
+            return true;
+        }
+
+        pendingCatalogTarget = to.fullPath;
+
+        return {
+            name: 'products.all',
+            replace: from.matched.length === 0,
+        };
+    }
+
+    if (to.name === 'products.group') {
+        const isParentCategory =
+            from.name === 'products.category' &&
+            from.params.categorySlug === to.params.categorySlug;
+
+        if (isParentCategory) {
+            return true;
+        }
+
+        if (from.matched.length === 0 && hasCatalogHistory()) {
+            return true;
+        }
+
+        pendingCatalogTarget = to.fullPath;
+
+        if (from.matched.length === 0 || !isCatalogRoute(from)) {
+            return {
+                name: 'products.all',
+                replace: from.matched.length === 0,
+            };
+        }
+
+        return {
+            name: 'products.category',
+            params: {
+                categorySlug: to.params.categorySlug,
+            },
+        };
+    }
+
+    return true;
+});
+
+router.afterEach((to, _from, failure) => {
+    if (router.currentRoute.value.fullPath !== to.fullPath) {
+        return;
+    }
+
+    lastHistoryPosition = router.options.history.state.position;
+
+    if (failure) {
+        pendingCatalogTarget = null;
+        return;
+    }
+
+    if (isCatalogRoute(to)) {
+        markCatalogHistory();
+    }
+
+    if (!pendingCatalogTarget) {
+        return;
+    }
+
+    const target = router.resolve(pendingCatalogTarget);
+
+    if (to.fullPath === target.fullPath) {
+        pendingCatalogTarget = null;
+        return;
+    }
+
+    if (to.name === 'products.all') {
+        if (target.name === 'products.group') {
+            void router.push({
+                name: 'products.category',
+                params: {
+                    categorySlug: target.params.categorySlug,
+                },
+            });
+            return;
+        }
+
+        void router.push(target.fullPath);
+        return;
+    }
+
+    if (to.name === 'products.category' && target.name === 'products.group') {
+        void router.push(target.fullPath);
+        return;
+    }
+
+    pendingCatalogTarget = null;
+});
+
 export default router;
