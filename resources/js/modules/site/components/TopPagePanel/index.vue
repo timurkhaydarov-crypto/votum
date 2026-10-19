@@ -17,7 +17,7 @@
                             @add-contact="openDialog(DialogType.DRAWER, contact.type, ActionType.ADD)"
                             @edit-contact="openDialog(DialogType.DRAWER, contact.type, ActionType.UPDATE, $event)"
                             @delete-contact="openDialog(DialogType.MODAL, contact.type, ActionType.DELETE, $event)" />
-                        <ChangeLanguage />
+                        <!-- <ChangeLanguage /> -->
                     </div>
                 </div>
             </div>
