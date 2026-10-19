@@ -12,6 +12,8 @@ use Database\Seeders\Product\CertificateSeeder;
 use Database\Seeders\Product\FeaturesGallerySeeder;
 use Database\Seeders\Product\GroupSeeder;
 use Database\Seeders\Product\MethodSeeder;
+use Database\Seeders\Product\ProductAppImageSeeder;
+use Database\Seeders\Product\ProductAppSeeder;
 use Database\Seeders\Product\ProductCompatibilitySeeder;
 use Database\Seeders\Product\ProductFeaturesSeeder;
 use Database\Seeders\Product\ProductGallerySeeder;
@@ -40,6 +42,8 @@ class ProductionSeeder extends Seeder
                 CertificateSeeder::class,
                 BrandSeeder::class,
                 ProductSeeder::class,
+                ProductAppSeeder::class,
+                ProductAppImageSeeder::class,
                 ProductSpecificationSeeder::class,
                 SectorSeeder::class,
                 MethodSeeder::class,

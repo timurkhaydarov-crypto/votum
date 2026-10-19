@@ -43,6 +43,9 @@ export const normalizeProduct = (product, locale = 'ru') => ({
     hasFeatures: product.has_features,
     hasSpecifications: product.has_specifications,
     compatible_products: product.compatible_products,
+    productApps: Array.isArray(product.product_apps)
+        ? product.product_apps
+        : [],
     certificates: product.certificates,
     gallery: product.gallery,
     categorySlug: product.category?.slug || null,

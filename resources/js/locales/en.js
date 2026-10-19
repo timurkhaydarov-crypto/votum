@@ -422,6 +422,32 @@ export default {
         photo: 'Photo',
     },
 
+    productApps: {
+        eyebrow: 'PRODUCT APPLICATIONS',
+        title: 'Applications TOMOGRAPHIC 5M',
+        filterLabel: 'Filter by application',
+        all: 'All',
+        details: 'Learn more',
+        backToList: 'Back to applications',
+        version: 'Version',
+        gallery: 'Application photos',
+        image: 'Image',
+        previousImage: 'Previous image',
+        nextImage: 'Next image',
+        untitled: 'Unnamed application',
+        noDescription: 'Description is unavailable.',
+        noImages: 'No photos available for this application.',
+        noApps: 'No applications are available for this product.',
+        noFilteredApps: 'No applications match this filter.',
+        purposes: {
+            general: 'General purpose',
+            railway: 'Railway',
+            avia: 'Aviation',
+            'eddy-current': 'Eddy current',
+            service: 'Service',
+        },
+    },
+
     compatibleProducts: {
         label: 'COMPATIBLE PRODUCTS',
         title: 'Compatible products',

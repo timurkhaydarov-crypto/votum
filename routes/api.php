@@ -9,6 +9,7 @@ use App\Http\Controllers\EmailController;
 use App\Http\Controllers\FeaturesGalleryController;
 use App\Http\Controllers\OperatingHourController;
 use App\Http\Controllers\PhoneController;
+use App\Http\Controllers\ProductAppController;
 use App\Http\Controllers\ProductCompatibilityController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductDocumentController;
@@ -236,6 +237,47 @@ Route::prefix('products')->group(function () {
 
         /*
         |--------------------------------------------------------------------------
+        | Product app management
+        |--------------------------------------------------------------------------
+        */
+
+        Route::post(
+            'item/{product}/apps',
+            [ProductAppController::class, 'store']
+        );
+
+        Route::put(
+            'item/{product}/apps/{productApp}',
+            [ProductAppController::class, 'update']
+        );
+
+        Route::patch(
+            'item/{product}/apps/{productApp}',
+            [ProductAppController::class, 'update']
+        );
+
+        Route::delete(
+            'item/{product}/apps/{productApp}',
+            [ProductAppController::class, 'destroy']
+        );
+
+        Route::post(
+            'item/{product}/apps/{productApp}/images',
+            [ProductAppController::class, 'storeImages']
+        );
+
+        Route::delete(
+            'item/{product}/apps/{productApp}/images/{productAppImage}',
+            [ProductAppController::class, 'destroyImage']
+        );
+
+        Route::put(
+            'item/{product}/apps/{productApp}/images/order',
+            [ProductAppController::class, 'updateImageOrder']
+        );
+
+        /*
+        |--------------------------------------------------------------------------
         | Product gallery management
         |--------------------------------------------------------------------------
         */
@@ -334,6 +376,16 @@ Route::prefix('products')->group(function () {
     | Public product details
     |--------------------------------------------------------------------------
     */
+
+    Route::get(
+        'item/{product}/apps',
+        [ProductAppController::class, 'index']
+    );
+
+    Route::get(
+        'item/{product}/apps/{productApp}',
+        [ProductAppController::class, 'show']
+    );
 
     Route::get(
         'item/{product}',

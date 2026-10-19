@@ -38,6 +38,11 @@
                 @status-updated="handleProductStatusUpdated"
             />
 
+            <ProductApps
+                :key="product.id"
+                :apps="product.productApps"
+            />
+
             <!-- ===================================================== -->
             <!-- COMPATIBLE PRODUCTS -->
             <!-- ===================================================== -->
@@ -150,6 +155,7 @@ import ProductDetailLoading from '../../components/products/detail/ProductDetail
 import ProductDetailError from '../../components/products/detail/ProductDetailError.vue';
 import ProductDetailNotFound from '../../components/products/detail/ProductDetailNotFound.vue';
 import ProductDetailHero from '../../components/products/detail/ProductDetailHero.vue';
+import ProductApps from '../../components/products/detail/ProductApps.vue';
 import ProductCompatible from '../../components/products/detail/ProductCompatible.vue';
 import ProductGallery from '../../components/products/detail/ProductGallery.vue';
 import ProductImageGallery from '../../components/products/detail/ProductImageGallery.vue';

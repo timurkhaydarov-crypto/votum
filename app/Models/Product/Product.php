@@ -17,6 +17,15 @@ class Product extends Model
 {
     use HasFactory;
 
+    protected static function booted(): void
+    {
+        static::deleting(function (Product $product): void {
+            $product->productApps()->get()->each(
+                fn (ProductApp $productApp) => $productApp->delete()
+            );
+        });
+    }
+
     protected $casts = [
         'name' => 'array',
         'short_description' => 'array',
@@ -75,6 +84,11 @@ class Product extends Model
     public function gallery(): HasMany
     {
         return $this->hasMany(ProductGallery::class);
+    }
+
+    public function productApps(): HasMany
+    {
+        return $this->hasMany(ProductApp::class);
     }
 
     public function certificates(): BelongsToMany

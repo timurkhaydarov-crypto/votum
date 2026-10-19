@@ -129,6 +129,86 @@ class ProductMediaService
         return $basename;
     }
 
+    public function promoteProductAppImage(
+        string $token,
+        int $productAppId
+    ): string {
+        $relativeDirectory = 'image/product-apps/'.$productAppId;
+        $directory = public_path($relativeDirectory);
+        $basename = null;
+
+        try {
+            $basename = $this->promoteImage(
+                $token,
+                $relativeDirectory,
+                self::GALLERY_MAX_WIDTH
+            );
+
+            $thumbnailDirectory =
+                $directory.DIRECTORY_SEPARATOR.'thumbnails';
+
+            File::ensureDirectoryExists($thumbnailDirectory);
+
+            $this->createThumbnail(
+                $directory.DIRECTORY_SEPARATOR.$basename.'.webp',
+                $thumbnailDirectory.DIRECTORY_SEPARATOR.$basename.'.webp',
+                self::GALLERY_THUMBNAIL_WIDTH
+            );
+
+            if (! is_file(
+                $thumbnailDirectory
+                .DIRECTORY_SEPARATOR
+                .$basename
+                .'.webp'
+            )) {
+                throw new RuntimeException(
+                    'Unable to create product app image thumbnail.'
+                );
+            }
+        } catch (\Throwable $exception) {
+            if ($basename !== null) {
+                $this->deleteProductAppImage(
+                    'product-apps/'.$productAppId.'/'.$basename
+                );
+            }
+
+            throw $exception;
+        }
+
+        return 'product-apps/'.$productAppId.'/'.$basename;
+    }
+
+    public function deleteProductAppImage(string $imagePath): void
+    {
+        if (! preg_match(
+            '#^product-apps/[0-9]+/[A-Za-z0-9_-]+$#',
+            $imagePath
+        )) {
+            throw new RuntimeException(
+                'Invalid product app image path.'
+            );
+        }
+
+        $relativePath = 'image/'.$imagePath;
+        $paths = [
+            public_path($relativePath.'.webp'),
+            public_path(
+                dirname($relativePath)
+                .'/thumbnails/'
+                .basename($relativePath)
+                .'.webp'
+            ),
+        ];
+
+        foreach ($paths as $path) {
+            if (is_file($path) && ! File::delete($path)) {
+                throw new RuntimeException(
+                    'Unable to delete product app image file.'
+                );
+            }
+        }
+    }
+
     public function promoteFeaturesImage(
         string $token
     ): string {
@@ -795,4 +875,3 @@ class ProductMediaService
         );
     }
 }
-

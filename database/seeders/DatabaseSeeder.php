@@ -2,23 +2,24 @@
 
 namespace Database\Seeders;
 
+use App\Models\User;
 use Database\Seeders\Contacts\EmailSeeder;
 use Database\Seeders\Contacts\OperatingHoursSeeder;
 use Database\Seeders\Contacts\PhoneSeeder;
 use Database\Seeders\Contacts\SocialMediaSeeder;
-use Database\Seeders\Product\FeaturesGallerySeeder;
 use Database\Seeders\Product\BrandSeeder;
 use Database\Seeders\Product\CategorySeeder;
+use Database\Seeders\Product\CertificateSeeder;
+use Database\Seeders\Product\FeaturesGallerySeeder;
 use Database\Seeders\Product\GroupSeeder;
 use Database\Seeders\Product\MethodSeeder;
-use Database\Seeders\Product\ProductSeeder;
-use Database\Seeders\Product\SectorSeeder;
-use Database\Seeders\Product\CertificateSeeder;
+use Database\Seeders\Product\ProductAppImageSeeder;
+use Database\Seeders\Product\ProductAppSeeder;
+use Database\Seeders\Product\ProductCompatibilitySeeder;
 use Database\Seeders\Product\ProductFeaturesSeeder;
 use Database\Seeders\Product\ProductGallerySeeder;
-use Database\Seeders\Product\ProductCompatibilitySeeder;
-use Database\Seeders\DealerSeeder;
-use App\Models\User;
+use Database\Seeders\Product\ProductSeeder;
+use Database\Seeders\Product\SectorSeeder;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Schema;
@@ -55,6 +56,8 @@ class DatabaseSeeder extends Seeder
             && Schema::hasTable('product_galleries')
             && Schema::hasTable('features_galleries')
             && Schema::hasTable('product_compatibilities')
+            && Schema::hasTable('product_apps')
+            && Schema::hasTable('product_app_images')
         ) {
             $this->call([
                 CategorySeeder::class,
@@ -62,6 +65,8 @@ class DatabaseSeeder extends Seeder
                 CertificateSeeder::class,
                 BrandSeeder::class,
                 ProductSeeder::class,
+                ProductAppSeeder::class,
+                ProductAppImageSeeder::class,
                 SectorSeeder::class,
                 MethodSeeder::class,
                 ProductFeaturesSeeder::class,

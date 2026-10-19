@@ -23,15 +23,13 @@ return [
     </div>
 
     <!-- CONCEPTUAL SOLUTIONS -->
-    <div class="space-y-5">
+    <section class="rounded-xl border border-slate-200 bg-white p-5">
 
-        <div>
-            <h3 class="text-base font-bold tracking-tight text-slate-900">
-                Основные концептуальные решения
-            </h3>
+        <h3 class="text-base font-bold tracking-tight text-slate-900">
+            Основные концептуальные решения
+        </h3>
 
-            <div class="mt-2 h-px bg-slate-200"></div>
-        </div>
+        <div class="pt-5">
 
         <div class="grid gap-3 sm:grid-cols-2">
 
@@ -103,17 +101,16 @@ return [
         </div>
 
     </div>
+    </section>
 
     <!-- ADVANTAGES -->
-    <div class="space-y-5">
+    <section class="rounded-xl border border-slate-200 bg-white p-5">
 
-        <div>
-            <h3 class="text-base font-bold tracking-tight text-slate-900">
-                Преимущества
-            </h3>
+        <h3 class="text-base font-bold tracking-tight text-slate-900">
+            Преимущества
+        </h3>
 
-            <div class="mt-2 h-px bg-slate-200"></div>
-        </div>
+        <div class="pt-5">
 
         <div class="space-y-3">
 
@@ -209,13 +206,16 @@ return [
         </div>
 
     </div>
+    </section>
 
     <!-- AWS -->
-    <div class="rounded-xl border border-slate-200 bg-slate-50 p-5 sm:p-6">
+    <section class="rounded-xl border border-slate-200 bg-slate-50 p-5 sm:p-6">
 
         <h3 class="text-base font-bold tracking-tight text-slate-900">
             Автоматизированное рабочее место дефектоскописта
         </h3>
+
+        <div class="pt-4">
 
         <p class="mt-3 text-sm leading-7 text-slate-700">
             В базовый комплект программного обеспечения
@@ -265,298 +265,9 @@ return [
         </div>
 
     </div>
+    </section>
 
-    <!-- BUILT-IN APPLICATIONS -->
-    <div class="space-y-5">
 
-        <div>
-            <h3 class="text-base font-bold tracking-tight text-slate-900">
-                Встроенные приложения
-            </h3>
-
-            <div class="mt-2 h-px bg-slate-200"></div>
-        </div>
-
-        <!-- GENERAL PURPOSE -->
-        <div class="space-y-3">
-
-            <h4 class="text-sm font-bold text-slate-900">
-                Общего назначения
-            </h4>
-
-            <div class="grid gap-3 sm:grid-cols-2">
-
-                <div class="rounded-lg border border-slate-200 p-4">
-                    <div class="text-sm font-semibold text-slate-900">
-                        Томографик 1.1
-                    </div>
-
-                    <p class="mt-1 text-sm text-slate-600">
-                        Ультразвуковой дефектоскоп общего назначения
-                        с диапазоном 0,2–10 МГц.
-                    </p>
-                </div>
-
-                <div class="rounded-lg border border-slate-200 p-4">
-                    <div class="text-sm font-semibold text-slate-900">
-                        Томографик 1.2
-                    </div>
-
-                    <p class="mt-1 text-sm text-slate-600">
-                        ЭМА толщиномер с диапазоном измерения
-                        от 0,2 до 1000 мм.
-                    </p>
-                </div>
-
-                <div class="rounded-lg border border-slate-200 p-4">
-                    <div class="text-sm font-semibold text-slate-900">
-                        Томографик 1.3
-                    </div>
-
-                    <p class="mt-1 text-sm text-slate-600">
-                        Паспортизация ПЭП и построение АРД-диаграмм.
-                    </p>
-                </div>
-
-                <div class="rounded-lg border border-slate-200 p-4">
-                    <div class="text-sm font-semibold text-slate-900">
-                        Томографик 1.4
-                    </div>
-
-                    <p class="mt-1 text-sm text-slate-600">
-                        Автоматизированное рабочее место дефектоскописта
-                        для связи прибора с Windows ПК.
-                    </p>
-                </div>
-
-            </div>
-
-        </div>
-
-        <!-- RAILWAY -->
-        <div class="space-y-3">
-
-            <h4 class="text-sm font-bold text-slate-900">
-                Железнодорожные
-            </h4>
-
-            <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-
-                <div class="rounded-lg border border-slate-200 p-4">
-                    <div class="text-sm font-semibold text-slate-900">
-                        Томографик 2.1
-                    </div>
-
-                    <p class="mt-1 text-sm text-slate-600">
-                        Комплексная методика ультразвукового контроля
-                        колесных пар вагонов по РД 07.09-97.
-                    </p>
-                </div>
-
-                <div class="rounded-lg border border-slate-200 p-4">
-                    <div class="text-sm font-semibold text-slate-900">
-                        Томографик 2.2
-                    </div>
-
-                    <p class="mt-1 text-sm text-slate-600">
-                        Методика ультразвукового контроля
-                        железнодорожных осей по РД 32.144-2000.
-                    </p>
-                </div>
-
-                <div class="rounded-lg border border-slate-200 p-4">
-                    <div class="text-sm font-semibold text-slate-900">
-                        Томографик 2.3
-                    </div>
-
-                    <p class="mt-1 text-sm text-slate-600">
-                        Методика ультразвукового контроля деталей
-                        локомотивов и МВПС.
-                    </p>
-                </div>
-
-                <div class="rounded-lg border border-slate-200 p-4">
-                    <div class="text-sm font-semibold text-slate-900">
-                        Томографик 2.4
-                    </div>
-
-                    <p class="mt-1 text-sm text-slate-600">
-                        Методика ультразвукового контроля колесных пар
-                        пассажирских вагонов по СТО ФПК 1.11.001-2010.
-                    </p>
-                </div>
-
-                <div class="rounded-lg border border-slate-200 p-4">
-                    <div class="text-sm font-semibold text-slate-900">
-                        Томографик 2.5
-                    </div>
-
-                    <p class="mt-1 text-sm text-slate-600">
-                        Методика вихретокового контроля деталей вагонов
-                        по РД 32.150-2000.
-                    </p>
-                </div>
-
-                <div class="rounded-lg border border-slate-200 p-4">
-                    <div class="text-sm font-semibold text-slate-900">
-                        Томографик 2.6
-                    </div>
-
-                    <p class="mt-1 text-sm text-slate-600">
-                        Методика ультразвукового контроля стрелочных
-                        переводов и сварных стыков рельсов.
-                    </p>
-                </div>
-
-                <div class="rounded-lg border border-slate-200 p-4">
-                    <div class="text-sm font-semibold text-slate-900">
-                        Томографик 2.7
-                    </div>
-
-                    <p class="mt-1 text-sm text-slate-600">
-                        Методика вихретокового контроля деталей
-                        локомотивов и МВПС.
-                    </p>
-                </div>
-
-                <div class="rounded-lg border border-slate-200 p-4">
-                    <div class="text-sm font-semibold text-slate-900">
-                        Томографик 2.8
-                    </div>
-
-                    <p class="mt-1 text-sm text-slate-600">
-                        Комплексный ультразвуковой контроль колесных пар
-                        грузовых вагонов по ПР НК В.2 и ТИ НК В.21-1.
-                    </p>
-                </div>
-
-                <div class="rounded-lg border border-slate-200 p-4">
-                    <div class="text-sm font-semibold text-slate-900">
-                        Томографик 2.9
-                    </div>
-
-                    <p class="mt-1 text-sm text-slate-600">
-                        Комплексный ультразвуковой контроль колесных пар
-                        грузовых вагонов по СТО РЖД 1.11.002-2008.
-                    </p>
-                </div>
-
-            </div>
-
-        </div>
-
-        <!-- AVIATION -->
-        <div class="space-y-3">
-
-            <h4 class="text-sm font-bold text-slate-900">
-                Авиационные
-            </h4>
-
-            <div class="grid gap-3 sm:grid-cols-2">
-
-                <div class="rounded-lg border border-slate-200 p-4">
-                    <div class="text-sm font-semibold text-slate-900">
-                        Томографик 3.1
-                    </div>
-
-                    <p class="mt-1 text-sm text-slate-600">
-                        Резонансный дефектоскоп с диапазоном
-                        0,2–1,0 МГц.
-                    </p>
-                </div>
-
-                <div class="rounded-lg border border-slate-200 p-4">
-                    <div class="text-sm font-semibold text-slate-900">
-                        Томографик 3.2
-                    </div>
-
-                    <p class="mt-1 text-sm text-slate-600">
-                        Акустический тензометр для определения степени
-                        затяжки резьбовых соединений методом акустоупругости.
-                    </p>
-                </div>
-
-            </div>
-
-        </div>
-
-        <!-- EDDY CURRENT -->
-        <div class="space-y-3">
-
-            <h4 class="text-sm font-bold text-slate-900">
-                Вихретоковые
-            </h4>
-
-            <div class="grid gap-3 sm:grid-cols-2">
-
-                <div class="rounded-lg border border-slate-200 p-4">
-                    <div class="text-sm font-semibold text-slate-900">
-                        Томографик 4.1
-                    </div>
-
-                    <p class="mt-1 text-sm text-slate-600">
-                        Вихретоковый дефектоскоп.
-                    </p>
-                </div>
-
-                <div class="rounded-lg border border-slate-200 p-4">
-                    <div class="text-sm font-semibold text-slate-900">
-                        Томографик 4.2
-                    </div>
-
-                    <p class="mt-1 text-sm text-slate-600">
-                        Вихретоковый толщиномер покрытий.
-                    </p>
-                </div>
-
-            </div>
-
-        </div>
-
-        <!-- SERVICE -->
-        <div class="space-y-3">
-
-            <h4 class="text-sm font-bold text-slate-900">
-                Сервисные
-            </h4>
-
-            <div class="grid gap-3 sm:grid-cols-3">
-
-                <div class="rounded-lg border border-slate-200 p-4">
-                    <div class="text-sm font-semibold text-slate-900">
-                        Томографик 5.1
-                    </div>
-
-                    <p class="mt-1 text-sm text-slate-600">
-                        Мультимедийный проигрыватель FlashPlayer.
-                    </p>
-                </div>
-
-                <div class="rounded-lg border border-slate-200 p-4">
-                    <div class="text-sm font-semibold text-slate-900">
-                        Томографик 5.2
-                    </div>
-
-                    <p class="mt-1 text-sm text-slate-600">
-                        Арифметический калькулятор.
-                    </p>
-                </div>
-
-                <div class="rounded-lg border border-slate-200 p-4">
-                    <div class="text-sm font-semibold text-slate-900">
-                        Томографик 5.4
-                    </div>
-
-                    <p class="mt-1 text-sm text-slate-600">
-                        Мониторинг состояния батареи.
-                    </p>
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
 
 </div>',
 
@@ -583,15 +294,13 @@ return [
     </div>
 
     <!-- CONCEPTUAL SOLUTIONS -->
-    <div class="space-y-5">
+    <section class="rounded-xl border border-slate-200 bg-white p-5">
 
-        <div>
-            <h3 class="text-base font-bold tracking-tight text-slate-900">
-                Main Conceptual Solutions
-            </h3>
+        <h3 class="text-base font-bold tracking-tight text-slate-900">
+            Main Conceptual Solutions
+        </h3>
 
-            <div class="mt-2 h-px bg-slate-200"></div>
-        </div>
+        <div class="pt-5">
 
         <div class="grid gap-3 sm:grid-cols-2">
 
@@ -663,17 +372,16 @@ return [
         </div>
 
     </div>
+    </section>
 
     <!-- ADVANTAGES -->
-    <div class="space-y-5">
+    <section class="rounded-xl border border-slate-200 bg-white p-5">
 
-        <div>
-            <h3 class="text-base font-bold tracking-tight text-slate-900">
-                Advantages
-            </h3>
+        <h3 class="text-base font-bold tracking-tight text-slate-900">
+            Advantages
+        </h3>
 
-            <div class="mt-2 h-px bg-slate-200"></div>
-        </div>
+        <div class="pt-5">
 
         <div class="space-y-3">
 
@@ -770,13 +478,16 @@ return [
         </div>
 
     </div>
+    </section>
 
     <!-- AWS -->
-    <div class="rounded-xl border border-slate-200 bg-slate-50 p-5 sm:p-6">
+    <section class="rounded-xl border border-slate-200 bg-slate-50 p-5 sm:p-6">
 
         <h3 class="text-base font-bold tracking-tight text-slate-900">
             NDT Operator Automated Workstation
         </h3>
+
+        <div class="pt-4">
 
         <p class="mt-3 text-sm leading-7 text-slate-700">
             The basic
@@ -825,302 +536,9 @@ return [
         </div>
 
     </div>
+    </section>
 
-    <!-- BUILT-IN APPLICATIONS -->
-    <div class="space-y-5">
 
-        <div>
-            <h3 class="text-base font-bold tracking-tight text-slate-900">
-                Built-in Applications
-            </h3>
-
-            <div class="mt-2 h-px bg-slate-200"></div>
-        </div>
-
-        <!-- GENERAL PURPOSE -->
-        <div class="space-y-3">
-
-            <h4 class="text-sm font-bold text-slate-900">
-                General Purpose
-            </h4>
-
-            <div class="grid gap-3 sm:grid-cols-2">
-
-                <div class="rounded-lg border border-slate-200 p-4">
-                    <div class="text-sm font-semibold text-slate-900">
-                        Tomographic 1.1
-                    </div>
-
-                    <p class="mt-1 text-sm text-slate-600">
-                        General-purpose ultrasonic flaw detector
-                        with a frequency range of 0.2–10 MHz.
-                    </p>
-                </div>
-
-                <div class="rounded-lg border border-slate-200 p-4">
-                    <div class="text-sm font-semibold text-slate-900">
-                        Tomographic 1.2
-                    </div>
-
-                    <p class="mt-1 text-sm text-slate-600">
-                        EMA thickness meter with a measurement range
-                        from 0.2 to 1,000 mm.
-                    </p>
-                </div>
-
-                <div class="rounded-lg border border-slate-200 p-4">
-                    <div class="text-sm font-semibold text-slate-900">
-                        Tomographic 1.3
-                    </div>
-
-                    <p class="mt-1 text-sm text-slate-600">
-                        Probe certification and DGS diagram generation.
-                    </p>
-                </div>
-
-                <div class="rounded-lg border border-slate-200 p-4">
-                    <div class="text-sm font-semibold text-slate-900">
-                        Tomographic 1.4
-                    </div>
-
-                    <p class="mt-1 text-sm text-slate-600">
-                        NDT Operator Automated Workstation for
-                        communication between the instrument and a Windows PC.
-                    </p>
-                </div>
-
-            </div>
-
-        </div>
-
-        <!-- RAILWAY -->
-        <div class="space-y-3">
-
-            <h4 class="text-sm font-bold text-slate-900">
-                Railway
-            </h4>
-
-            <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-
-                <div class="rounded-lg border border-slate-200 p-4">
-                    <div class="text-sm font-semibold text-slate-900">
-                        Tomographic 2.1
-                    </div>
-
-                    <p class="mt-1 text-sm text-slate-600">
-                        Comprehensive ultrasonic testing method
-                        for railway wheelsets according to RD 07.09-97.
-                    </p>
-                </div>
-
-                <div class="rounded-lg border border-slate-200 p-4">
-                    <div class="text-sm font-semibold text-slate-900">
-                        Tomographic 2.2
-                    </div>
-
-                    <p class="mt-1 text-sm text-slate-600">
-                        Ultrasonic testing method for railway axles
-                        according to RD 32.144-2000.
-                    </p>
-                </div>
-
-                <div class="rounded-lg border border-slate-200 p-4">
-                    <div class="text-sm font-semibold text-slate-900">
-                        Tomographic 2.3
-                    </div>
-
-                    <p class="mt-1 text-sm text-slate-600">
-                        Ultrasonic testing method for locomotive
-                        and multiple-unit vehicle components.
-                    </p>
-                </div>
-
-                <div class="rounded-lg border border-slate-200 p-4">
-                    <div class="text-sm font-semibold text-slate-900">
-                        Tomographic 2.4
-                    </div>
-
-                    <p class="mt-1 text-sm text-slate-600">
-                        Ultrasonic testing method for passenger
-                        railway wheelsets according to
-                        STO FPK 1.11.001-2010.
-                    </p>
-                </div>
-
-                <div class="rounded-lg border border-slate-200 p-4">
-                    <div class="text-sm font-semibold text-slate-900">
-                        Tomographic 2.5
-                    </div>
-
-                    <p class="mt-1 text-sm text-slate-600">
-                        Eddy-current testing method for railway
-                        vehicle components according to RD 32.150-2000.
-                    </p>
-                </div>
-
-                <div class="rounded-lg border border-slate-200 p-4">
-                    <div class="text-sm font-semibold text-slate-900">
-                        Tomographic 2.6
-                    </div>
-
-                    <p class="mt-1 text-sm text-slate-600">
-                        Ultrasonic testing method for turnouts
-                        and welded rail joints.
-                    </p>
-                </div>
-
-                <div class="rounded-lg border border-slate-200 p-4">
-                    <div class="text-sm font-semibold text-slate-900">
-                        Tomographic 2.7
-                    </div>
-
-                    <p class="mt-1 text-sm text-slate-600">
-                        Eddy-current testing method for locomotive
-                        and multiple-unit vehicle components.
-                    </p>
-                </div>
-
-                <div class="rounded-lg border border-slate-200 p-4">
-                    <div class="text-sm font-semibold text-slate-900">
-                        Tomographic 2.8
-                    </div>
-
-                    <p class="mt-1 text-sm text-slate-600">
-                        Comprehensive ultrasonic testing of freight
-                        railway wheelsets according to PR NK V.2
-                        and TI NK V.21-1.
-                    </p>
-                </div>
-
-                <div class="rounded-lg border border-slate-200 p-4">
-                    <div class="text-sm font-semibold text-slate-900">
-                        Tomographic 2.9
-                    </div>
-
-                    <p class="mt-1 text-sm text-slate-600">
-                        Comprehensive ultrasonic testing of freight
-                        railway wheelsets according to
-                        STO RZD 1.11.002-2008.
-                    </p>
-                </div>
-
-            </div>
-
-        </div>
-
-        <!-- AVIATION -->
-        <div class="space-y-3">
-
-            <h4 class="text-sm font-bold text-slate-900">
-                Aviation
-            </h4>
-
-            <div class="grid gap-3 sm:grid-cols-2">
-
-                <div class="rounded-lg border border-slate-200 p-4">
-                    <div class="text-sm font-semibold text-slate-900">
-                        Tomographic 3.1
-                    </div>
-
-                    <p class="mt-1 text-sm text-slate-600">
-                        Resonance flaw detector with a frequency
-                        range of 0.2–1.0 MHz.
-                    </p>
-                </div>
-
-                <div class="rounded-lg border border-slate-200 p-4">
-                    <div class="text-sm font-semibold text-slate-900">
-                        Tomographic 3.2
-                    </div>
-
-                    <p class="mt-1 text-sm text-slate-600">
-                        Acoustic strain gauge based on the acoustoelastic
-                        method for determining the tightening force
-                        of threaded components.
-                    </p>
-                </div>
-
-            </div>
-
-        </div>
-
-        <!-- EDDY CURRENT -->
-        <div class="space-y-3">
-
-            <h4 class="text-sm font-bold text-slate-900">
-                Eddy Current
-            </h4>
-
-            <div class="grid gap-3 sm:grid-cols-2">
-
-                <div class="rounded-lg border border-slate-200 p-4">
-                    <div class="text-sm font-semibold text-slate-900">
-                        Tomographic 4.1
-                    </div>
-
-                    <p class="mt-1 text-sm text-slate-600">
-                        Eddy-current flaw detector.
-                    </p>
-                </div>
-
-                <div class="rounded-lg border border-slate-200 p-4">
-                    <div class="text-sm font-semibold text-slate-900">
-                        Tomographic 4.2
-                    </div>
-
-                    <p class="mt-1 text-sm text-slate-600">
-                        Eddy-current coating thickness meter.
-                    </p>
-                </div>
-
-            </div>
-
-        </div>
-
-        <!-- SERVICE -->
-        <div class="space-y-3">
-
-            <h4 class="text-sm font-bold text-slate-900">
-                Service
-            </h4>
-
-            <div class="grid gap-3 sm:grid-cols-3">
-
-                <div class="rounded-lg border border-slate-200 p-4">
-                    <div class="text-sm font-semibold text-slate-900">
-                        Tomographic 5.1
-                    </div>
-
-                    <p class="mt-1 text-sm text-slate-600">
-                        FlashPlayer multimedia player.
-                    </p>
-                </div>
-
-                <div class="rounded-lg border border-slate-200 p-4">
-                    <div class="text-sm font-semibold text-slate-900">
-                        Tomographic 5.2
-                    </div>
-
-                    <p class="mt-1 text-sm text-slate-600">
-                        Arithmetic calculator.
-                    </p>
-                </div>
-
-                <div class="rounded-lg border border-slate-200 p-4">
-                    <div class="text-sm font-semibold text-slate-900">
-                        Tomographic 5.4
-                    </div>
-
-                    <p class="mt-1 text-sm text-slate-600">
-                        Battery status monitoring.
-                    </p>
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
 
 </div>',
 ];

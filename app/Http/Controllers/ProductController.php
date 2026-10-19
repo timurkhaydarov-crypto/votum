@@ -133,7 +133,8 @@ class ProductController extends Controller
 
     protected function serializeProduct(
         Product $product,
-        bool $withCompatibleProducts = false
+        bool $withCompatibleProducts = false,
+        bool $withProductApps = false
     ): array {
         $data = [
             'id' => $product->id,
@@ -486,6 +487,58 @@ class ProductController extends Controller
 
             $data['compatible_products'] =
                 $compatibleProductsByCategory;
+        }
+
+        if ($withProductApps) {
+            $data['product_apps'] = $product->productApps
+                ->sortBy('version', SORT_NATURAL)
+                ->values()
+                ->map(
+                    fn ($productApp) => [
+                        'id' => $productApp->id,
+                        'name' => $productApp->name,
+                        'version' => $productApp->version,
+                        'purpose' => $productApp->purpose,
+                        'image' => $productApp->image
+                            ? '/image/'.$productApp->image
+                            : null,
+                        'short_description' => $productApp->short_description,
+                        'full_description' => $productApp->full_description,
+                        'images' => $productApp->images
+                            ->map(
+                                function ($image) {
+                                    $imageName = pathinfo(
+                                        $image->image_url,
+                                        PATHINFO_FILENAME
+                                    );
+                                    $directory = dirname($image->image_url);
+                                    $thumbnailPath = $directory
+                                        .'/thumbnails/'.$imageName.'.webp';
+                                    $imagePath = str_ends_with(
+                                        $image->image_url,
+                                        '.webp'
+                                    )
+                                        ? $image->image_url
+                                        : $image->image_url.'.webp';
+
+                                    return [
+                                        'id' => $image->id,
+                                        'image_url' => '/image/'.$imagePath,
+                                        'thumbnail' => is_file(
+                                            public_path('image/'.$thumbnailPath)
+                                        )
+                                            ? '/image/'.$thumbnailPath
+                                            : '/image/'.$imagePath,
+                                        'sort_order' => $image->sort_order,
+                                    ];
+                                }
+                            )
+                            ->values()
+                            ->all(),
+                    ]
+                )
+                ->values()
+                ->all();
         }
 
         return $data;
@@ -893,11 +946,13 @@ class ProductController extends Controller
             'features',
             'compatibleProducts.category',
             'compatibleWithProducts.category',
+            'productApps.images',
         ]);
 
         return response()->json(
             $this->serializeProduct(
                 $product,
+                true,
                 true
             )
         );
