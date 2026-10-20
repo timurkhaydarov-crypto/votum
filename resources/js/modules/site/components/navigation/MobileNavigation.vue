@@ -43,7 +43,7 @@
             >
                 <Logo :mobile="true" />
 
-                <ChangeLanguage />
+                <!-- <ChangeLanguage /> -->
             </div>
 
             <!-- ======================================== -->
