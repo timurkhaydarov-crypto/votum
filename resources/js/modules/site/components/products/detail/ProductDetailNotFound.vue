@@ -8,12 +8,11 @@
             </div>
 
             <h2 class="mt-5 text-2xl font-bold tracking-tight text-slate-900">
-                Прибор не найден
+                {{ t('siteUi.product.notFoundTitle') }}
             </h2>
 
             <p class="mt-2 text-sm leading-6 text-slate-600">
-                Запрошенная карточка продукции не найдена
-                или была удалена из каталога.
+                {{ t('siteUi.product.notFoundDescription') }}
             </p>
 
             <RouterLink
@@ -22,8 +21,14 @@
             >
                 <i class="bi bi-arrow-left"></i>
 
-                Вернуться в каталог
+                {{ t('productBreadcrumbs.backToCatalog') }}
             </RouterLink>
         </div>
     </div>
 </template>
+
+<script setup>
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
+</script>

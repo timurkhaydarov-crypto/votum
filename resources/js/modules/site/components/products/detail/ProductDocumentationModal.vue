@@ -21,10 +21,7 @@
                             <i class="bi bi-file-earmark-text"></i>
 
                             {{
-                                $t(
-                                    'product.info.documentation.title',
-                                    'Документация'
-                                )
+                                $t('product.info.documentation.title')
                             }}
                         </div>
 
@@ -73,14 +70,13 @@
                             <h3
                                 class="text-lg font-semibold text-slate-900"
                             >
-                                Введите ключ доступа
+                                {{ $t('siteUi.documentation.enterAccessKey') }}
                             </h3>
 
                             <p
                                 class="mt-2 text-sm leading-6 text-slate-500"
                             >
-                                Для просмотра технической документации
-                                требуется ключ доступа к этому прибору.
+                                {{ $t('siteUi.documentation.accessDescription') }}
                             </p>
                         </div>
 
@@ -94,7 +90,7 @@
                                 for="documentation-key"
                                 class="mb-2 block text-[10px] font-semibold uppercase tracking-[0.12em] text-slate-400"
                             >
-                                Ключ доступа
+                                {{ $t('siteUi.documentation.keyLabel') }}
                             </label>
 
                             <div class="relative">
@@ -106,7 +102,7 @@
                                     autocomplete="off"
                                     spellcheck="false"
                                     :disabled="isLoading"
-                                    placeholder="Введите ключ"
+                                    :placeholder="$t('siteUi.documentation.keyPlaceholder')"
                                     class="w-full rounded-xl border border-slate-200 bg-white px-4 py-3.5 pr-11 text-sm text-slate-900 outline-none transition placeholder:text-slate-300 focus:border-slate-400 focus:ring-2 focus:ring-slate-900/5 disabled:bg-slate-50"
                                 />
 
@@ -150,8 +146,8 @@
 
                                 {{
                                     isLoading
-                                        ? 'Проверка...'
-                                        : 'Получить документацию'
+                                        ? $t('siteUi.documentation.checking')
+                                        : $t('siteUi.documentation.get')
                                 }}
                             </button>
                         </form>
@@ -180,13 +176,13 @@
                             <div
                                 class="text-xs font-semibold text-emerald-800"
                             >
-                                Доступ подтверждён
+                                {{ $t('siteUi.documentation.authorized') }}
                             </div>
 
                             <div
                                 class="mt-0.5 text-[11px] text-emerald-600"
                             >
-                                Доступная документация прибора
+                                {{ $t('siteUi.documentation.available') }}
                             </div>
                         </div>
                     </div>
@@ -326,7 +322,7 @@
                                             class="bi bi-box-arrow-up-right"
                                         ></i>
 
-                                        Открыть PDF
+                                        {{ $t('siteUi.documentation.openPdf') }}
                                     </button>
                                 </div>
                             </div>
@@ -337,7 +333,7 @@
                                 v-else
                                 class="mt-4 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2.5 text-xs text-amber-700"
                             >
-                                Документ на текущем языке отсутствует.
+                                {{ $t('siteUi.documentation.noLocalizedFile') }}
                             </div>
                         </div>
                     </div>
@@ -359,13 +355,13 @@
                         <div
                             class="mt-4 text-sm font-semibold text-slate-700"
                         >
-                            Документация отсутствует
+                            {{ $t('siteUi.documentation.noDocuments') }}
                         </div>
 
                         <p
                             class="mt-1 text-xs text-slate-400"
                         >
-                            Для этого прибора пока нет доступных документов.
+                            {{ $t('siteUi.documentation.noDocumentsDescription') }}
                         </p>
                     </div>
                 </div>
@@ -382,7 +378,7 @@
                         class="rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-xs font-semibold text-slate-600 transition hover:border-slate-300 hover:text-slate-900"
                         @click="close"
                     >
-                        Закрыть
+                        {{ $t('actions.close') }}
                     </button>
                 </div>
             </div>
@@ -400,7 +396,7 @@ import {
 
 import { useI18n } from 'vue-i18n';
 
-const { locale } = useI18n();
+const { t, locale } = useI18n();
 
 const props = defineProps({
     product: {
@@ -522,7 +518,7 @@ const documentTitle = (document) => {
     return (
         localizedValue(document?.title) ||
         document?.type ||
-        'Документ'
+        t('siteUi.documentation.document')
     );
 };
 
@@ -572,8 +568,8 @@ const documentCurrentFile = (document) => {
 
 const localeLabel = (value) => {
     return String(value).toLowerCase() === 'ru'
-        ? 'Русский'
-        : 'English';
+        ? t('common.russian')
+        : t('common.english');
 };
 
 const formatFileSize = (bytes) => {

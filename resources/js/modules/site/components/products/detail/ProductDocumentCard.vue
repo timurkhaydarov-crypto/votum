@@ -49,7 +49,7 @@
             v-if="!available"
             class="mt-4 text-[10px] font-semibold uppercase tracking-wider text-amber-700"
         >
-            Ссылка отсутствует
+            {{ $t('siteUi.product.missingLink') }}
         </div>
     </component>
 </template>

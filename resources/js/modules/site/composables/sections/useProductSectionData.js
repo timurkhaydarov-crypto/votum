@@ -3,6 +3,7 @@ import { fetchJsonApi } from '../../services/fetchJsonApi.js';
 
 export function useProductSectionData({
     props,
+    t,
     locale,
     editProduct,
     currentUser,
@@ -308,7 +309,7 @@ export function useProductSectionData({
         } catch (error) {
             console.error('Failed to load product section:', error);
 
-            formError.value = error?.message ?? 'Не удалось загрузить данные раздела.';
+            formError.value = error?.message ?? t('siteUi.product.loadSectionError');
         } finally {
             isLoading.value = false;
         }

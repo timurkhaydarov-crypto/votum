@@ -12,7 +12,7 @@
 
 
             <!-- Mobile button -->
-            <button type="button" aria-label="Открыть меню" class="ml-auto flex h-10 w-10
+            <button type="button" :aria-label="t('siteUi.navigation.openMenu')" class="ml-auto flex h-10 w-10
                items-center justify-center
                rounded-xl text-[#252525]
                transition hover:bg-gray-100
@@ -30,12 +30,14 @@
 </template>
 <script setup>
 import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 import DesktopNavigation from './DesktopNavigation.vue'
 import MobileNavigation from './MobileNavigation.vue'
 import Logo from '../shared/Logo.vue'
 
 const mobileMenuOpen = ref(false)
+const { t } = useI18n()
 
 const openMobileMenu = () => {
     mobileMenuOpen.value = true

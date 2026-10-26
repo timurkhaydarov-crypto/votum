@@ -307,6 +307,7 @@ const {
 
 const data = useProductSectionData({
     props,
+    t,
     locale,
     editProduct,
     currentUser,
@@ -353,6 +354,7 @@ const {
 
 const save = useProductSectionSave({
     props,
+    t,
     emit,
     isSaving,
     formError,

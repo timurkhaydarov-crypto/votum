@@ -11,7 +11,7 @@
         <div
             class="mt-3 text-sm font-semibold text-slate-700"
         >
-            {{ title }}
+            {{ title || t('siteUi.empty.data') }}
         </div>
 
         <p
@@ -24,10 +24,14 @@
 </template>
 
 <script setup>
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
+
 defineProps({
     title: {
         type: String,
-        default: 'Данные отсутствуют',
+        default: '',
     },
 
     text: {

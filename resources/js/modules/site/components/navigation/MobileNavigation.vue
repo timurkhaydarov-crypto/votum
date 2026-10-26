@@ -89,7 +89,7 @@
                         :open="servicesOpen"
                         :title="t('menu.services')"
                         :icon="Icon.SERVICES"
-                        :categories="serviceCategories"
+                        :categories="getServiceCategories(t)"
                         all-link="/services"
                         :all-label="t('megaMenu.allServices')"
                         @toggle="toggleServices"
@@ -236,7 +236,7 @@ import { Icon } from '@/modules/site/constants/icons.js';
 
 import {
     mainMenu,
-    serviceCategories,
+    getServiceCategories,
     fetchProductCategories,
 } from './navigation.data.js';
 

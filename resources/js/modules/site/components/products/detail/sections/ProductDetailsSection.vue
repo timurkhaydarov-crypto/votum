@@ -12,7 +12,7 @@
                 <label
                     class="mb-2 block text-sm font-medium text-slate-700"
                 >
-                    Русский
+                    {{ $t('common.russian') }}
                 </label>
 
                 <textarea

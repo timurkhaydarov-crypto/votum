@@ -71,7 +71,7 @@
             v-if="isLoading"
             class="rounded-lg border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600"
         >
-            Загрузка продукции...
+            {{ t('siteUi.catalog.loadingProducts') }}
         </p>
         <!-- ===================================================== -->
         <!-- ERROR -->
@@ -89,7 +89,7 @@
             v-else-if="!filteredProducts.length"
             class="rounded-lg border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600"
         >
-            По этому запросу продукция не найдена.
+            {{ t('siteUi.catalog.noProductsMatch') }}
         </p>
         <!-- ===================================================== -->
         <!-- PRODUCTS -->

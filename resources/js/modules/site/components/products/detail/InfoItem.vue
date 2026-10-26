@@ -40,13 +40,13 @@
                 "
                 :title="
                     hasValue(value)
-                        ? editLabel
-                        : addLabel
+                        ? editText
+                        : addText
                 "
                 :aria-label="
                     hasValue(value)
-                        ? editLabel
-                        : addLabel
+                        ? editText
+                        : addText
                 "
                 @click.stop="emit('manage')"
             >
@@ -120,7 +120,7 @@
                 {{
                     hasValue(value)
                         ? value
-                        : noDataLabel
+                        : noDataText
                 }}
             </div>
         </div>
@@ -128,6 +128,11 @@
 </template>
 
 <script setup>
+import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
+
 const props = defineProps({
     label: {
         type: String,
@@ -161,17 +166,17 @@ const props = defineProps({
 
     noDataLabel: {
         type: String,
-        default: 'Данные отсутствуют',
+        default: '',
     },
 
     addLabel: {
         type: String,
-        default: 'Добавить',
+        default: '',
     },
 
     editLabel: {
         type: String,
-        default: 'Редактировать',
+        default: '',
     },
 });
 
@@ -179,6 +184,10 @@ const emit = defineEmits([
     'select',
     'manage',
 ]);
+
+const noDataText = computed(() => props.noDataLabel || t('common.notAvailable'));
+const addText = computed(() => props.addLabel || t('actions.add'));
+const editText = computed(() => props.editLabel || t('actions.edit'));
 
 const hasValue = (value) => {
     if (
@@ -207,4 +216,3 @@ const handleSelect = () => {
     emit('select');
 };
 </script>
-

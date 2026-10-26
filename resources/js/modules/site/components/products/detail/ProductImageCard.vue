@@ -39,10 +39,7 @@
                 <button
                     type="button"
                     :aria-label="
-                        $t(
-                            'actions.open',
-                            'Открыть изображение',
-                        )
+                        $t('gallery.openImage')
                     "
                     class="flex h-12 w-12 translate-y-2 cursor-pointer items-center justify-center rounded-full border border-white/60 bg-white/90 text-slate-800 opacity-0 shadow-xl shadow-slate-900/20 backdrop-blur-md transition-all duration-300 hover:scale-110 hover:bg-white group-hover:translate-y-0 group-hover:opacity-100"
                     @click="openModal"
@@ -102,10 +99,7 @@
                     <button
                         type="button"
                         :aria-label="
-                            $t(
-                                'common.close',
-                                'Закрыть',
-                            )
+                            $t('common.close')
                         "
                         class="absolute right-2 top-2 z-20 flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border border-white/15 bg-white/10 text-white backdrop-blur-md transition hover:bg-white/20 sm:right-4 sm:top-4"
                         @click="closeModal"

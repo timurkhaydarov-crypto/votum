@@ -35,6 +35,7 @@ const { t, locale } = useI18n();
  */
 const updateDocumentTitle = () => {
     document.title = t('logo.title') || 'TECHNOVOTUM';
+    document.documentElement.lang = locale.value;
 };
 
 /**

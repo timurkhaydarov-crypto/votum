@@ -108,6 +108,7 @@ export default {
         all: 'Все',
         more: 'Подробнее',
         less: 'Свернуть',
+        hide: 'Скрыть',
         showAll: 'Показать всё',
         showMore: 'Показать ещё',
         collapse: 'Свернуть',
@@ -122,7 +123,84 @@ export default {
         russian: 'Русский',
         english: 'English',
     },
-
+    siteUi: {
+        navigation: {
+            openMenu: 'Открыть меню',
+        },
+        services: {
+            projects: {
+                title: 'Разработка индивидуальных проектов',
+                shortTitle: 'Индивидуальные проекты',
+                items: {
+                    discuss: {
+                        title: 'Обсудить проект',
+                        description: 'Обсудим задачу и требования к вашему проекту.',
+                    },
+                },
+            },
+        },
+        catalog: {
+            fullCatalog: 'Полный каталог доступной продукции',
+            categoryProducts: 'Продукция в выбранной категории',
+            loadingProducts: 'Загрузка продукции...',
+            noProductsMatch: 'По этому запросу продукция не найдена.',
+        },
+        empty: {
+            data: 'Данные отсутствуют',
+            information: 'Информация отсутствует',
+        },
+        product: {
+            application: 'Область применения',
+            applicationNotProvided: 'Информация пока не заполнена.',
+            angle: 'Угол',
+            compatibleItem: 'Совместимый товар',
+            notFoundTitle: 'Прибор не найден',
+            notFoundDescription: 'Запрошенная карточка продукции не найдена или была удалена из каталога.',
+            loadErrorTitle: 'Не удалось загрузить продукцию',
+            loadErrorDescription: 'Произошла ошибка при загрузке продукции.',
+            loadInfoError: 'Не удалось загрузить информацию.',
+            loadSectionError: 'Не удалось загрузить данные раздела.',
+            saveSectionError: 'Не удалось сохранить изменения.',
+            missingLink: 'Ссылка отсутствует',
+            featuresDescription: 'Ключевые функции и возможности прибора.',
+            technicalDescription: 'Основные параметры и технические возможности оборудования.',
+            specificationsDescription: 'Подробные технические параметры прибора.',
+            certificatesDescription: 'Сертификационные документы и подтверждения.',
+            documentationDescription: 'Руководства и эксплуатационные документы.',
+            softwareTitle: 'Обновление ПО',
+            softwareDescription: 'Программное обеспечение и обновления.',
+            documentsTitle: 'Документация и материалы',
+            documentsDescription: 'Техническая документация, сертификаты, программное обеспечение и дополнительные материалы.',
+            allowedImageTypes: 'JPG, JPEG, PNG или WEBP.',
+            hideCharacteristics: 'Скрыть характеристики',
+            showAllCharacteristics: 'Показать все характеристики',
+        },
+        documentation: {
+            enterAccessKey: 'Введите ключ доступа',
+            accessDescription: 'Для просмотра технической документации требуется ключ доступа к этому прибору.',
+            keyLabel: 'Ключ доступа',
+            keyPlaceholder: 'Введите ключ',
+            checking: 'Проверка...',
+            get: 'Получить документацию',
+            authorized: 'Доступ подтверждён',
+            available: 'Доступная документация прибора',
+            openPdf: 'Открыть PDF',
+            noLocalizedFile: 'Документ на текущем языке отсутствует.',
+            noDocuments: 'Документация отсутствует',
+            noDocumentsDescription: 'Для этого прибора пока нет доступных документов.',
+            document: 'Документ',
+            productUnknown: 'Не удалось определить продукт.',
+            keyRequired: 'Введите ключ доступа.',
+            keyIncorrect: 'Неверный ключ доступа.',
+            keyNoAccess: 'Ключ не предоставляет доступ к документации этого продукта.',
+            fetchFailed: 'Не удалось получить документацию.',
+            popupBlocked: 'Браузер заблокировал открытие PDF. Разрешите всплывающие окна для сайта.',
+            invalidKey: 'Ключ доступа недействителен.',
+            forbidden: 'Доступ к этому документу запрещён.',
+            fileNotFound: 'Файл документации не найден.',
+            openFailed: 'Не удалось открыть PDF.',
+        },
+    },
     company: {
         about: {
             eyebrow: 'О КОМПАНИИ',
@@ -418,6 +496,8 @@ export default {
         description: 'Визуальный обзор оборудования.',
         empty: 'Изображения отсутствуют',
         image: 'Изображение',
+        openImage: 'Открыть изображение',
+        manage: 'Управление',
         certificate: 'Сертификат',
         diploma: 'Диплом',
         document: 'Документ',
@@ -672,6 +752,7 @@ export default {
                 choose: 'Выбрать файл',
                 placeholder: 'Выберите файл',
                 current: 'Текущий файл',
+                uploadError: 'Не удалось загрузить файл.',
             },
 
             method: {
@@ -715,6 +796,12 @@ export default {
     productPages: {
         groupTitle: 'Группа: {group}',
         groupSubtitle: 'Товары группы в категории {category}',
+    },
+
+    products: {
+        sections: {
+            unsupported: 'Этот раздел продукции не поддерживается.',
+        },
     },
 
     hero: {

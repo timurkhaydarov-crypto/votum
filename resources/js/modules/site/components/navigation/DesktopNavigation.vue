@@ -133,7 +133,7 @@ vue
                 :title="t('menu.services')"
                 :variant="'cards'"
                 :icon="'bi-tools'"
-                :categories="serviceCategories"
+                :categories="getServiceCategories(t)"
                 :all-link="'/services'"
                 :all-label="t('megaMenu.allServices')"
                 :footer="{
@@ -215,7 +215,7 @@ import CartBadge from '../shared/CartBadge.vue'
 
 import {
     mainMenu,
-    serviceCategories,
+    getServiceCategories,
     fetchProductCategories,
 } from './navigation.data.js'
 

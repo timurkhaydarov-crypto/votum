@@ -9,7 +9,7 @@
                     class="inline-flex items-center rounded-full border border-slate-200 bg-slate-50 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.08em] text-slate-500"
                 >
                     {{ images.length }}
-                    {{ $t('common.pcs', 'шт.') }}
+                    {{ $t('common.pcs') }}
                 </span>
             </template>
 
@@ -19,13 +19,13 @@
                         v-if="props.canManage"
                         type="button"
                         class="flex h-7 items-center gap-1.5 rounded-lg px-2 text-xs font-medium text-slate-500 transition hover:bg-slate-100 hover:text-slate-800"
-                        :title="$t('actions.edit', 'Управление')"
+                        :title="$t('gallery.manage')"
                         @click="emit('manage')"
                     >
                         <i class="bi bi-pencil-square"></i>
 
                         <span class="hidden sm:inline">
-                            {{ $t('actions.edit', 'Управление') }}
+                            {{ $t('gallery.manage') }}
                         </span>
                     </button>
 
@@ -34,8 +34,8 @@
                         class="flex h-7 w-7 items-center justify-center rounded-lg text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
                         :aria-label="
                             isOpen
-                                ? $t('common.collapse', 'Свернуть')
-                                : $t('common.showAll', 'Показать все')
+                                ? $t('common.collapse')
+                                : $t('common.showAll')
                         "
                         @click="toggleSection"
                     >
@@ -73,7 +73,7 @@
                         :alt="
                             image.alt ||
                             localizedTitle(image) ||
-                            `${$t('gallery.image', 'Изображение')} ${index + 1}`
+                            `${$t('gallery.image')} ${index + 1}`
                         "
                         :type="type"
                         :title="localizedTitle(image)"
@@ -103,10 +103,7 @@
                             class="mt-3 text-sm font-medium text-slate-700"
                         >
                             {{
-                                $t(
-                                    'gallery.empty',
-                                    'Изображения отсутствуют',
-                                )
+                                $t('gallery.empty')
                             }}
                         </p>
                     </div>
@@ -124,8 +121,8 @@
                         <span>
                             {{
                                 isAllImagesVisible
-                                    ? $t('common.hide', 'Скрыть')
-                                    : $t('common.showAll', 'Показать все')
+                                    ? $t('common.hide')
+                                    : $t('common.showAll')
                             }}
                         </span>
 
@@ -242,4 +239,3 @@ const toggleImages = () => {
     visibleCount.value = props.images.length;
 };
 </script>
-

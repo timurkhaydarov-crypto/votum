@@ -17,7 +17,7 @@
                 <h2
                     class="mt-3 text-2xl font-bold tracking-tight sm:text-3xl"
                 >
-                    Область применения
+                    {{ t('siteUi.product.application') }}
                 </h2>
 
                 <p
@@ -33,7 +33,7 @@
                 >
                     <i class="bi bi-info-circle"></i>
 
-                    Информация пока не заполнена
+                    {{ t('siteUi.product.applicationNotProvided') }}
                 </div>
             </div>
         </div>
@@ -41,6 +41,10 @@
 </template>
 
 <script setup>
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
+
 defineProps({
     product: {
         type: Object,

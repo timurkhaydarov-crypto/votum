@@ -24,7 +24,7 @@ export const mainMenu = [
 
 export const products = []
 
-export const resolveProductById = (id) => {
+export const resolveProductById = (id, t) => {
     const cached = products.find(item => item.id === id)
 
     if (cached) {
@@ -38,7 +38,7 @@ export const resolveProductById = (id) => {
         title: safeId
             .replace(/[-_]+/g, ' ')
             .replace(/\s+/g, ' ')
-            .trim() || 'Продукция',
+            .trim() || t('productCard.untitledProduct'),
         href: `/products/item/${safeId}`
     }
 }
@@ -58,32 +58,29 @@ export const fetchProductCategories = async (locale = 'ru') => {
 // SERVICES
 // ======================================================
 
-export const serviceCategories = [
+export const getServiceCategories = (t) => [
     {
-        title: 'Обучение',
-        shortTitle: 'Обучение',
+        title: t('about.competence.training.title'),
+        shortTitle: t('about.competence.training.title'),
         icon: 'bi-mortarboard',
         href: '/services/training',
 
         items: [
             {
-                title: 'Обучение специалистов',
-                description:
-                    'Подготовка и обучение специалистов по неразрушающему контролю',
+                title: t('about.competence.training.items.specialists.title'),
+                description: t('about.competence.training.items.specialists.description'),
                 href: '/services/training/specialists',
                 icon: 'bi-person-workspace'
             },
             {
-                title: 'Повышение квалификации',
-                description:
-                    'Повышение квалификации и профессиональная подготовка',
+                title: t('about.competence.training.items.qualification.title'),
+                description: t('about.competence.training.items.qualification.description'),
                 href: '/services/training/qualification',
                 icon: 'bi-award'
             },
             {
-                title: 'Практические семинары',
-                description:
-                    'Практические занятия и тематические семинары',
+                title: t('about.competence.training.items.seminars.title'),
+                description: t('about.competence.training.items.seminars.description'),
                 href: '/services/training/seminars',
                 icon: 'bi-easel2'
             }
@@ -92,30 +89,27 @@ export const serviceCategories = [
 
 
     {
-        title: 'Метрология',
-        shortTitle: 'Метрология',
+        title: t('about.competence.metrology.title'),
+        shortTitle: t('about.competence.metrology.title'),
         icon: 'bi-speedometer2',
         href: '/services/metrology',
 
         items: [
             {
-                title: 'Поверка оборудования',
-                description:
-                    'Поверка средств измерений и оборудования',
+                title: t('about.competence.metrology.items.verification.title'),
+                description: t('about.competence.metrology.items.verification.description'),
                 href: '/services/metrology/verification',
                 icon: 'bi-patch-check'
             },
             {
-                title: 'Калибровка',
-                description:
-                    'Калибровка измерительного оборудования',
+                title: t('about.competence.metrology.items.calibration.title'),
+                description: t('about.competence.metrology.items.calibration.description'),
                 href: '/services/metrology/calibration',
                 icon: 'bi-sliders'
             },
             {
-                title: 'Метрологическая экспертиза',
-                description:
-                    'Экспертиза технической и метрологической документации',
+                title: t('about.competence.metrology.items.expertise.title'),
+                description: t('about.competence.metrology.items.expertise.description'),
                 href: '/services/metrology/expertise',
                 icon: 'bi-file-earmark-check'
             }
@@ -124,30 +118,27 @@ export const serviceCategories = [
 
 
     {
-        title: 'Диагностика',
-        shortTitle: 'Диагностика',
+        title: t('about.competence.diagnostics.title'),
+        shortTitle: t('about.competence.diagnostics.title'),
         icon: 'bi-activity',
         href: '/services/diagnostics',
 
         items: [
             {
-                title: 'Техническая диагностика',
-                description:
-                    'Определение технического состояния оборудования',
+                title: t('about.competence.diagnostics.items.technical.title'),
+                description: t('about.competence.diagnostics.items.technical.description'),
                 href: '/services/diagnostics/technical',
                 icon: 'bi-tools'
             },
             {
-                title: 'Диагностика оборудования',
-                description:
-                    'Комплексная диагностика и поиск неисправностей',
+                title: t('about.competence.diagnostics.items.equipment.title'),
+                description: t('about.competence.diagnostics.items.equipment.description'),
                 href: '/services/diagnostics/equipment',
                 icon: 'bi-cpu'
             },
             {
-                title: 'Экспертное обследование',
-                description:
-                    'Экспертная оценка технического состояния',
+                title: t('about.competence.diagnostics.items.expertise.title'),
+                description: t('about.competence.diagnostics.items.expertise.description'),
                 href: '/services/diagnostics/expertise',
                 icon: 'bi-search'
             }
@@ -155,16 +146,15 @@ export const serviceCategories = [
     },
 
     {
-        title: 'Разработка индивидуальных проектов',
-        shortTitle: 'Индивидуальные проекты',
+        title: t('siteUi.services.projects.title'),
+        shortTitle: t('siteUi.services.projects.shortTitle'),
         icon: 'bi-diagram-3',
         href: '/services/individual-projects',
 
         items: [
             {
-                title: 'Обсудить проект',
-                description:
-                    'Обсудим задачу и требования к вашему проекту',
+                title: t('siteUi.services.projects.items.discuss.title'),
+                description: t('siteUi.services.projects.items.discuss.description'),
                 href: '/services/individual-projects',
                 icon: 'bi-chat-dots'
             }

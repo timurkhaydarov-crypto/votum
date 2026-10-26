@@ -2,8 +2,8 @@
     <section>
         <SectionHeader
             eyebrow="04 / CAPABILITIES"
-            title="Функциональные особенности"
-            description="Ключевые функции и возможности прибора."
+            :title="$t('product.info.features.title')"
+            :description="$t('siteUi.product.featuresDescription')"
         />
 
         <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">

@@ -9,11 +9,11 @@
 
             <div>
                 <h2 class="font-semibold text-rose-900">
-                    Не удалось загрузить продукцию
+                    {{ t('siteUi.product.loadErrorTitle') }}
                 </h2>
 
                 <p class="mt-1 text-sm text-rose-700">
-                    {{ message }}
+                    {{ message || t('siteUi.product.loadErrorDescription') }}
                 </p>
             </div>
         </div>
@@ -21,10 +21,14 @@
 </template>
 
 <script setup>
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
+
 defineProps({
     message: {
         type: String,
-        default: 'Произошла ошибка при загрузке продукции.',
+        default: '',
     },
 });
 </script>

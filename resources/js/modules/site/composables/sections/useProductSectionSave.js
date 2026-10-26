@@ -2,6 +2,7 @@ import { productsApi } from '../../services/productsApi.js';
 
 export function useProductSectionSave({
     props,
+    t,
     emit,
     isSaving,
     formError,
@@ -344,7 +345,7 @@ export function useProductSectionSave({
         } catch (error) {
             console.error('Failed to save product section:', error);
 
-            formError.value = error?.message ?? 'Не удалось сохранить изменения.';
+            formError.value = error?.message ?? t('siteUi.product.saveSectionError');
 
             return false;
         } finally {

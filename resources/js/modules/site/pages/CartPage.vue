@@ -74,7 +74,7 @@ vue
         <RequestModal
             v-if="requestModalOpen"
             :with-products="true"
-            subject="Запрос на оборудование"
+            :subject="t('cart.title')"
             context="cart"
             @close="handleCloseRequestModal"
             @success="handleRequestSuccess"

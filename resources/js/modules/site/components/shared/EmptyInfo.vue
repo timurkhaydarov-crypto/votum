@@ -9,7 +9,7 @@
         </div>
 
         <p class="text-sm font-medium text-slate-700">
-            {{ title }}
+            {{ title || t('siteUi.empty.information') }}
         </p>
 
         <p
@@ -22,10 +22,14 @@
 </template>
 
 <script setup>
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
+
 defineProps({
     title: {
         type: String,
-        default: 'Информация отсутствует',
+        default: '',
     },
 
     description: {

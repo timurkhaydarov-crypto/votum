@@ -2,35 +2,35 @@
     <section>
         <SectionHeader
             eyebrow="06 / DOCUMENTATION"
-            title="Документация и материалы"
-            description="Техническая документация, сертификаты, программное обеспечение и дополнительные материалы."
+            :title="$t('siteUi.product.documentsTitle')"
+            :description="$t('siteUi.product.documentsDescription')"
         />
 
         <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             <ProductDocumentCard
-                title="Технические характеристики"
-                description="Подробные технические параметры прибора"
+                :title="$t('product.documents.characteristics')"
+                :description="$t('siteUi.product.specificationsDescription')"
                 icon="bi-file-earmark-text"
                 :href="documents.characteristics"
             />
 
             <ProductDocumentCard
-                title="Сертификаты"
-                description="Сертификационные документы и подтверждения"
+                :title="$t('product.documents.certificates')"
+                :description="$t('siteUi.product.certificatesDescription')"
                 icon="bi-patch-check"
                 :href="documents.certificates"
             />
 
             <ProductDocumentCard
-                title="Документация"
-                description="Руководства и эксплуатационные документы"
+                :title="$t('product.documents.documentation')"
+                :description="$t('siteUi.product.documentationDescription')"
                 icon="bi-book"
                 :href="documents.documentation"
             />
 
             <ProductDocumentCard
-                title="Обновление ПО"
-                description="Программное обеспечение и обновления"
+                :title="$t('siteUi.product.softwareTitle')"
+                :description="$t('siteUi.product.softwareDescription')"
                 icon="bi-cloud-arrow-down"
                 :href="documents.software"
             />

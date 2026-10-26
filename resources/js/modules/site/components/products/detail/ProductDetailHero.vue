@@ -199,6 +199,7 @@
 
 <script setup>
 import { computed, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 import {
     fetchProductFeatures,
@@ -246,6 +247,7 @@ const props = defineProps({
 });
 
 const emit = defineEmits(['manageInfo', 'statusUpdated']);
+const { t } = useI18n();
 
 const isPlaying = ref(false);
 
@@ -342,7 +344,7 @@ const openInfoModal = async (key) => {
     } catch (error) {
         console.error('Failed to load product info:', error);
 
-        infoError.value = 'Не удалось загрузить информацию';
+        infoError.value = t('siteUi.product.loadInfoError');
     } finally {
         isInfoLoading.value = false;
     }
@@ -388,13 +390,13 @@ const openDocumentation = () => {
 
 const authorizeDocumentation = async (key) => {
     if (!props.product?.id) {
-        documentationError.value = 'Не удалось определить продукт.';
+        documentationError.value = t('siteUi.documentation.productUnknown');
 
         return;
     }
 
     if (!key) {
-        documentationError.value = 'Введите ключ доступа.';
+        documentationError.value = t('siteUi.documentation.keyRequired');
 
         return;
     }
@@ -415,12 +417,11 @@ const authorizeDocumentation = async (key) => {
         documentationDocuments.value = [];
 
         if (error?.status === 401) {
-            documentationError.value = 'Неверный ключ доступа.';
+            documentationError.value = t('siteUi.documentation.keyIncorrect');
         } else if (error?.status === 403) {
-            documentationError.value =
-                'Ключ не предоставляет доступ к документации этого продукта.';
+            documentationError.value = t('siteUi.documentation.keyNoAccess');
         } else {
-            documentationError.value = error?.message || 'Не удалось получить документацию.';
+            documentationError.value = error?.message || t('siteUi.documentation.fetchFailed');
         }
     } finally {
         isDocumentationLoading.value = false;
@@ -455,8 +456,7 @@ const openDocumentationPdf = async ({ file, key }) => {
         if (!pdfWindow) {
             URL.revokeObjectURL(blobUrl);
 
-            documentationError.value =
-                'Браузер заблокировал открытие PDF. Разрешите всплывающие окна для сайта.';
+            documentationError.value = t('siteUi.documentation.popupBlocked');
 
             return;
         }
@@ -468,13 +468,13 @@ const openDocumentationPdf = async ({ file, key }) => {
         console.error('Failed to open documentation PDF:', error);
 
         if (error?.status === 401) {
-            documentationError.value = 'Ключ доступа недействителен.';
+            documentationError.value = t('siteUi.documentation.invalidKey');
         } else if (error?.status === 403) {
-            documentationError.value = 'Доступ к этому документу запрещён.';
+            documentationError.value = t('siteUi.documentation.forbidden');
         } else if (error?.status === 404) {
-            documentationError.value = 'Файл документации не найден.';
+            documentationError.value = t('siteUi.documentation.fileNotFound');
         } else {
-            documentationError.value = error?.message || 'Не удалось открыть PDF.';
+            documentationError.value = error?.message || t('siteUi.documentation.openFailed');
         }
     }
 };

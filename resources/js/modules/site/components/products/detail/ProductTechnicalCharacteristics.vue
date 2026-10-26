@@ -2,8 +2,8 @@
     <section>
         <SectionHeader
             eyebrow="01 / TECHNICAL DATA"
-            title="Технические характеристики"
-            description="Основные параметры и технические возможности оборудования."
+            :title="$t('product.info.specifications.title')"
+            :description="$t('siteUi.product.technicalDescription')"
         />
 
         <div
@@ -42,7 +42,7 @@
                     <i class="bi bi-info-circle"></i>
 
                     <span>
-                        Данные отсутствуют
+                        {{ $t('common.notAvailable') }}
                     </span>
                 </div>
             </div>
@@ -56,8 +56,8 @@
                 <span>
                     {{
                         showAll
-                            ? 'Скрыть характеристики'
-                            : 'Показать все характеристики'
+                            ? $t('siteUi.product.hideCharacteristics')
+                            : $t('siteUi.product.showAllCharacteristics')
                     }}
                 </span>
 

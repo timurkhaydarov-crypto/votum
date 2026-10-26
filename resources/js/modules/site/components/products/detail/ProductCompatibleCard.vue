@@ -79,7 +79,7 @@
                     <div
                         class="text-[9px] font-bold uppercase tracking-wider text-slate-400"
                     >
-                        Частота
+                        {{ t('productCard.frequency') }}
                     </div>
 
                     <div
@@ -97,7 +97,7 @@
                     <div
                         class="text-[9px] font-bold uppercase tracking-wider text-slate-400"
                     >
-                        Угол
+                        {{ t('siteUi.product.angle') }}
                     </div>
 
                     <div
@@ -119,7 +119,7 @@
                     <div
                         class="text-[9px] font-bold uppercase tracking-wider text-slate-400"
                     >
-                        Метод
+                        {{ t('productCard.method') }}
                     </div>
 
                     <div
@@ -139,7 +139,7 @@
                     class="max-w-[60%] truncate text-[10px] font-bold uppercase tracking-[0.14em] text-slate-400"
                     :title="categoryTitle"
                 >
-                    {{ categoryTitle || 'Совместимый товар' }}
+                    {{ categoryTitle || t('siteUi.product.compatibleItem') }}
                 </span>
 
                 <!-- LINK -->
@@ -148,7 +148,7 @@
                     :to="productUrl"
                     class="inline-flex shrink-0 items-center gap-1.5 text-xs font-bold text-slate-700 transition hover:text-slate-900"
                 >
-                    Подробнее
+                    {{ t('productApps.details') }}
 
                     <i
                         class="bi bi-arrow-right transition-transform group-hover:translate-x-0.5"
@@ -161,6 +161,7 @@
 
 <script setup>
 import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 const props = defineProps({
     product: {
@@ -173,6 +174,7 @@ const props = defineProps({
         default: false,
     },
 });
+const { t, locale } = useI18n();
 
 /*
 |--------------------------------------------------------------------------
@@ -192,7 +194,7 @@ const productName = computed(() => {
     const name = product.value.name;
 
     if (!name) {
-        return 'Совместимый товар';
+        return t('siteUi.product.compatibleItem');
     }
 
     if (typeof name === 'string') {
@@ -201,10 +203,11 @@ const productName = computed(() => {
 
     if (typeof name === 'object') {
         return (
-            name.ru ||
+            name[locale.value] ||
             name.en ||
+            name.ru ||
             Object.values(name)[0] ||
-            'Совместимый товар'
+            t('siteUi.product.compatibleItem')
         );
     }
 

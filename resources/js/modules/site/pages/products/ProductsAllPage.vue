@@ -1,7 +1,7 @@
 <template>
     <ProductsLayout
-        title="Вся продукция"
-        subtitle="Полный каталог доступной продукции"
+        :title="t('megaMenu.allProducts')"
+        :subtitle="t('siteUi.catalog.fullCatalog')"
     >
         <ProductGrid
             :products="products"
@@ -32,6 +32,7 @@ import {
     onMounted,
     ref,
 } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 import ProductGrid from '../../components/products/ProductGrid.vue';
 import ProductManagement from '../../components/products/ProductManagement.vue';
@@ -39,6 +40,7 @@ import ProductsLayout from '../../components/products/ProductsLayout.vue';
 
 import { useProductsCatalog } from '../../composables/useProductsCatalog.js';
 
+const { t } = useI18n();
 
 /*
 |--------------------------------------------------------------------------

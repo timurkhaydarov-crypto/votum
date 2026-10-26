@@ -128,7 +128,7 @@ const groupProducts = computed(() => {
     }
 
     return props.group.productIds
-        .map(id => resolveProductById(id))
+        .map(id => resolveProductById(id, t))
         .filter(Boolean)
 
 })
@@ -233,4 +233,3 @@ const handleNavigation = () => {
 }
 
 </style>
-

@@ -108,6 +108,7 @@ export default {
         all: 'All',
         more: 'More',
         less: 'Collapse',
+        hide: 'Hide',
         showAll: 'Show all',
         showMore: 'Show more',
         collapse: 'Collapse',
@@ -121,6 +122,84 @@ export default {
         loading: 'Loading...',
         russian: 'Russian',
         english: 'English',
+    },
+    siteUi: {
+        navigation: {
+            openMenu: 'Open menu',
+        },
+        services: {
+            projects: {
+                title: 'Custom Projects',
+                shortTitle: 'Custom Projects',
+                items: {
+                    discuss: {
+                        title: 'Discuss a Project',
+                        description: 'Let us discuss your project and its requirements.',
+                    },
+                },
+            },
+        },
+        catalog: {
+            fullCatalog: 'Full catalog of available products',
+            categoryProducts: 'Products in this category',
+            loadingProducts: 'Loading products...',
+            noProductsMatch: 'No products match this request.',
+        },
+        empty: {
+            data: 'No data available',
+            information: 'No information available',
+        },
+        product: {
+            application: 'Application',
+            applicationNotProvided: 'Application information has not been provided yet.',
+            angle: 'Angle',
+            compatibleItem: 'Compatible product',
+            notFoundTitle: 'Product not found',
+            notFoundDescription: 'The requested product page could not be found or has been removed from the catalog.',
+            loadErrorTitle: 'Failed to load products',
+            loadErrorDescription: 'An error occurred while loading products.',
+            loadInfoError: 'Failed to load product information.',
+            loadSectionError: 'Failed to load section data.',
+            saveSectionError: 'Failed to save changes.',
+            missingLink: 'Link is unavailable',
+            featuresDescription: 'Key functions and capabilities of the device.',
+            technicalDescription: 'Key parameters and technical capabilities of the equipment.',
+            specificationsDescription: 'Detailed technical parameters of the device.',
+            certificatesDescription: 'Certification documents and compliance evidence.',
+            documentationDescription: 'User manuals and operating documents.',
+            softwareTitle: 'Software Updates',
+            softwareDescription: 'Software and updates.',
+            documentsTitle: 'Documentation and Resources',
+            documentsDescription: 'Technical documentation, certificates, software and additional resources.',
+            allowedImageTypes: 'JPG, JPEG, PNG, or WEBP.',
+            hideCharacteristics: 'Hide specifications',
+            showAllCharacteristics: 'Show all specifications',
+        },
+        documentation: {
+            enterAccessKey: 'Enter the access key',
+            accessDescription: 'An access key for this device is required to view its technical documentation.',
+            keyLabel: 'Access key',
+            keyPlaceholder: 'Enter the key',
+            checking: 'Verifying...',
+            get: 'Get documentation',
+            authorized: 'Access granted',
+            available: 'Available device documentation',
+            openPdf: 'Open PDF',
+            noLocalizedFile: 'A document is not available in the current language.',
+            noDocuments: 'No documentation available',
+            noDocumentsDescription: 'There are no documents available for this device yet.',
+            document: 'Document',
+            productUnknown: 'Unable to identify the product.',
+            keyRequired: 'Enter the access key.',
+            keyIncorrect: 'The access key is incorrect.',
+            keyNoAccess: 'This key does not grant access to this product’s documentation.',
+            fetchFailed: 'Failed to retrieve the documentation.',
+            popupBlocked: 'The browser blocked the PDF from opening. Allow pop-ups for this site.',
+            invalidKey: 'The access key is invalid.',
+            forbidden: 'Access to this document is denied.',
+            fileNotFound: 'The documentation file could not be found.',
+            openFailed: 'Failed to open the PDF.',
+        },
     },
     company: {
         about: {
@@ -416,6 +495,8 @@ export default {
         description: 'Visual overview of the equipment.',
         empty: 'No images available',
         image: 'Image',
+        openImage: 'Open image',
+        manage: 'Manage',
         certificate: 'Certificate',
         diploma: 'Diploma',
         document: 'Document',
@@ -673,6 +754,7 @@ export default {
                 choose: 'Choose file',
                 placeholder: 'Select a file',
                 current: 'Current file',
+                uploadError: 'Failed to upload the file.',
             },
         },
 
@@ -706,6 +788,12 @@ export default {
     productPages: {
         groupTitle: 'Group: {group}',
         groupSubtitle: 'Products in the {category} category',
+    },
+
+    products: {
+        sections: {
+            unsupported: 'This product section is not supported.',
+        },
     },
 
     hero: {

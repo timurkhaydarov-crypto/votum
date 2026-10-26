@@ -491,7 +491,7 @@
                             </div>
 
                             <p class="mt-2 text-[11px] leading-5 text-slate-400">
-                                JPG, JPEG, PNG или WEBP.
+                                {{ $t('siteUi.product.allowedImageTypes') }}
                             </p>
                         </div>
                     </div>

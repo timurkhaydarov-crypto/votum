@@ -1,7 +1,7 @@
 <template>
     <ProductsLayout
         :title="categoryTitle"
-        subtitle="Продукция в выбранной категории"
+        :subtitle="t('siteUi.catalog.categoryProducts')"
     >
         <ProductBreadcrumbs :items="breadcrumbs" />
 
@@ -56,7 +56,7 @@ import { useProductsCatalog } from '../../composables/useProductsCatalog.js';
 
 const route = useRoute();
 
-const { locale } = useI18n();
+const { locale, t } = useI18n();
 
 
 /*

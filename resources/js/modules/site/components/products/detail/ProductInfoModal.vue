@@ -154,7 +154,7 @@ import EmptyInfo from '@/modules/site/components/shared/EmptyInfo.vue';
 import FeaturesGallery from './FeaturesGallery.vue';
 import ProductSpecification from './ProductSpecification.vue';
 
-const { locale } = useI18n();
+const { locale, t } = useI18n();
 
 const props = defineProps({
     product: {
@@ -224,11 +224,7 @@ const modalTitle = computed(() => {
     return (
         titles[props.infoKey]?.[locale.value] ||
         props.product.name ||
-        (
-            locale.value === 'en'
-                ? 'Product Information'
-                : 'Информация о продукте'
-        )
+        t('productDetail.noData')
     );
 });
 
